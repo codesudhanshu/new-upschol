@@ -3,6 +3,9 @@ import { useEffect, useState, useRef } from "react";
 import { getUniversityByUrl } from "@/app/api/admin/apiService";
 import { Star, CheckCircle, Download, ChevronRight, ChevronDown } from 'lucide-react';
 import Link from "next/link";
+import '../../public/css/style.css';
+import '../../public/css/responsive.css';
+import '../../public/css/developer.css';
 
 export default function UniversityClient({ collegeUrl }) {
   const [university, setUniversity] = useState(null);
@@ -33,22 +36,83 @@ export default function UniversityClient({ collegeUrl }) {
     fetchUniversity();
   }, [collegeUrl]);
 
-  const renderStars = (rating) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+ const renderStars = (rating) => {
+  const stars = [];
+  const ratings = [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5];
+  
+  ratings.forEach((value, index) => {
+    const id = `rating${10 - index}`;
+    const isHalf = value % 1 !== 0;
+    const isActive = value <= rating;
     
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />);
-    }
-    if (hasHalfStar) {
-      stars.push(<Star key="half" className="w-4 h-4 fill-yellow-400/50 text-yellow-400" />);
-    }
-    for (let i = stars.length; i < 5; i++) {
-      stars.push(<Star key={i} className="w-4 h-4 text-gray-300" />);
-    }
-    return stars;
-  };
+    stars.push(
+      <input 
+        key={`input-${id}`}
+        type="radio" 
+        id={id} 
+        name="rating" 
+        value={value} 
+        disabled 
+      />
+    );
+    
+    stars.push(
+      <label 
+        key={`label-${id}`}
+        htmlFor={id}
+        title={`${value} ${value === 1 ? 'star' : 'stars'}`}
+        className={`${isHalf ? 'half' : ''} ${isActive ? 'active-star' : ''}`}
+      ></label>
+    );
+  });
+  
+  return stars;
+};
+
+const renderPeripheralStars = (rating) => {
+  const stars = [];
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  
+  // Full stars
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(
+      <img 
+        key={`full-${i}`}
+        src="/images/star-on.png" 
+        alt="Filled Star" 
+        style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
+      />
+    );
+  }
+  
+  // Half star
+  if (hasHalfStar) {
+    stars.push(
+      <img 
+        key="half"
+        src="/images/star-on.png" // You might need a half-star image
+        alt="Half Star" 
+        style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
+      />
+    );
+  }
+  
+  // Empty stars
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push(
+      <img 
+        key={`empty-${i}`}
+        src="/images/star-off.png" 
+        alt="Empty Star" 
+        style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
+      />
+    );
+  }
+  
+  return stars;
+};
 
   if (loading) {
     return (
@@ -113,11 +177,11 @@ export default function UniversityClient({ collegeUrl }) {
                 
                 <div className="d-md-flex logobrand-card align-items-center">
                   <div className="info_logo">
-                    <ul className="flex items-center gap-4">
+                    <ul className="flex items-center">
                       {university.selectedApprovals?.slice(0, 4).map((approval, index) => (
                         <li key={index}>
-                          <figure className="flex items-center justify-center">
-                            <img src={approval.image} alt={approval.title} className="" />
+                          <figure className="flex">
+                            <img src={approval.image} alt={approval.title} className="images-section" />
                           </figure>
                         </li>
                       ))}
@@ -144,76 +208,76 @@ export default function UniversityClient({ collegeUrl }) {
                 </div>
                 
                 {/* Star Rating Section */}
-                <div className="star_rating" id="gauge-rating" data-rating={university.universityRating || 4}>
-                  <div className="gauge-container" style={{ justifySelf: 'anchor-center' }}>
-                    <div className="gauge-text">
-                      <div className="gauge-label">Overall Ratings :</div>
-                      <div className="gauge-score">
-                        <span id="scoreValue">{university.universityRating || 4}</span>
-                        <span className="gauge-small"> /of 5</span>
-                      </div>
-                      <div className="flex">
-                        {renderStars(university.universityRating || 4)}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="col-md-6 col-12 PeripheralRating" style={{ marginLeft: '15%' }}>
-                    <div className="d-flex flex-column">
-                      <div className="mb-2">
-                        <span className="fw-semibold" style={{ float: 'left' }}>Peripheral Rating</span>
-                        <span style={{ fontSize: '.875rem', color: '#999', float: 'left', fontWeight: 400 }}>
-                          (Out of 5)
-                        </span>
-                      </div>
+           <div className="star_rating" id="gauge-rating" data-rating={university.universityRating || 4}>
+  <div className="gauge-container" style={{ justifySelf: 'anchor-center' }}>
+    <div className="gauge-text">
+      <div className="gauge-label">Overall Ratings :</div>
+      <div className="gauge-score">
+        <span id="scoreValue">{university.universityRating || 4}</span>
+        <span className="gauge-small"> /of 5</span>
+      </div>
+      <fieldset className="gauge-container-rate">
+        {renderStars(university.universityRating || 4)}
+      </fieldset>
+    </div>
+  </div>
+  
+  <div className="col-md-6 col-12 PeripheralRating" style={{ marginLeft: '15%' }}>
+    <div className="d-flex flex-column">
+      <div className="mb-2">
+        <span className="fw-semibold" style={{ float: 'left' }}>Peripheral Rating</span>
+        <span style={{ fontSize: '.875rem', color: '#999', float: 'left', fontWeight: 400 }}>
+          (Out of 5)
+        </span>
+      </div>
 
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Average Ratings</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">4.0</span>
-                          <div className="d-flex">
-                            {renderStars(4.0)}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Digital Infrastructure</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">4.1</span>
-                          <div className="d-flex">
-                            {renderStars(4.1)}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Curriculum</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">3.9</span>
-                          <div className="d-flex">
-                            {renderStars(3.9)}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Value For Money</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">3.9</span>
-                          <div className="d-flex">
-                            {renderStars(3.9)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      <div className="d-flex justify-content-between align-items-center">
+        <div style={{ fontWeight: 400, fontSize: '13px' }}>Average Ratings</div>
+        <div className="d-flex align-items-center">
+          <span className="me-3 fw-bold">4.0</span>
+          <div className="d-flex">
+            {renderPeripheralStars(4.0)}
+          </div>
+        </div>
+      </div>
+      
+      <div className="d-flex justify-content-between align-items-center">
+        <div style={{ fontWeight: 400, fontSize: '13px' }}>Digital Infrastructure</div>
+        <div className="d-flex align-items-center">
+          <span className="me-3 fw-bold">4.1</span>
+          <div className="d-flex">
+            {renderPeripheralStars(4.1)}
+          </div>
+        </div>
+      </div>
+      
+      <div className="d-flex justify-content-between align-items-center">
+        <div style={{ fontWeight: 400, fontSize: '13px' }}>Curriculum</div>
+        <div className="d-flex align-items-center">
+          <span className="me-3 fw-bold">3.9</span>
+          <div className="d-flex">
+            {renderPeripheralStars(3.9)}
+          </div>
+        </div>
+      </div>
+      
+      <div className="d-flex justify-content-between align-items-center">
+        <div style={{ fontWeight: 400, fontSize: '13px' }}>Value For Money</div>
+        <div className="d-flex align-items-center">
+          <span className="me-3 fw-bold">3.9</span>
+          <div className="d-flex">
+            {renderPeripheralStars(3.9)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
                 
                 <div className="btn-group">
                   <button className="btn-primary expbtn">
                     <i className="fa fa-university btn-icon"></i> 
-                    <Link href="/free-counselling">Apply Now</Link>
+                    <Link href="/expert-advice" style={{color: "white"}}>Apply Now</Link>
                   </button>
                   <Link href="/expert-advice">
                     <button className="btn-secondary exprtbtn">
@@ -302,9 +366,9 @@ export default function UniversityClient({ collegeUrl }) {
                       <h2 className="heading_program_details">Updated Course Fees for 2025</h2>
                       <div className="table-responsive tableformat">
                         <table className="table-responsive align-middle text-start" 
-                               style={{ border: '2px solid #F47C80', width: '100%', tableLayout: 'fixed' }}>
+                               style={{ border: '2px solid #8D0DFE', width: '100%', tableLayout: 'fixed' }}>
                           <thead>
-                            <tr className="tophead" style={{ backgroundColor: '#Ed2024', color: '#ffff' }}>
+                            <tr className="tophead" style={{ backgroundColor: '#8D0DFE', color: '#ffff' }}>
                               <th className="p-3 text-start align-middle" style={{ borderRight: '1px solid #F47C80' }}>
                                 Course
                               </th>
@@ -450,7 +514,7 @@ export default function UniversityClient({ collegeUrl }) {
                       <h2 className="heading_program_details">Financial Aid</h2>
                       <div className="table-responsive">
                         <table className="table table-bordered">
-                          <thead className="tophead" style={{ backgroundColor: '#Ed2024', color: '#fff' }}>
+                          <thead className="tophead" style={{ backgroundColor: '#8D0DFE', color: '#fff' }}>
                             <tr>
                               <th>Category</th>
                               <th>Scholarship Credit</th>
@@ -545,9 +609,9 @@ export default function UniversityClient({ collegeUrl }) {
                 </section>
 
                 {/* Apply Now CTA */}
-                <section className="bg-[#Ed2024] text-white p-8 rounded-lg mt-5">
+                <section className="bg-[#8D0DFE] text-white p-8 rounded-lg mt-5">
                   <h2 className="text-2xl font-bold mb-4">Ready to Apply to {university.universityName}?</h2>
-                  <button className="bg-white text-[#Ed2024] hover:bg-gray-100 px-6 py-3 rounded-lg font-medium flex items-center gap-2">
+                  <button className="bg-white text-[#8D0DFE] hover:bg-gray-100 px-6 py-3 rounded-lg font-medium flex items-center gap-2">
                     Begin Application <ChevronRight className="w-5 h-5" />
                   </button>
                 </section>
@@ -556,222 +620,124 @@ export default function UniversityClient({ collegeUrl }) {
           </div>
         </div>
       </section>
-
-      {/* Add Required CSS Styles */}
-      <style jsx>{`
-        .icon-circle {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          background-color: #f5f5f5;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
+      <style jsx>
+        {`
+        .images-section{
+          max-width: 15%;
         }
+        
+          .nirf-content {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
 
-        .icon-img {
-          object-fit: contain;
-        }
+.nirf-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 4px 8px;
+    /* height: 48px;
+    width: 80px;  */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
-        .list-group-item {
-          display: flex;
-          align-items: center;
-          padding: 10px;
-          font-size: 14px;
-        }
+.nirf-icon {
+    height: 100%;
+    width: auto;
+    max-height: 100%;
+}
 
-        .nav-item.active .list-group-item {
-          background-color: #Ed2024;
-          color: white;
-        }
+.nirf-rank {
+    font-weight: bold;
+    font-size: 14px;
+    color: #000;
+    margin-left: 5px;
+}
+@media (max-width: 768px) {
+    .nirf-box {
+        height: 40px;
+        width: 107px;
+    }
 
-        .university-banner {
-          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-          padding: 40px 0;
-        }
+    .nirf-rank {
+        font-size: 12px;
+    }
+}
 
-        .programs_banner_content {
-          display: flex;
-          align-items: center;
-          gap: 2rem;
-        }
+    .btn-group {
+        /* padding: 27px 0px; */
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
 
-        .programs_details {
-          flex: 1;
-        }
+    /* Primary Button */
+    .expbtn {
+        /* background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white; */
+        padding: 12px 20px;
+        border-radius: 30px;
+        border: none;
+        /* font-size: 16px; */
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-        .programs_crousel {
-          flex: 1;
-          max-width: 50%;
-        }
+    .expbtn:hover {
+        background: linear-gradient(45deg, #0056b3, #003d80);
+        box-shadow: 0px 6px 14px rgba(0, 123, 255, 0.5);
+    }
 
-        .program_img_box {
-          position: relative;
-          border-radius: 12px;
-          overflow: hidden;
-        }
+    /* Secondary Button */
+    .exprtbtn {
+        /* background: transparent;
+            color: #007bff; */
+        padding: 12px 20px;
+        border-radius: 30px;
+        border: none;
+        /* font-size: 16px; */
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-        .small_logo {
-          position: absolute;
-          top: 12px;
-          left: 12px;
-          background: white;
-          border-radius: 50%;
-          padding: 8px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+    .exprtbtn:hover {
+        background: #8D0DFE;
+        color: white;
+    }
 
-        .nirf-content {
-          position: absolute;
-          top: 12px;
-          right: 12px;
-        }
-
-        .nirf-box {
-          background: white;
-          padding: 8px 12px;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
+    @media (max-width: 480px) {
         .btn-group {
-          display: flex;
-          gap: 1rem;
-          margin-top: 2rem;
+            justify-content: center;
+            /* Centers buttons horizontally */
+            align-items: center;
+            gap: 25px;
+            padding: 20px 0px;
         }
 
-        .btn-primary {
-          background-color: #Ed2024;
-          color: white;
-          padding: 12px 24px;
-          border: none;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
+        .btn-group button {
+            height: 45px;
+            /* Slightly smaller height for mobile */
+            font-size: 14px;
+            /* Adjust font size */
+            padding: 10px 16px;
         }
-
-        .btn-secondary {
-          background-color: transparent;
-          color: #Ed2024;
-          border: 2px solid #Ed2024;
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-        }
-
-        .star_rating {
-          display: flex;
-          gap: 2rem;
-          margin: 2rem 0;
-          align-items: flex-start;
-        }
-
-        .gauge-container {
-          flex: 1;
-        }
-
-        .PeripheralRating {
-          flex: 1;
-        }
-
-        .heading_program_details {
-          font-size: 1.75rem;
-          font-weight: 700;
-          margin-bottom: 1.5rem;
-          color: #1a1a1a;
-        }
-
-        .table-responsive table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-
-        .table-responsive th,
-        .table-responsive td {
-          padding: 12px;
-          text-align: left;
-          border-bottom: 1px solid #ddd;
-        }
-
-        .approved_crousel {
-          display: flex;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-
-        .approved_logo_box {
-          flex: 0 0 150px;
-          text-align: center;
-        }
-
-        .approved_logo img {
-          width: 60px;
-          height: 60px;
-          object-fit: contain;
-          margin-bottom: 8px;
-        }
-
-        .courses_crousel {
-          display: flex;
-          gap: 1rem;
-          flex-wrap: wrap;
-        }
-
-        .crousel_item {
-          flex: 0 0 300px;
-        }
-
-        .course_details {
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          overflow: hidden;
-          background: white;
-        }
-
-        .course-img-wrapper img {
-          width: 100%;
-          height: 200px;
-          object-fit: cover;
-        }
-
-        .card-body {
-          padding: 1rem;
-        }
-
-        .card-footer {
-          padding: 1rem;
-          border-top: 1px solid #ddd;
-        }
-
-        .container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 20px;
-        }
-
-        .programs_tab_listing {
-          display: flex;
-          gap: 2rem;
-        }
-
-        .university_program_listing {
-          flex: 0 0 300px;
-        }
-
-        .university_program_detaile {
-          flex: 1;
-        }
-
-        .programs_listing {
-          position: sticky;
-          top: 20px;
-        }
-      `}</style>
+    }
+        `}
+      </style>
     </div>
   );
 }

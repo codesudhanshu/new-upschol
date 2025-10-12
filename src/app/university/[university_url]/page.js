@@ -9,7 +9,7 @@ export default function UniversityPage({ params }) {
   return (
     <>
     <Layout>
-      <div className="min-h-screen py-8 px-4">
+      <div className="min-h-screen ">
         <UniversityClient collegeUrl={university_url} />
       </div>
     </Layout>

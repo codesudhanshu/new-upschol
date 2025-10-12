@@ -917,7 +917,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .certificate_listing li::before {
     content: '';
-    /* background-image: url(../images/check_icon.svg); */
+    background-image: url(../images/check_icon.svg);
     height: 18px;
     width: 50px;
     position: absolute;
@@ -3386,7 +3386,7 @@ header.fixed {
 .programs_details_contant {
     background-color: #FFFFFF;
     /* border: 1px solid #E6E6E6; */
-    padding: 13px 22px 13px 29px;
+    /* padding: 13px 22px 13px 29px; */
     border-radius: 9px 0 0 9px;
     width: 100%;
 }
@@ -3529,7 +3529,7 @@ header.fixed {
     font-family: 'Poppins';
     text-align: center;
     border-radius: 50px;
-    display: inline-block;
+    display:  flex;
     position: relative;
     overflow: hidden;
     z-index: 1;
@@ -4036,7 +4036,7 @@ header.fixed {
 
 .university_facts ul li::before {
     content: '';
-    /* background-image: url(../images/check_icon.svg); */
+    background-image: url(../images/check_icon.svg);
     height: 18px;
     width: 50px;
     position: absolute;
@@ -6763,7 +6763,7 @@ figure.placement-support_logo {
 
 .job_portal_listing li::before {
     content: '';
-    /* background-image: url(../images/check_icon.svg); */
+    background-image: url(../images/check_icon.svg);
     height: 15px;
     width: 18px;
     position: absolute;
@@ -7774,7 +7774,7 @@ figure.placement-support_logo {
     content: "";
     top: 5px;
     left: 0;
-    /* background-image: url(../images/check_icon.svg); */
+    background-image: url(../images/check_icon.svg);
     background-repeat: no-repeat;
     width: 14px;
     height: 14px;
@@ -8204,7 +8204,7 @@ figure.placement-support_logo {
 
     .university_details_section     .advantages-card .certificate_listing li{padding-left: 26px;}
     .university_details_section     .advantages-card .certificate_listing li:before{    
-        /* background-image: url(../images/check_icon.svg); */
+        background-image: url(../images/check_icon.svg);
          background-color: transparent;     height: 18px;
         width: 50px;}
 
