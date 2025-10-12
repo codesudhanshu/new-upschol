@@ -1,0 +1,116 @@
+
+
+ .button-hdr {
+    display: flex;
+    gap: 10px;
+  }
+
+  .hdr {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  /* .ai-powered {
+          background-color: #008000a8;
+            color: #000;
+            border: 3px solid #ff0051;
+        }
+       
+        span.tips {       
+    font-size: 17px;
+    font-family: sans-serif;
+} */
+  .ai-powered {
+    background-color: #0080007d;
+    color: #000;
+    position: relative;
+    padding: 20px;
+    display: inline-block;
+    /* border-radius: 5px; */
+    /* border: 2px solid #F44336; */
+    /* Transparent border for gradient effect */
+    background: linear-gradient(90deg, transparent, transparent) padding-box,
+      /* Inner box */
+      linear-gradient(90deg, white, lightgrey) border-box;
+    /* Rotating blue border */
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.5);
+    /* White shadow around the box */
+    animation: rotate-border 3s linear infinite;
+    /* Animate the gradient movement */
+  }
+
+  /* Animation for rotating the gradient border */
+  @keyframes rotate-border {
+    0% {
+      background-position: 0%;
+    }
+
+    100% {
+      background-position: 100%;
+    }
+  }
+
+  /* Blink text keyframes (unchanged) */
+  span.tips {
+    color: white;
+    font-size: 17px;
+    font-family: sans-serif;
+    animation: blink-text 1s infinite;
+    /* Animation for blinking text */
+    position: relative;
+    z-index: 2;
+    /* Ensure the text is above everything */
+  }
+
+  @keyframes blink-text {
+    0% {
+      color: black;
+    }
+
+    50% {
+      color: darkblue;
+      /* Change the text color for the blink effect */
+    }
+
+    100% {
+      color: black;
+    }
+  }
+
+  #srch-btn {
+    display: none;
+    /* Hide by default */
+  }
+
+  #mob {
+    display: none;
+  }
+
+  #scli {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    #srch-btn {
+      display: block;
+      /* Show on mobile devices (up to 767px wide) */
+    }
+  }
+
+  .search-bar {
+    position: relative;
+    width: 100%;
+  }
+
+  #voiceSearchBtn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
