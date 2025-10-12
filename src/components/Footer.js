@@ -3,6 +3,7 @@
 import { getAllfooterdata } from '@/app/api/admin/apiService';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import '../../public/css/responsive.css';
 
 const UpScholFooter = () => {
   const [footerData, setFooterData] = useState([]);
@@ -309,29 +310,6 @@ const UpScholFooter = () => {
             font-size: 14px !important;
             color: #B5B7BC !important
         }
-
-        @media(max-width:500px) {
-            .top-stuff .justify-content-end {
-                justify-content: center !important
-            }
-
-            .top-stuff .w-50 {
-                text-align: center;
-                width: 100% !important;
-                margin-bottom: 1rem
-            }
-
-            .top-stuff {
-                margin-bottom: 1rem
-            }
-
-            footer .justify-content-between {
-                justify-content: center !important
-            }
-
-            footer .justify-content-between .nav-link {
-                margin-right: 10px
-            }
         }`}</style>
     </footer>
   );

@@ -105,7 +105,7 @@
         left: 0;
         width: 0%;
         height: 2px;
-        /* background-color: #EC1C24; */
+        /* background-color: #8D0DFE; */
         transition: all 0.3s ease-in-out;
     }
 
@@ -1287,7 +1287,7 @@
     .university_program_listing .list-group .list-group-item.active::before {
         height: auto;
         min-width: auto;
-        border: 1px solid #EC1C24;
+        border: 1px solid #8D0DFE;
     }
 
     .management_listing li .card .card-body .star_rating {
@@ -3593,10 +3593,10 @@
     }
 
     .footer_navigation #collapsegetintouch .subscribe_form button.btn.btn-primary {
-        background-color: #EC1C24 !important;
+        background-color: #8D0DFE !important;
         width: 100px;
         border-radius: 50px;
-        border-color: #EC1C24;
+        border-color: #8D0DFE;
     }
 
     .footer_navigation #collapsegetintouch .subscribe_form button.btn.btn-primary:hover {
@@ -3929,7 +3929,7 @@
     }
 
     .blog_banner_slider .slick-dots li.slick-active button:before {
-        color: #EC1C24;
+        color: #8D0DFE;
     }
 
     .blog_banner_slider .slider.responsive.slick-initialized button.slick-prev {
@@ -5433,11 +5433,11 @@
     }
 
     .menubar-strip ul li.active a {
-        color: #EC1C24;
+        color: #8D0DFE;
     }
 
     .menubar-strip ul li:hover a {
-        color: #EC1C24;
+        color: #8D0DFE;
     }
 
     .menubar-strip ul li figure {
@@ -5461,11 +5461,11 @@
     }
 
     .menubar-strip ul li:hover figure {
-        background-color: #EC1C24;
+        background-color: #8D0DFE;
     }
 
     .menubar-strip ul li.active figure {
-        background-color: #EC1C24;
+        background-color: #8D0DFE;
     }
 
     .menubar-strip ul li.active figure img {
