@@ -255,8 +255,8 @@ export const getAllSpecializations = () => {
   return axios.get(`${API_BASE_URL}/admin/specializations`).then(res => res.data);
 };
 
-export const getSpecializationById = (id) => {
-  return axios.get(`${API_BASE_URL}/admin/specialization/${id}`).then(res => res.data);
+export const getSpecializationById = (url) => {
+  return axios.get(`${API_BASE_URL}/admin/specialization/${url}`).then(res => res.data);
 };
 
 export const updateSpecialization = (id, data) => {

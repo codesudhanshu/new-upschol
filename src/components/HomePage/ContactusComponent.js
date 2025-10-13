@@ -50,7 +50,7 @@ export default function ContactSection() {
           icon: 'error',
           title: 'Error!',
           text: result.message || 'Something went wrong!',
-          confirmButtonColor: '#dc3545'
+          confirmButtonColor: '#8D0DFE'
         });
       }
     } catch (error) {
@@ -58,7 +58,7 @@ export default function ContactSection() {
         icon: 'error',
         title: 'Error!',
         text: 'Network error! Please try again.',
-        confirmButtonColor: '#dc3545'
+        confirmButtonColor: '#8D0DFE'
       });
     } finally {
       setLoading(false);
@@ -199,7 +199,7 @@ export default function ContactSection() {
         }
 
         .btn-red {
-          background-color: #dc3545;
+          background-color: #8D0DFE;
           color: white;
           border: none;
           padding: 10px 20px;

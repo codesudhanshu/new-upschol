@@ -173,7 +173,7 @@ const IndustryExpertForm = () => {
           </div>
 
           {/* Highest Degree Field */}
-          <div>
+          {/* <div>
             <label className="flex items-center text-sm font-medium text-gray-800 mb-2">
               <Award className="w-4 h-4 mr-2 text-indigo-600" />
               Highest Degree*
@@ -188,7 +188,7 @@ const IndustryExpertForm = () => {
               required
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 text-gray-900 placeholder-gray-400 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
-          </div>
+          </div> */}
 
           {/* Expert In Field */}
           <div>

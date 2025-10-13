@@ -159,7 +159,7 @@ export default function JobListings() {
       {/* Career Banner */}
       <div className="career-banner">
         <div className="container">
-          <h1>Celebrating 8 Years of Collegesathi</h1>
+          <h1>Celebrating 8 Years of Upschol</h1>
           <img 
             alt="" 
             src="https://onlinevidhya.com/live/images/career.png"

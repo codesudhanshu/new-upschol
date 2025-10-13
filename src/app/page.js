@@ -23,6 +23,7 @@ import 'swiper/css/pagination';
 import Image from "next/image";
 import Layout from "@/components/Candidatepagelayout";
 import GetAllIndustryExpertsTesti from "@/components/IndustyExpert/IndustryExprtTestimonial";
+import SpecializationsSection from "@/components/HomePage/AllSpecialization";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('Search1');
@@ -286,6 +287,7 @@ export default function Home() {
 
 
       <AllTestimonial /> */}
+      <SpecializationsSection />
       <ContactSection /> 
 
     </div>

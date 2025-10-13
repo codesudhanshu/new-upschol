@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+
 import { getAllIndustryExpertData } from "@/app/api/candidate/HomePage";
 
 export default function AllIndustryExpert() {
@@ -40,15 +41,14 @@ export default function AllIndustryExpert() {
       <section className="teachers-section py-5">
         <div className="container">
           <div className="header text-center mx-auto">
-            <h2 className="heading">Meet some of our <strong style={{color: "white"}}>Program Experts</strong></h2>
+            <h2 className="heading">Meet some of our <strong style={{color: "white"}}>Counselors</strong></h2>
           </div>
           <div className="body mt-4">
             <Swiper
-              modules={[Navigation, Pagination]}
+              modules={[Navigation]}
               spaceBetween={30}
               slidesPerView={1}
               navigation
-              pagination={{ clickable: true }}
               breakpoints={{
                 640: {
                   slidesPerView: 1,
@@ -84,7 +84,7 @@ export default function AllIndustryExpert() {
                         <small className="pe-3">{expert.designation}</small>
                       </div>
                       <p className="mb-3 mt-2">
-                        {expert.highestDegree}, {expert.experience}+ Years of Expertise
+                        {expert.highestDegree} {expert.experience}+ Years of Expertise
                       </p>
                       <button 
                         // onClick={() => openPopup(expert)}
@@ -185,6 +185,59 @@ export default function AllIndustryExpert() {
           </div>
         </div>
       )}
+      <style jsx global>{`
+        .swiper-button-prev,
+        .swiper-button-next {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 40px;
+          height: 40px;
+          background: #8D0DFE;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          z-index: 10;
+          transition: all 0.3s ease;
+          color: white;
+        }
+        
+        .swiper-button-prev:hover,
+        .swiper-button-next:hover {
+          background: #8D0DFE;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .swiper-button-prev::after,
+        .swiper-button-next::after {
+          content: '';
+          width: 10px;
+          height: 10px;
+          border-top: 2px solid white;
+          border-right: 2px solid white;
+        }
+        
+        .swiper-button-prev {
+          left: 10px;
+        }
+        
+        .swiper-button-prev::after {
+          transform: rotate(-135deg);
+          margin-left: 3px;
+        }
+        
+        .swiper-button-next {
+          right: 10px;
+        }
+        
+        .swiper-button-next::after {
+          transform: rotate(45deg);
+          margin-right: 3px;
+        }
+      `}</style>
     </>
   );
 }

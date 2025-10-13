@@ -74,7 +74,7 @@ export default function GetAllIndustryExpertsTesti() {
 
   return (
     <>
-      <section className="industry-experts my-3">
+      <section className="industry-experts pb-10">
         <div className="container">
           <div className="text-center">
             <h1 className="text-center heading">Insights from the <strong>Industry experts</strong></h1>

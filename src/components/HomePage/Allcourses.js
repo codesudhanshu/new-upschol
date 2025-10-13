@@ -32,7 +32,7 @@ const Allcourses = () => {
 
   const handleCourseClick = (course) => {
     console.log('Redirecting to university page for course:', course.courseName);
-    window.location.href = 'https://www.collegesathi.com/university-page';
+    window.location.href = '/university-page';
   };
 
   const getBadgeText = (categoryName) => {
@@ -68,7 +68,7 @@ const Allcourses = () => {
                   key={category._id} 
                   className="nav-item" 
                   role="presentation" 
-                  style={{ borderRadius: '7px', border: '2px solid #14081E' }}
+                  style={{ borderRadius: '7px', border: '2px solid #8D0DFE' }}
                 >
                   <button
                     className={`nav-link ${isActive ? 'active' : ''}`}

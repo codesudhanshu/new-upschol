@@ -4593,7 +4593,7 @@ only screen and (min-resolution:2dppx) {
     --black: #000;
     --navi: #8D0DFE;
     --gray: #808080;
-    --primary: #14081E;
+    --primary: #8D0DFE;
     --ligh-black: #000000BF
 }
 
@@ -5128,7 +5128,7 @@ footer ul .nav-link {
 .latest-articles .swiper-button-prev:after,
 .quick-tips .swiper-button-prev:after,
 .questions .swiper-button-prev:after {
-    content: '<'
+ 
 }
 
 .leading-universities .swiper-button-next:after,
@@ -5138,7 +5138,7 @@ footer ul .nav-link {
 .latest-articles .swiper-button-next:after,
 .quick-tips .swiper-button-next:after,
 .questions .swiper-button-next:after {
-    content: '>'
+
 }
 
 .leading-universities .swiper-button-next,

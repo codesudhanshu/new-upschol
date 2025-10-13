@@ -54,14 +54,14 @@ export default function AllUniversity() {
 
   return (
     <section className="py-12">
-      <div className="max-w-6xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         
         {/* Title */}
     <div className="d-flex justify-content-between align-items-center mb-4">
   <h2 className="h1 fw-bold">
-    Discover <span style={{color: "#14081E"}}>Leading Universities</span>
+    Discover <span style={{color: "#8D0DFE"}}>Leading Universities</span>
   </h2>
-  <a href="/universities" className="btn fw-medium" style={{backgroundColor: "#14081E", color: "white"}}>
+  <a href="/universities" className="btn fw-medium" style={{backgroundColor: "#8D0DFE", color: "white"}}>
     View All &gt;
   </a>
 </div>
@@ -98,7 +98,7 @@ export default function AllUniversity() {
                       backgroundPosition: 'center'
                     }}
                   ></div>
-                  <div className="body p-2">
+                  <div className="card-content cards p-0 border-0 c-2">
                     <Link href={`/university/${partner.collegeUrl}`}>
                       <div className="logo-circle">
                         <Image
@@ -124,7 +124,6 @@ export default function AllUniversity() {
           </div>
           
           <div 
-          style={{color: "white"}}
             className="swiper-button-prev"
             tabIndex={0}
             role="button"
@@ -134,7 +133,6 @@ export default function AllUniversity() {
           ></div>
           <div 
             className="swiper-button-next"
-              style={{color: "white"}}
             tabIndex={0}
             role="button"
             aria-label="Next slide"
@@ -149,7 +147,6 @@ export default function AllUniversity() {
         .swiper {
           position: relative;
           overflow: hidden;
-          padding: 20px 50px;
         }
         
         .swiper-wrapper {
@@ -220,7 +217,7 @@ export default function AllUniversity() {
           transform: translateY(-50%);
           width: 40px;
           height: 40px;
-          background: #14081E;
+          background: #8D0DFE;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -234,7 +231,7 @@ export default function AllUniversity() {
         
         .swiper-button-prev:hover,
         .swiper-button-next:hover {
-          background: #14081E;
+          background: #8D0DFE;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         
@@ -243,8 +240,8 @@ export default function AllUniversity() {
           content: '';
           width: 10px;
           height: 10px;
-          border-top: 2px solid #333;
-          border-right: 2px solid #333;
+          border-top: 2px solid white;
+          border-right: 2px solid white;
         }
         
         .swiper-button-prev {

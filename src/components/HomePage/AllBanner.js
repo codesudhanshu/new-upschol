@@ -107,8 +107,8 @@ const QuestionsSection = () => {
                     </SwiperSlide>
                   ))}
                   {/* Navigation Buttons */}
-                  <div className="swiper-button-next"></div>
-                  <div className="swiper-button-prev"></div>
+                  <div className="swiper-button-next" style={{color:"white"}}></div>
+                  <div className="swiper-button-prev" style={{color:"white"}}></div>
                 </Swiper>
               </div>
             ) : (
@@ -152,6 +152,58 @@ const QuestionsSection = () => {
           width: 100%;
           height: auto;
         }
+
+         .swiper-button-prev,
+        .swiper-button-next {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 40px;
+          height: 40px;
+          background: #8D0DFE;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          z-index: 10;
+          transition: all 0.3s ease;
+          color: white;
+        }
+        
+        .swiper-button-prev:hover,
+        .swiper-button-next:hover {
+          background: #8D0DFE;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .swiper-button-prev::after,
+        .swiper-button-next::after {
+          content: '';
+          width: 10px;
+          height: 10px;
+          border-top: 2px solid white;
+          border-right: 2px solid white;
+        }
+        
+        .swiper-button-prev {
+          left: 10px;
+        }
+        
+        .swiper-button-prev::after {
+          transform: rotate(-135deg);
+          margin-left: 3px;
+        }
+        
+        .swiper-button-next {
+          right: 10px;
+        }
+        
+        .swiper-button-next::after {
+          transform: rotate(45deg);
+          margin-right: 3px;
+        }
         
         @media (max-width: 500px) {
           .my-sm-2 {
@@ -164,4 +216,4 @@ const QuestionsSection = () => {
   );
 };
 
-export default QuestionsSection;
+export default QuestionsSection;  

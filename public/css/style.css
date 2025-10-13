@@ -8746,14 +8746,14 @@ figure.placement-support_logo {
 }
 .career-banner{
     padding: 50px 0 30px;
-    background-color: #fff0da;
+    background-color: #8D0DFE;
     text-align: center;
 }
 .career-banner h1{
     font-size: 40px;
     font-weight: 700;
     padding-bottom: 14px;
-    color: #1f1f1f;
+    color: white;
     margin-bottom: 30px;
 }
 .scholarship-banner{
@@ -9254,3 +9254,5 @@ figure.placement-support_logo {
 a {
     text-decoration: none !important;
 }
+
+
