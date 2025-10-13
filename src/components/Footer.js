@@ -119,6 +119,9 @@ const UpScholFooter = () => {
                         <li className="nav-item">
                           <Link href="/about-us" className="nav-link ps-0 pt-0">About Us</Link>
                         </li>
+                           <li className="nav-item">
+                          <Link href="/vision-and-mission" className="nav-link ps-0 pt-0">Vision and Mission</Link>
+                        </li>
                         <li className="nav-item">
                           <Link href="/terms-conditions" className="nav-link ps-0 pt-0">Terms & Conditions</Link>
                         </li>
