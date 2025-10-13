@@ -98,7 +98,7 @@ export default function AllUniversity() {
                       backgroundPosition: 'center'
                     }}
                   ></div>
-                  <div className="card-content cards p-0 border-0 c-2">
+                  <div className="body p-2">
                     <Link href={`/university/${partner.collegeUrl}`}>
                       <div className="logo-circle">
                         <Image
