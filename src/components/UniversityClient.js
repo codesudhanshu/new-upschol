@@ -154,7 +154,7 @@ export default function UniversityClient({ collegeUrl }) {
     { id: 'ExaminationPattern', name: 'Examination Pattern', image: 'Examination Pattern' },
     { id: 'EducationLoanEMI', name: 'Financial Aid' , image: 'Education loan- Monthly EMI' },
     { id: 'Campuses', name: 'Campuses', image: 'Similar Universities' },
-    { id: 'PlacementPartners', name: 'Hiring Partners', image: 'Hiring Partners' },
+    { id: 'PlacementPartners', name: 'Hiring Partners', image: 'Hiring partners' },
     { id: 'AdmissionOpen', name: 'Admission Open 2025', image: 'Admission Open 2025' },
     { id: 'FAQ', name: 'FAQ', image: 'FAQ' },
     { id: 'OtherUniversities', name: 'Similar Universities', image: 'Similar Universities' },
