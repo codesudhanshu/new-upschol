@@ -246,10 +246,10 @@ export default function UniversityClient({ collegeUrl }) {
                       <div className="gauge-label">Overall Ratings :</div>
                       <div className="gauge-score">
                         <span id="scoreValue">{university.universityRating || 4}</span>
-                        <span className="gauge-small"> /of 5</span>
+                        <span className="gauge-small"> / 5</span>
                       </div>
-                      <fieldset className="gauge-container-rate">
-                        {renderStars(university.universityRating || 4)}
+                      <fieldset className="gauge-container-rate d-flex">
+                        {renderPeripheralStars(university.universityRating || 4)}
                       </fieldset>
                     </div>
                   </div>
