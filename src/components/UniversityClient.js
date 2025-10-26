@@ -759,6 +759,32 @@ export default function UniversityClient({ collegeUrl }) {
         </div>
       </section>
 
+<style jsx>{`
+    .icon-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .icon-img {
+        /* width: 18px;
+        height: 18px; */
+        object-fit: contain;
+    }
+
+    .list-group-item {
+        display: flex;
+        align-items: center;
+         padding: 10px; 
+         font-size: 14px;
+    }
+         `}
+</style>
 
     </div>
   );
