@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { getUniversityByUrl } from "@/app/api/admin/apiService";
-import { Star, CheckCircle, Download, ChevronRight, ChevronDown } from 'lucide-react';
+import { Star, CheckCircle, Download, ChevronRight, ChevronDown, X } from 'lucide-react';
 import Link from "next/link";
 import '../../public/css/style.css';
 import '../../public/css/responsive.css';
@@ -13,7 +13,9 @@ export default function UniversityClient({ collegeUrl }) {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("About");
   const [expandedFAQ, setExpandedFAQ] = useState(null);
+  const [showFeeModal, setShowFeeModal] = useState(false);
   const sectionRefs = useRef({});
+  const observerRef = useRef(null);
 
   useEffect(() => {
     if (!collegeUrl) return;
@@ -36,83 +38,128 @@ export default function UniversityClient({ collegeUrl }) {
     fetchUniversity();
   }, [collegeUrl]);
 
- const renderStars = (rating) => {
-  const stars = [];
-  const ratings = [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5];
-  
-  ratings.forEach((value, index) => {
-    const id = `rating${10 - index}`;
-    const isHalf = value % 1 !== 0;
-    const isActive = value <= rating;
-    
-    stars.push(
-      <input 
-        key={`input-${id}`}
-        type="radio" 
-        id={id} 
-        name="rating" 
-        value={value} 
-        disabled 
-      />
-    );
-    
-    stars.push(
-      <label 
-        key={`label-${id}`}
-        htmlFor={id}
-        title={`${value} ${value === 1 ? 'star' : 'stars'}`}
-        className={`${isHalf ? 'half' : ''} ${isActive ? 'active-star' : ''}`}
-      ></label>
-    );
-  });
-  
-  return stars;
-};
+  // Intersection Observer for active tab highlighting
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.6
+    };
 
-const renderPeripheralStars = (rating) => {
-  const stars = [];
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 >= 0.5;
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-  
-  // Full stars
-  for (let i = 0; i < fullStars; i++) {
-    stars.push(
-      <img 
-        key={`full-${i}`}
-        src="/images/star-on.png" 
-        alt="Filled Star" 
-        style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
-      />
-    );
-  }
-  
-  // Half star
-  if (hasHalfStar) {
-    stars.push(
-      <img 
-        key="half"
-        src="/images/star-on.png" // You might need a half-star image
-        alt="Half Star" 
-        style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
-      />
-    );
-  }
-  
-  // Empty stars
-  for (let i = 0; i < emptyStars; i++) {
-    stars.push(
-      <img 
-        key={`empty-${i}`}
-        src="/images/star-off.png" 
-        alt="Empty Star" 
-        style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
-      />
-    );
-  }
-  
-  return stars;
-};
+    observerRef.current = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveTab(entry.target.id);
+        }
+      });
+    }, options);
+
+    // Observe all sections
+    Object.values(sectionRefs.current).forEach(section => {
+      if (section) {
+        observerRef.current.observe(section);
+      }
+    });
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [university]);
+
+  const renderStars = (rating) => {
+    const stars = [];
+    const ratings = [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5];
+    
+    ratings.forEach((value, index) => {
+      const id = `rating${10 - index}`;
+      const isHalf = value % 1 !== 0;
+      const isActive = value <= rating;
+      
+      stars.push(
+        <input 
+          key={`input-${id}`}
+          type="radio" 
+          id={id} 
+          name="rating" 
+          value={value} 
+          disabled 
+        />
+      );
+      
+      stars.push(
+        <label 
+          key={`label-${id}`}
+          htmlFor={id}
+          title={`${value} ${value === 1 ? 'star' : 'stars'}`}
+          className={`${isHalf ? 'half' : ''} ${isActive ? 'active-star' : ''}`}
+        ></label>
+      );
+    });
+    
+    return stars;
+  };
+
+  const renderPeripheralStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    // Full stars
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <img 
+          key={`full-${i}`}
+          src="/images/star-on.png" 
+          alt="Filled Star" 
+          style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
+        />
+      );
+    }
+    
+    // Half star
+    if (hasHalfStar) {
+      stars.push(
+        <img 
+          key="half"
+          src="/images/star-on.png"
+          alt="Half Star" 
+          style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
+        />
+      );
+    }
+    
+    // Empty stars
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <img 
+          key={`empty-${i}`}
+          src="/images/star-off.png" 
+          alt="Empty Star" 
+          style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
+        />
+      );
+    }
+    
+    return stars;
+  };
+
+  const sections = [
+    { id: 'About', name: 'About' },
+    { id: 'Approvals', name: 'Approvals' },
+    { id: 'Ranking', name: 'Ranking' },
+    { id: 'Courses', name: 'Courses' },
+    { id: 'ExaminationPattern', name: 'Examination Pattern' },
+    { id: 'EducationLoanEMI', name: 'Financial Aid' },
+    { id: 'Campuses', name: 'Campuses' },
+    { id: 'PlacementPartners', name: 'Hiring Partners' },
+    { id: 'AdmissionOpen', name: 'Admission Open 2025' },
+    { id: 'FAQ', name: 'FAQ' },
+    { id: 'OtherUniversities', name: 'Similar Universities' },
+    { id: 'TestimonialsReviews', name: 'Reviews' }
+  ];
 
   if (loading) {
     return (
@@ -140,21 +187,6 @@ const renderPeripheralStars = (rating) => {
       </div>
     );
   }
-
-  const sections = [
-    { id: 'About', name: 'About' },
-    { id: 'Approvals', name: 'Approvals' },
-    { id: 'Ranking', name: 'Ranking' },
-    { id: 'Courses', name: 'Courses' },
-    { id: 'ExaminationPattern', name: 'Examination Pattern' },
-    { id: 'EducationLoanEMI', name: 'Education loan- Monthly EMI' },
-    { id: 'Campuses', name: 'Similar Universities' },
-    { id: 'PlacementPartners', name: 'Hiring Partners' },
-    { id: 'AdmissionOpen', name: 'Admission Open 2025' },
-    { id: 'FAQ', name: 'FAQ' },
-    { id: 'OtherUniversities', name: 'Similar Universities' },
-    { id: 'TestimonialsReviews', name: 'Reviews' }
-  ];
 
   return (
     <div>
@@ -208,71 +240,71 @@ const renderPeripheralStars = (rating) => {
                 </div>
                 
                 {/* Star Rating Section */}
-           <div className="star_rating" id="gauge-rating" data-rating={university.universityRating || 4}>
-  <div className="gauge-container" style={{ justifySelf: 'anchor-center' }}>
-    <div className="gauge-text">
-      <div className="gauge-label">Overall Ratings :</div>
-      <div className="gauge-score">
-        <span id="scoreValue">{university.universityRating || 4}</span>
-        <span className="gauge-small"> /of 5</span>
-      </div>
-      <fieldset className="gauge-container-rate">
-        {renderStars(university.universityRating || 4)}
-      </fieldset>
-    </div>
-  </div>
-  
-  <div className="col-md-6 col-12 PeripheralRating" style={{ marginLeft: '15%' }}>
-    <div className="d-flex flex-column">
-      <div className="mb-2">
-        <span className="fw-semibold" style={{ float: 'left' }}>Peripheral Rating</span>
-        <span style={{ fontSize: '.875rem', color: '#999', float: 'left', fontWeight: 400 }}>
-          (Out of 5)
-        </span>
-      </div>
+                <div className="star_rating" id="gauge-rating" data-rating={university.universityRating || 4}>
+                  <div className="gauge-container" style={{ justifySelf: 'anchor-center' }}>
+                    <div className="gauge-text">
+                      <div className="gauge-label">Overall Ratings :</div>
+                      <div className="gauge-score">
+                        <span id="scoreValue">{university.universityRating || 4}</span>
+                        <span className="gauge-small"> /of 5</span>
+                      </div>
+                      <fieldset className="gauge-container-rate">
+                        {renderStars(university.universityRating || 4)}
+                      </fieldset>
+                    </div>
+                  </div>
+                  
+                  <div className="col-md-6 col-12 PeripheralRating" style={{ marginLeft: '15%' }}>
+                    <div className="d-flex flex-column">
+                      <div className="mb-2">
+                        <span className="fw-semibold" style={{ float: 'left' }}>Peripheral Rating</span>
+                        <span style={{ fontSize: '.875rem', color: '#999', float: 'left', fontWeight: 400 }}>
+                          (Out of 5)
+                        </span>
+                      </div>
 
-      <div className="d-flex justify-content-between align-items-center">
-        <div style={{ fontWeight: 400, fontSize: '13px' }}>Average Ratings</div>
-        <div className="d-flex align-items-center">
-          <span className="me-3 fw-bold">4.0</span>
-          <div className="d-flex">
-            {renderPeripheralStars(4.0)}
-          </div>
-        </div>
-      </div>
-      
-      <div className="d-flex justify-content-between align-items-center">
-        <div style={{ fontWeight: 400, fontSize: '13px' }}>Digital Infrastructure</div>
-        <div className="d-flex align-items-center">
-          <span className="me-3 fw-bold">4.1</span>
-          <div className="d-flex">
-            {renderPeripheralStars(4.1)}
-          </div>
-        </div>
-      </div>
-      
-      <div className="d-flex justify-content-between align-items-center">
-        <div style={{ fontWeight: 400, fontSize: '13px' }}>Curriculum</div>
-        <div className="d-flex align-items-center">
-          <span className="me-3 fw-bold">3.9</span>
-          <div className="d-flex">
-            {renderPeripheralStars(3.9)}
-          </div>
-        </div>
-      </div>
-      
-      <div className="d-flex justify-content-between align-items-center">
-        <div style={{ fontWeight: 400, fontSize: '13px' }}>Value For Money</div>
-        <div className="d-flex align-items-center">
-          <span className="me-3 fw-bold">3.9</span>
-          <div className="d-flex">
-            {renderPeripheralStars(3.9)}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Average Ratings</div>
+                        <div className="d-flex align-items-center">
+                          <span className="me-3 fw-bold">4.0</span>
+                          <div className="d-flex">
+                            {renderPeripheralStars(4.0)}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Digital Infrastructure</div>
+                        <div className="d-flex align-items-center">
+                          <span className="me-3 fw-bold">4.1</span>
+                          <div className="d-flex">
+                            {renderPeripheralStars(4.1)}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Curriculum</div>
+                        <div className="d-flex align-items-center">
+                          <span className="me-3 fw-bold">3.9</span>
+                          <div className="d-flex">
+                            {renderPeripheralStars(3.9)}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Value For Money</div>
+                        <div className="d-flex align-items-center">
+                          <span className="me-3 fw-bold">3.9</span>
+                          <div className="d-flex">
+                            {renderPeripheralStars(3.9)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 
                 <div className="btn-group">
                   <button className="btn-primary expbtn">
@@ -301,7 +333,7 @@ const renderPeripheralStars = (rating) => {
                     </figure>
                     <div className="small_logo">
                       <figure className="university_logo_explore_program">
-                        <img src={university.logo || "https://via.placeholder.com/64"} alt="image" />
+                        <img src={university.logo || "https://via.placeholder.com/64"} alt="University Logo" />
                       </figure>
                     </div>
                     {university.nirfRanking && (
@@ -321,6 +353,87 @@ const renderPeripheralStars = (rating) => {
           </div>
         </div>
       </section>
+
+      {/* Fee Details Modal */}
+      {showFeeModal && (
+        <div className="modal show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} id="enquiryModal">
+          <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className="modal-content border-0 rounded-3 overflow-hidden">
+              <div className="modal-body p-0">
+                <div className="row g-0">
+                  {/* Left Section */}
+                  <div className="col-md-5 d-flex justify-content-center align-items-center p-3" style={{ background: 'linear-gradient(135deg, #eb7676ff, #ffcccc)' }}>
+                    <img src="/images/Find Programs Form side Image 2-100.jpeg" className="img-fluid" alt="Promo" style={{ maxHeight: '400px' }} />
+                  </div>
+
+                  {/* Right Section */}
+                  <div className="col-md-7 p-4" style={{ background: 'linear-gradient(90deg, #fff5f5, #ffecec)' }}>
+                    {/* Close Button */}
+                    <button 
+                      className="btn-close position-absolute top-0 end-0 m-3" 
+                      onClick={() => setShowFeeModal(false)}
+                      style={{ zIndex: 10 }}
+                    ></button>
+
+                    {/* Logos Slider */}
+                    <div className="logo-slider mb-4 overflow-hidden">
+                      <div className="d-flex align-items-center logo-track">
+                    
+                        <img src={university.logo} alt="University Logo" className="mx-3" style={{ height: '40px' }} />
+                      </div>
+                    </div>
+
+                    <h4 className="fw-bold mb-3">Enquire Now</h4>
+
+                    <form id="FeesForm"  method="POST">
+                      <input type="hidden" id="selectedCourseId" name="course_id" value="15" />
+
+                      <div className="row">
+                        <div className="col-md-6 mb-3">
+                          <input type="text" className="form-control rounded-pill" id="fullName" name="fullName" placeholder="Your Name" required />
+                          <div id="error" style={{ color: 'red', fontSize: '14px' }}></div>
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <input type="email" className="form-control rounded-pill" id="email" name="email" placeholder="Email Address" required />
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <div className="col-md-6 mb-3">
+                          <input type="tel" id="mobileNumber" className="form-control rounded-pill mobile02" name="mobileNumber" maxLength="10" placeholder="Mobile Number" required />
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <div className="form_col_12 otpAction">
+                            <input type="text" id="txtotpmobile02" maxLength="6" className="form-control rounded-pill txtotp txtotpmobile02" placeholder="OTP" required />
+
+                            <div className="otpActionBtn mt-2 d-flex gap-2 feefrm">
+                              <input id="enquiryBtnVerifymobile02" className="btn btn-outline-danger btn-sm" type="button" value="Verify" />
+                              <input id="enquiryBtnResendmobile02" className="btn btn-outline-secondary btn-sm" type="button" value="Resend" />
+                              <input id="enquiryBtnVerifySuccessmobile02" className="btn btn-success btn-sm" type="button" value="Verified" style={{ display: 'none' }} />
+                            </div>
+
+                            <span className="error help-inline otp_error_div help-block">
+                              <small className="help-block" data-fv-validator="notEmpty" data-fv-for="otp_veryfy" data-fv-result="NOT_VALIDATED" style={{ display: 'none' }}>
+                                Please enter OTP.
+                              </small>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-group text-center">
+                        <button type="submit" className="btn btn-danger rounded-pill px-5">
+                          Submit
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <section className="programs_details_section university_details_section">
@@ -391,6 +504,15 @@ const renderPeripheralStars = (rating) => {
                           </tbody>
                         </table>
                       </div>
+                      <div className="text-center mt-3">
+                        <button 
+                          className="btn btn-primary"
+                          onClick={() => setShowFeeModal(true)}
+                          style={{backgroundColor:"#8D0DFE"}}
+                        >
+                          Click here to view fee details
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </section>
@@ -459,7 +581,7 @@ const renderPeripheralStars = (rating) => {
                               <div className="course_details eq_course_details card">
                                 <div className="course-img-wrapper">
                                   <img 
-                                    src={course.image || "https://via.placeholder.com/300x200"}
+                                    src={university.universityHomeImage || "https://via.placeholder.com/300x200"}
                                     alt={course.courseName}
                                     width="300" 
                                     height="200"
@@ -608,6 +730,22 @@ const renderPeripheralStars = (rating) => {
                   )}
                 </section>
 
+                {/* Similar Universities Section */}
+                <section id="OtherUniversities" className="mt-5" ref={el => sectionRefs.current['OtherUniversities'] = el}>
+                  <h2 className="heading_program_details">Similar Universities</h2>
+                  <div className="prose max-w-none text-gray-700">
+                    <p>Content for similar universities will be displayed here.</p>
+                  </div>
+                </section>
+
+                {/* Reviews Section */}
+                <section id="TestimonialsReviews" className="mt-5" ref={el => sectionRefs.current['TestimonialsReviews'] = el}>
+                  <h2 className="heading_program_details">Reviews</h2>
+                  <div className="prose max-w-none text-gray-700">
+                    <p>Student reviews and testimonials will be displayed here.</p>
+                  </div>
+                </section>
+
                 {/* Apply Now CTA */}
                 <section className="bg-[#8D0DFE] text-white p-8 rounded-lg mt-5">
                   <h2 className="text-2xl font-bold mb-4">Ready to Apply to {university.universityName}?</h2>
@@ -620,124 +758,8 @@ const renderPeripheralStars = (rating) => {
           </div>
         </div>
       </section>
-      <style jsx>
-        {`
-        .images-section{
-          max-width: 15%;
-        }
-        
-          .nirf-content {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 10;
-}
 
-.nirf-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 4px 8px;
-    /* height: 48px;
-    width: 80px;  */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
 
-.nirf-icon {
-    height: 100%;
-    width: auto;
-    max-height: 100%;
-}
-
-.nirf-rank {
-    font-weight: bold;
-    font-size: 14px;
-    color: #000;
-    margin-left: 5px;
-}
-@media (max-width: 768px) {
-    .nirf-box {
-        height: 40px;
-        width: 107px;
-    }
-
-    .nirf-rank {
-        font-size: 12px;
-    }
-}
-
-    .btn-group {
-        /* padding: 27px 0px; */
-        display: flex;
-        gap: 15px;
-        align-items: center;
-    }
-
-    /* Primary Button */
-    .expbtn {
-        /* background: linear-gradient(45deg, #007bff, #0056b3);
-            color: white; */
-        padding: 12px 20px;
-        border-radius: 30px;
-        border: none;
-        /* font-size: 16px; */
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.3s ease-in-out;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .expbtn:hover {
-        background: linear-gradient(45deg, #0056b3, #003d80);
-        box-shadow: 0px 6px 14px rgba(0, 123, 255, 0.5);
-    }
-
-    /* Secondary Button */
-    .exprtbtn {
-        /* background: transparent;
-            color: #007bff; */
-        padding: 12px 20px;
-        border-radius: 30px;
-        border: none;
-        /* font-size: 16px; */
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.3s ease-in-out;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .exprtbtn:hover {
-        background: #8D0DFE;
-        color: white;
-    }
-
-    @media (max-width: 480px) {
-        .btn-group {
-            justify-content: center;
-            /* Centers buttons horizontally */
-            align-items: center;
-            gap: 25px;
-            padding: 20px 0px;
-        }
-
-        .btn-group button {
-            height: 45px;
-            /* Slightly smaller height for mobile */
-            font-size: 14px;
-            /* Adjust font size */
-            padding: 10px 16px;
-        }
-    }
-        `}
-      </style>
     </div>
   );
 }

@@ -102,7 +102,7 @@ export default function GetAllIndustryExpertsTesti() {
                     >
                       <div className="card d-flex align-items-center justify-content-center ps-5">
                         <div className="row d-flex align-items-center flex-reverse-rap">
-                          <div className="col-md-6">
+                          <div className="col-md-8">
                             <div className="content">
                               <p>
                                 <strong>{expert.testimonials}</strong>
@@ -137,7 +137,7 @@ export default function GetAllIndustryExpertsTesti() {
                               </div>
                             </div>
                           </div>
-                          <div className="col-md-6 text-center">
+                          <div className="col-md-4 text-center">
                             <img 
                               src={expert.image} 
                               alt={expert.name} 
@@ -152,7 +152,7 @@ export default function GetAllIndustryExpertsTesti() {
                 })}
               </div>
               
-              <div className="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+              <div className="swiper-pagination d-none swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
                 {experts.map((_, index) => (
                   <span 
                     key={index} 

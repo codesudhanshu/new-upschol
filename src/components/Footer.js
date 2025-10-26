@@ -123,7 +123,7 @@ const UpScholFooter = () => {
                           <Link href="/vision-and-mission" className="nav-link ps-0 pt-0">Vision and Mission</Link>
                         </li>
                         <li className="nav-item">
-                          <Link href="/terms-conditions" className="nav-link ps-0 pt-0">Terms & Conditions</Link>
+                          <Link href="/terms-and-condition" className="nav-link ps-0 pt-0">Terms & Conditions</Link>
                         </li>
                         <li className="nav-item">
                           <Link href="/privacy-policy" className="nav-link ps-0 pt-0">Privacy Policy</Link>
@@ -237,7 +237,7 @@ const UpScholFooter = () => {
               <Link href="#" className="nav-link px-0 me-2">Disclaimer</Link>
             </li>
             <li className="nav-item">
-              <Link href="/terms-conditions" className="nav-link px-0 me-2">/ Terms & Conditions</Link>
+              <Link href="/terms-and-condition" className="nav-link px-0 me-2">/ Terms & Conditions</Link>
             </li>
             <li className="nav-item">
               <Link href="/privacy-policy" className="nav-link px-0 me-2">/ Our Policy</Link>

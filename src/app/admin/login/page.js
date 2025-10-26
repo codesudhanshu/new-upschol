@@ -26,7 +26,8 @@ export default function AdminLogin() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('https://upschol.onrender.com/api/auth/login', {
+       const res = await fetch('https://upschol.onrender.com/api/auth/login', {
+      // const res = await fetch('http://localhost:5022/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

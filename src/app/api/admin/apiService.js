@@ -15,6 +15,15 @@ export const getBlogById = (id) => {
   return axios.get(`${API_BASE_URL}/admin/blog/${id}`).then(res => res.data);
 };
 
+export const getTrendingPosts = (id) => {
+  return axios.get(`${API_BASE_URL}/admin/trending-blogs/${id}`).then(res => res.data);
+};
+
+export const getTrendingPostsAll = () => {
+  return axios.get(`${API_BASE_URL}/admin/trending-blogs-data`).then(res => res.data);
+};
+
+
 export const updateBlog = (id, data) => {
   return axios.put(`${API_BASE_URL}/admin/blog/${id}`, data).then(res => res.data);
 };
@@ -253,6 +262,10 @@ export const createSpecialization = (data) => {
 
 export const getAllSpecializations = () => {
   return axios.get(`${API_BASE_URL}/admin/specializations`).then(res => res.data);
+};
+
+export const getAllSpecializationshome = () => {
+  return axios.get(`${API_BASE_URL}/admin/specializations-home`).then(res => res.data);
 };
 
 export const getSpecializationById = (url) => {

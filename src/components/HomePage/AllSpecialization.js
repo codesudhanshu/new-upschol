@@ -1,5 +1,5 @@
 'use client';
-import { getAllSpecializations } from '@/app/api/admin/apiService';
+import { getAllSpecializationshome } from '@/app/api/admin/apiService';
 import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -16,7 +16,7 @@ const SpecializationsSection = () => {
   useEffect(() => {
     const fetchSpecializations = async () => {
       try {
-        const specializationsData = await getAllSpecializations();
+        const specializationsData = await getAllSpecializationshome();
         setSpecializations(specializationsData?.result?.specializations || []);
       } catch (error) {
         console.error('Error fetching specializations:', error);

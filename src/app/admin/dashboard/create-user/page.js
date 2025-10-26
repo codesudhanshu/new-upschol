@@ -37,7 +37,8 @@ export default function CreateUser() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5022/api/auth/create-user', {
+       const res = await fetch('https://upschol.onrender.com/api/auth/login', {
+      // const res = await fetch('http://localhost:5022/api/auth/create-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

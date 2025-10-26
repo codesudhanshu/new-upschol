@@ -2,7 +2,7 @@
 import { getAllFAQData } from '@/app/api/candidate/HomePage';
 import { useState, useEffect } from 'react';
 
-export default function AllFAQ() {
+export default function AllFAQHome() {
   const [faqs, setFaqs] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -27,35 +27,35 @@ export default function AllFAQ() {
   if (faqs.length === 0) return <div className="text-center py-8">Loading FAQs...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold  text-transparent bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text mb-8">Frequently Asked Questions</h1>
-      
-      <div className="space-y-4">
-        {faqs.map((faq, index) => (
-          <div 
-            key={faq._id} 
-            className="border border-gray-200 rounded-lg overflow-hidden"
-          >
-            <button
-              className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors"
-              onClick={() => toggleFAQ(index)}
-            >
-              <h2 className="text-lg font-medium flex justify-between items-center">
-                {faq.title}
-                <span className="text-xl">
-                  {activeIndex === index ? '−' : '+'}
-                </span>
-              </h2>
-            </button>
-            
-            {activeIndex === index && (
-              <div className="px-6 py-4 bg-white">
-                <p className="text-gray-700">{faq.description}</p>
+    <section className="faq-section my-5">
+      <div className="container">
+        <div className="header">
+          <h2>FAQ: Get the Information You Need</h2>
+        </div>
+        <div className="body mt-4">
+          <div className="accordion" id="accordionExample">
+            {faqs.map((faq, index) => (
+              <div className="accordion-item" key={faq._id}>
+                <h2 className="accordion-header">
+                  <button 
+                    className={`accordion-button faq-acc ${activeIndex === index ? '' : 'collapsed'}`} 
+                    type="button"
+                    onClick={() => toggleFAQ(index)}
+                  >
+                    <span>⭐</span>
+                    <b className="ms-5">{faq.title}</b>
+                  </button>
+                </h2>
+                <div className={`accordion-collapse faq-collapse ${activeIndex === index ? 'visible' : 'collapse'}`}>
+                  <div className="accordion-body">
+                    <strong>{faq.description}</strong>
+                  </div>
+                </div>
               </div>
-            )}
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -8,7 +8,7 @@ export default function FAQPage() {
   const [faqs, setFaqs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [openIndex, setOpenIndex] = useState(0); // First item open by default
+  const [openIndex, setOpenIndex] = useState(0); 
 
   useEffect(() => {
     const fetchFaqs = async () => {

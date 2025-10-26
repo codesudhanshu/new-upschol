@@ -69,7 +69,7 @@ export default function AboutUs() {
       <section className="relative py-5 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-blue-50 to-white opacity-70"></div>
         <div className="relative max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-semibold mb-6">
+          <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
             <Award className="w-4 h-4 mr-2" />
             Your Pathway to a Recognized Online Degree
           </div>
@@ -129,7 +129,7 @@ export default function AboutUs() {
       <section className="py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
               <BookOpen className="w-4 h-4 mr-2" />
               What We Do
             </div>
@@ -159,7 +159,7 @@ export default function AboutUs() {
       <section className="py-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-purple-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
               <Users className="w-4 h-4 mr-2" />
               Who We Help
             </div>
@@ -205,7 +205,7 @@ export default function AboutUs() {
       {/* CTA Section */}
       <section className="py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-semibold mb-6">
+          <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
             <CheckCircle className="w-4 h-4 mr-2" />
             Ready to Start?
           </div>
@@ -223,12 +223,12 @@ export default function AboutUs() {
                 <CheckCircle className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform duration-300" />
               </span>
             </button>
-            <button className="group flex items-center space-x-2 text-gray-900 font-semibold py-4 px-10 rounded-2xl border-2 border-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300">
+            {/* <button className="group flex items-center space-x-2 text-gray-900 font-semibold py-4 px-10 rounded-2xl border-2 border-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300">
               <span>Watch Our Story</span>
               <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
-            </button>
+            </button> */}
           </div>
 
           <div className="flex flex-wrap justify-center gap-8 text-sm">

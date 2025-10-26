@@ -24,6 +24,8 @@ import Image from "next/image";
 import Layout from "@/components/Candidatepagelayout";
 import GetAllIndustryExpertsTesti from "@/components/IndustyExpert/IndustryExprtTestimonial";
 import SpecializationsSection from "@/components/HomePage/AllSpecialization";
+import AllFAQHome from "@/components/HomePage/AllFAQ";
+import LatestArticles from "@/components/HomePage/LatestArticles";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('Search1');
@@ -287,7 +289,9 @@ export default function Home() {
 
 
       <AllTestimonial /> */}
+      <LatestArticles />
       <SpecializationsSection />
+      <AllFAQHome />
       <ContactSection /> 
 
     </div>
