@@ -112,7 +112,7 @@ const Allcourses = () => {
                           key={course._id}
                           className={`pg-card position-relative ${courseIndex >= 6 ? 'view-more' : ''}`}
                         >
-                          <Link href="https://www.collegesathi.com/university-page">
+                          <Link href="/university-page">
                             <div className="c-header position-relative">
                               <small className="badge c-badge">
                                 {course.duration}

@@ -145,10 +145,10 @@ const UniversityComparison = ({ collegeUrl }) => {
                           style={{ objectFit: 'contain' }}
                         />
                       </a>
-                      <a className="comparison-item-title" target="_blank" href={`https://www.collegesathi.com/university/${university.slug || university.collegeUrl}`}>
+                      <a className="comparison-item-title" target="_blank" href={`/university/${university.slug || university.collegeUrl}`}>
                         {university.universityName}
                       </a>
-                      <a className="btn btn-pill btn-outline-primary btn-sm" target="_blank" href={`https://www.collegesathi.com/university/${university.slug || university.collegeUrl}`} type="button" data-toggle="toast" data-target="#cart-toast">
+                      <a className="btn btn-pill btn-outline-primary btn-sm" target="_blank" href={`/university/${university.slug || university.collegeUrl}`} type="button" data-toggle="toast" data-target="#cart-toast">
                         Visit University
                       </a>
                     </div>
@@ -401,7 +401,7 @@ const UniversityComparison = ({ collegeUrl }) => {
                       {university.pgCourses && university.pgCourses.length > 0 ? (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                           {university.pgCourses.map((course, index) => (
-                            <a key={index} href={`https://www.collegesathi.com/university/${university.slug || university.collegeUrl}/${course.slug}`} target="_blank">
+                            <a key={index} href={`/university/${university.slug || university.collegeUrl}/${course.slug}`} target="_blank">
                               <span className="text-dark d-block" style={{ cursor: 'pointer' }}>
                                 • <u>{course.name}</u>
                               </span>
@@ -424,7 +424,7 @@ const UniversityComparison = ({ collegeUrl }) => {
                       {university.ugCourses && university.ugCourses.length > 0 ? (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                           {university.ugCourses.map((course, index) => (
-                            <a key={index} href={`https://www.collegesathi.com/university/${university.slug || university.collegeUrl}/${course.slug}`} target="_blank">
+                            <a key={index} href={`/university/${university.slug || university.collegeUrl}/${course.slug}`} target="_blank">
                               <span className="text-dark d-block" style={{ cursor: 'pointer' }}>
                                 • <u>{course.name}</u>
                               </span>
@@ -468,7 +468,7 @@ const UniversityComparison = ({ collegeUrl }) => {
                       {university.certifications && university.certifications.length > 0 ? (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                           {university.certifications.map((cert, index) => (
-                            <a key={index} href={`https://www.collegesathi.com/university/${university.slug || university.collegeUrl}/${cert.slug}`} target="_blank">
+                            <a key={index} href={`/university/${university.slug || university.collegeUrl}/${cert.slug}`} target="_blank">
                               <span className="text-dark d-block" style={{ cursor: 'pointer' }}>
                                 • <u>{cert.name}</u>
                               </span>

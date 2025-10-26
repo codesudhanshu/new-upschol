@@ -147,18 +147,18 @@ export default function UniversityClient({ collegeUrl }) {
   };
 
   const sections = [
-    { id: 'About', name: 'About' },
-    { id: 'Approvals', name: 'Approvals' },
-    { id: 'Ranking', name: 'Ranking' },
-    { id: 'Courses', name: 'Courses' },
-    { id: 'ExaminationPattern', name: 'Examination Pattern' },
-    { id: 'EducationLoanEMI', name: 'Financial Aid' },
-    { id: 'Campuses', name: 'Campuses' },
-    { id: 'PlacementPartners', name: 'Hiring Partners' },
-    { id: 'AdmissionOpen', name: 'Admission Open 2025' },
-    { id: 'FAQ', name: 'FAQ' },
-    { id: 'OtherUniversities', name: 'Similar Universities' },
-    { id: 'TestimonialsReviews', name: 'Reviews' }
+    { id: 'About', name: 'About', image: 'About' },
+    { id: 'Approvals', name: 'Approvals',image: 'Approvals' },
+    { id: 'Ranking', name: 'Ranking', image: 'Ranking' },
+    { id: 'Courses', name: 'Courses',  image: 'Courses' },
+    { id: 'ExaminationPattern', name: 'Examination Pattern', image: 'Examination Pattern' },
+    { id: 'EducationLoanEMI', name: 'Financial Aid' , image: 'Education loan- Monthly EMI' },
+    { id: 'Campuses', name: 'Campuses', image: 'Similar Universities' },
+    { id: 'PlacementPartners', name: 'Hiring Partners', image: 'Hiring Partners' },
+    { id: 'AdmissionOpen', name: 'Admission Open 2025', image: 'Admission Open 2025' },
+    { id: 'FAQ', name: 'FAQ', image: 'FAQ' },
+    { id: 'OtherUniversities', name: 'Similar Universities', image: 'Similar Universities' },
+    { id: 'TestimonialsReviews', name: 'Reviews',  image: 'Reviews' }
   ];
 
   if (loading) {
@@ -213,7 +213,7 @@ export default function UniversityClient({ collegeUrl }) {
                       {university.selectedApprovals?.slice(0, 4).map((approval, index) => (
                         <li key={index}>
                           <figure className="flex">
-                            <img src={approval.image} alt={approval.title} className="images-section" />
+                            <img src={approval.image} alt={approval.title} className="images-section" width="57" height="57" />
                           </figure>
                         </li>
                       ))}
@@ -307,12 +307,12 @@ export default function UniversityClient({ collegeUrl }) {
                 </div>
                 
                 <div className="btn-group">
-                  <button className="btn-primary expbtn">
+                  <button className="btn-primary expbtn mr-2">
                     <i className="fa fa-university btn-icon"></i> 
                     <Link href="/expert-advice" style={{color: "white"}}>Apply Now</Link>
                   </button>
                   <Link href="/expert-advice">
-                    <button className="btn-secondary exprtbtn">
+                    <button className="btn-primary expbtn">
                       Talk To Expert <i className="fa fa-comment-dots btn-icon"></i>
                     </button>
                   </Link>
@@ -455,7 +455,7 @@ export default function UniversityClient({ collegeUrl }) {
                         }}
                       >
                         <span className="icon-circle me-2">
-                          <img src={`/images/${section.name}.svg`} alt="icon" className="icon-img" />
+                          <img src={`/images/${section.image}.svg`} alt="icon" className="icon-img" />
                         </span>
                         <span>{section.name}</span>
                       </a>
