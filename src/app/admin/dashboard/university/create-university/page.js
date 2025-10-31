@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   BookOpen, 
   FileText, 
@@ -14,7 +14,7 @@ import {
   Globe,
   ClipboardList,
   HelpCircle,
-  Link,
+  Link as LinkIcon,
   Star,
   Laptop,
   Book,
@@ -24,15 +24,40 @@ import {
   ChevronUp,
   X,
   BarChart2,
-  MessageSquare
+  MessageSquare,
+  ListOrdered,
+  List,
+  AlignRight,
+  AlignCenter,
+  AlignLeft,
+  Underline,
+  Italic,
+  Bold,
+  Image as ImageIcon
 } from 'lucide-react';
-import Swal from 'sweetalert2';
-import { Loader, PageLoader } from '@/utils/Loader';
-import { getAllApprovals, getAllCompanies } from '@/app/api/admin/apiService';
-import {  createuniversity, getAllCourses } from '@/app/api/admin/courseapi';
 
+// Mock Swal and Loader components
+const Swal = {
+  fire: (options) => {
+    alert(`${options.title}\n${options.text}`);
+    return Promise.resolve({ isConfirmed: true });
+  }
+};
+
+const Loader = ({ size = 4, color = "border-white" }) => (
+  <div className={`animate-spin rounded-full h-${size} w-${size} border-b-2 ${color}`}></div>
+);
+
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+  </div>
+);
 
 export default function UniversityCreateForm() {
+  const editorRef = useRef(null);
+  const specializationEditorRefs = useRef({});
+
   // Main form state
   const [formData, setFormData] = useState({
     universityName: '',
@@ -54,6 +79,7 @@ export default function UniversityCreateForm() {
     keyword: '',
     isGlobalCollege: false,
     isLocalCollege: false,
+    isDBA: false,
   });
 
   // Arrays for multiple entries
@@ -85,9 +111,11 @@ export default function UniversityCreateForm() {
   const [approvals, setApprovals] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [specializations, setSpecializations] = useState({});
 
   // UI states
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [expandedSections, setExpandedSections] = useState({
     basicInfo: true,
@@ -109,15 +137,63 @@ export default function UniversityCreateForm() {
       try {
         setIsLoading(true);
         
-        const [approvalsRes, companiesRes, coursesRes] = await Promise.all([
-          getAllApprovals(),
-          getAllCompanies(),
-          getAllCourses()
+        // Mock data - Replace with your actual API calls
+        // const [approvalsRes, companiesRes, coursesRes, departmentRes] = await Promise.all([
+        //   getAllApprovals(),
+        //   getAllCompanies(),
+        //   getAllCourses(),
+        //   departmentList()
+        // ]);
+
+        // Mock data for testing
+        setApprovals([
+          { _id: 'a1', title: 'UGC Approved' },
+          { _id: 'a2', title: 'AICTE Approved' },
+          { _id: 'a3', title: 'NAAC A+ Accredited' }
         ]);
 
-        if (approvalsRes.status) setApprovals(approvalsRes.result.approvals || []);
-        if (companiesRes.status) setCompanies(companiesRes.result.companies || []);
-        if (coursesRes.status) setCourses(coursesRes.result.courses || []);
+        setCompanies([
+          { _id: 'c1', title: 'Google' },
+          { _id: 'c2', title: 'Microsoft' },
+          { _id: 'c3', title: 'Amazon' },
+          { _id: 'c4', title: 'TCS' }
+        ]);
+
+        setCourses([
+          { _id: '1', courseName: 'MBA' },
+          { _id: '2', courseName: 'BBA' },
+          { _id: '3', courseName: 'MCA' },
+          { _id: '4', courseName: 'B.Tech' }
+        ]);
+
+        setDepartment([
+          { _id: 'd1', name: 'Engineering' },
+          { _id: 'd2', name: 'Management' }
+        ]);
+
+        // Mock specializations for each course
+        setSpecializations({
+          '1': [
+            { _id: 's1', name: 'Finance' },
+            { _id: 's2', name: 'Marketing' },
+            { _id: 's3', name: 'HR Management' },
+            { _id: 's4', name: 'Operations' }
+          ],
+          '2': [
+            { _id: 's5', name: 'International Business' },
+            { _id: 's6', name: 'Entrepreneurship' }
+          ],
+          '3': [
+            { _id: 's7', name: 'Artificial Intelligence' },
+            { _id: 's8', name: 'Data Science' },
+            { _id: 's9', name: 'Cloud Computing' }
+          ],
+          '4': [
+            { _id: 's10', name: 'Computer Science' },
+            { _id: 's11', name: 'Mechanical Engineering' },
+            { _id: 's12', name: 'Civil Engineering' }
+          ]
+        });
 
       } catch (error) {
         Swal.fire({
@@ -133,6 +209,33 @@ export default function UniversityCreateForm() {
     
     fetchData();
   }, []);
+
+  // Rich text editor functions
+  const formatText = (command) => {
+    document.execCommand(command, false, null);
+  };
+
+  const changeFontSize = (size) => {
+    document.execCommand('fontSize', false, size);
+  };
+
+  const insertLink = () => {
+    const url = prompt('Enter URL:');
+    if (url) {
+      document.execCommand('createLink', false, url);
+    }
+  };
+
+  const insertImage = () => {
+    const url = prompt('Enter image URL:');
+    if (url) {
+      document.execCommand('insertImage', false, url);
+    }
+  };
+
+  const handleContentChange = (e) => {
+    // Content is automatically updated in the contentEditable div
+  };
 
   // Handle basic input changes
   const handleInputChange = (e) => {
@@ -217,7 +320,9 @@ export default function UniversityCreateForm() {
           annualPrice: '', 
           oneTimePrice: '',
           totalAmount: '',
-          loanAmount: ''
+          loanAmount: '',
+          courseContent: '',
+          selectedSpecializations: []
         }];
       }
     });
@@ -230,6 +335,54 @@ export default function UniversityCreateForm() {
           ? { ...course, [field]: value } 
           : course
       )
+    );
+  };
+
+  // Handle specialization selection
+  const toggleSpecialization = (courseId, specializationId) => {
+    setSelectedCourses(prev =>
+      prev.map(course => {
+        if (course.courseId === courseId) {
+          const selectedSpecs = course.selectedSpecializations || [];
+          if (selectedSpecs.some(s => s.specializationId === specializationId)) {
+            return {
+              ...course,
+              selectedSpecializations: selectedSpecs.filter(s => s.specializationId !== specializationId)
+            };
+          } else {
+            return {
+              ...course,
+              selectedSpecializations: [...selectedSpecs, {
+                specializationId,
+                specializationContent: ''
+              }]
+            };
+          }
+        }
+        return course;
+      })
+    );
+  };
+
+  // Handle specialization content change
+  const handleSpecializationContentChange = (courseId, specializationId) => {
+    const editorKey = `${courseId}-${specializationId}`;
+    const content = specializationEditorRefs.current[editorKey]?.innerHTML || '';
+    
+    setSelectedCourses(prev =>
+      prev.map(course => {
+        if (course.courseId === courseId) {
+          return {
+            ...course,
+            selectedSpecializations: course.selectedSpecializations.map(spec =>
+              spec.specializationId === specializationId
+                ? { ...spec, specializationContent: content }
+                : spec
+            )
+          };
+        }
+        return course;
+      })
     );
   };
 
@@ -380,12 +533,18 @@ export default function UniversityCreateForm() {
       if (universityHomeImage) formDataToSend.append('universityHomeImage', universityHomeImage);
       if (sampleCertificate) formDataToSend.append('sampleCertificate', sampleCertificate);
 
+      // Get main course content
+      const courseContent = editorRef.current?.innerHTML || '';
+
       // Append arrays
       formDataToSend.append('universityFacts', JSON.stringify(universityFacts));
       formDataToSend.append('faqs', JSON.stringify(faqs));
       formDataToSend.append('selectedApprovals', JSON.stringify(selectedApprovals));
       formDataToSend.append('selectedCompanies', JSON.stringify(selectedCompanies));
-      formDataToSend.append('selectedCourses', JSON.stringify(selectedCourses));
+      formDataToSend.append('selectedCourses', JSON.stringify(selectedCourses.map(course => ({
+        ...course,
+        courseContent
+      }))));
       formDataToSend.append('financialOptions', JSON.stringify(financialOptions));
       formDataToSend.append('examinationPatterns', JSON.stringify(examinationPatterns));
       formDataToSend.append('advantages', JSON.stringify(advantages));
@@ -393,30 +552,26 @@ export default function UniversityCreateForm() {
       formDataToSend.append('reviews', JSON.stringify(reviews));
 
       // Submit to API
-      const result = await createuniversity(formDataToSend);
+      // const result = await createuniversity(formDataToSend);
 
-      if (result.status == true) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: result.result.message,
-          confirmButtonColor: '#3b82f6'
-        });
-        // Reset form on success
-        // resetForm();
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error!',
-          text: result.error || 'Failed to add university',
-          confirmButtonColor: '#ef4444'
-        });
-      }
+      // Mock success for demo
+      console.log('Form Data:', Object.fromEntries(formDataToSend));
+      console.log('Selected Courses with Specializations:', selectedCourses);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'University created successfully!',
+        confirmButtonColor: '#3b82f6'
+      });
+      
+      // Uncomment to reset form on success
+      // resetForm();
     } catch (error) {
       Swal.fire({
         icon: 'error',
         title: 'Error!',
-        text: error,
+        text: error.message || 'Failed to create university',
         confirmButtonColor: '#ef4444'
       });
     } finally {
@@ -446,6 +601,7 @@ export default function UniversityCreateForm() {
       keyword: '',
       isGlobalCollege: false,
       isLocalCollege: false,
+      isDBA: false,
     });
     setUniversityFacts([{ fact: '' }]);
     setFaqs([{ question: '', answer: '' }]);
@@ -460,6 +616,7 @@ export default function UniversityCreateForm() {
     setLogo(null);
     setUniversityHomeImage(null);
     setSampleCertificate(null);
+    if (editorRef.current) editorRef.current.innerHTML = '';
   };
 
   if (isLoading) {
@@ -606,7 +763,7 @@ export default function UniversityCreateForm() {
 
                <div>
                 <label className="flex items-center text-sm font-semibold text-gray-800 mb-2">
-                  <Link className="h-4 w-4 mr-2 text-indigo-600" />
+                  <LinkIcon className="h-4 w-4 mr-2 text-indigo-600" />
                   College URL
                 </label>
                 <div className="flex">
@@ -679,6 +836,20 @@ export default function UniversityCreateForm() {
                   />
                   <label htmlFor="isLocalCollege" className="ml-2 block text-sm text-gray-800">
                     Local College
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="isDBA"
+                    name="isDBA"
+                    checked={formData.isDBA}
+                    onChange={handleInputChange}
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="isDBA" className="ml-2 block text-sm text-gray-800">
+                    DBA College
                   </label>
                 </div>
               </div>
@@ -1231,7 +1402,7 @@ export default function UniversityCreateForm() {
           )}
         </div>
         
-        {/* Courses Section */}
+        {/* Courses Section with Specializations */}
         <div className="mb-8 border-b border-gray-200 pb-6">
           <div 
             className="flex justify-between items-center cursor-pointer mb-4"
@@ -1254,78 +1425,374 @@ export default function UniversityCreateForm() {
                 Select Courses and Set Pricing
               </label>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                {courses.map(course => (
-                  <div key={course._id} className="border rounded-lg p-4">
-                    <div className="flex items-center mb-2">
-                      <input
-                        type="checkbox"
-                        id={`course-${course._id}`}
-                        checked={selectedCourses.some(c => c.courseId === course._id)}
-                        onChange={() => toggleCourse(course._id)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor={`course-${course._id}`} className="ml-2 block text-sm font-medium text-gray-800">
-                        {course.courseName}
-                      </label>
-                    </div>
-                    
-                    {selectedCourses.some(c => c.courseId === course._id) && (
-                      <div className="mt-3 space-y-2">
-                        <div>
-                          <label className="block text-xs text-gray-500 mb-1">Semester Price</label>
-                          <input
-                            type="number"
-                            value={selectedCourses.find(c => c.courseId === course._id)?.semesterPrice || ''}
-                            onChange={(e) => handleCoursePriceChange(course._id, 'semesterPrice', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
-                            placeholder="Amount"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-gray-500 mb-1">Annual Price</label>
-                          <input
-                            type="number"
-                            value={selectedCourses.find(c => c.courseId === course._id)?.annualPrice || ''}
-                            onChange={(e) => handleCoursePriceChange(course._id, 'annualPrice', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
-                            placeholder="Amount"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-gray-500 mb-1">One Time Price</label>
-                          <input
-                            type="number"
-                            value={selectedCourses.find(c => c.courseId === course._id)?.oneTimePrice || ''}
-                            onChange={(e) => handleCoursePriceChange(course._id, 'oneTimePrice', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
-                            placeholder="Amount"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-gray-500 mb-1">Total Amount</label>
-                          <input
-                            type="number"
-                            value={selectedCourses.find(c => c.courseId === course._id)?.totalAmount || ''}
-                            onChange={(e) => handleCoursePriceChange(course._id, 'totalAmount', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
-                            placeholder="Total amount"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-gray-500 mb-1">Loan Amount</label>
-                          <input
-                            type="number"
-                            value={selectedCourses.find(c => c.courseId === course._id)?.loanAmount || ''}
-                            onChange={(e) => handleCoursePriceChange(course._id, 'loanAmount', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
-                            placeholder="Loan amount"
-                          />
-                        </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
+                {courses.map(course => {
+                  const selectedCourse = selectedCourses.find(c => c.courseId === course._id);
+                  const isSelected = !!selectedCourse;
+                  
+                  return (
+                    <div key={course._id} className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
+                      <div className="flex items-center mb-3">
+                        <input
+                          type="checkbox"
+                          id={`course-${course._id}`}
+                          checked={isSelected}
+                          onChange={() => toggleCourse(course._id)}
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor={`course-${course._id}`} className="ml-2 block text-sm font-bold text-gray-800">
+                          {course.courseName}
+                        </label>
                       </div>
-                    )}
-                  </div>
-                ))}
+                      
+                      {isSelected && (
+                        <div className="mt-3 space-y-3 border-t pt-3">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs text-gray-600 mb-1">Semester Price</label>
+                              <input
+                                type="number"
+                                value={selectedCourse.semesterPrice || ''}
+                                onChange={(e) => handleCoursePriceChange(course._id, 'semesterPrice', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900"
+                                placeholder="Amount"
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="block text-xs text-gray-600 mb-1">Annual Price</label>
+                              <input
+                                type="number"
+                                value={selectedCourse.annualPrice || ''}
+                                onChange={(e) => handleCoursePriceChange(course._id, 'annualPrice', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900"
+                                placeholder="Amount"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-xs text-gray-600 mb-1">One Time Price</label>
+                              <input
+                                type="number"
+                                value={selectedCourse.oneTimePrice || ''}
+                                onChange={(e) => handleCoursePriceChange(course._id, 'oneTimePrice', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900"
+                                placeholder="Amount"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-xs text-gray-600 mb-1">Total Amount</label>
+                              <input
+                                type="number"
+                                value={selectedCourse.totalAmount || ''}
+                                onChange={(e) => handleCoursePriceChange(course._id, 'totalAmount', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900"
+                                placeholder="Total"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-xs text-gray-600 mb-1">Loan Amount</label>
+                              <input
+                                type="number"
+                                value={selectedCourse.loanAmount || ''}
+                                onChange={(e) => handleCoursePriceChange(course._id, 'loanAmount', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900"
+                                placeholder="Loan"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Specializations Section */}
+                          {specializations[course._id] && specializations[course._id].length > 0 && (
+                            <div className="border-t pt-3 mt-3">
+                              <label className="block text-xs font-semibold text-gray-700 mb-2">
+                                Specializations (Optional)
+                              </label>
+                              <div className="space-y-3">
+                                {specializations[course._id].map(spec => {
+                                  const selectedSpec = selectedCourse.selectedSpecializations?.find(
+                                    s => s.specializationId === spec._id
+                                  );
+                                  const isSpecSelected = !!selectedSpec;
+                                  
+                                  return (
+                                    <div key={spec._id} className="bg-white p-3 rounded border border-gray-200">
+                                      <div className="flex items-center mb-2">
+                                        <input
+                                          type="checkbox"
+                                          id={`spec-${course._id}-${spec._id}`}
+                                          checked={isSpecSelected}
+                                          onChange={() => toggleSpecialization(course._id, spec._id)}
+                                          className="h-3 w-3 text-indigo-600"
+                                        />
+                                        <label 
+                                          htmlFor={`spec-${course._id}-${spec._id}`}
+                                          className="ml-2 text-xs font-medium text-gray-700"
+                                        >
+                                          {spec.name}
+                                        </label>
+                                      </div>
+                                      
+                                      {isSpecSelected && (
+                                        <div className="mt-2">
+                                          <label className="block text-xs text-gray-600 mb-1">
+                                            Specialization Content
+                                          </label>
+                                          
+                                          {/* Mini Toolbar for specialization editor */}
+                                          <div className="border border-gray-200 rounded-t-lg bg-gray-50 p-2 flex flex-wrap gap-1">
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                const editorKey = `${course._id}-${spec._id}`;
+                                                specializationEditorRefs.current[editorKey]?.focus();
+                                                document.execCommand('bold');
+                                              }}
+                                              className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
+                                              title="Bold"
+                                            >
+                                              <Bold className="h-3 w-3" />
+                                            </button>
+                                            
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                const editorKey = `${course._id}-${spec._id}`;
+                                                specializationEditorRefs.current[editorKey]?.focus();
+                                                document.execCommand('italic');
+                                              }}
+                                              className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
+                                              title="Italic"
+                                            >
+                                              <Italic className="h-3 w-3" />
+                                            </button>
+                                            
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                const editorKey = `${course._id}-${spec._id}`;
+                                                specializationEditorRefs.current[editorKey]?.focus();
+                                                document.execCommand('underline');
+                                              }}
+                                              className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
+                                              title="Underline"
+                                            >
+                                              <Underline className="h-3 w-3" />
+                                            </button>
+
+                                            <div className="h-4 w-px bg-gray-200"></div>
+                                            
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                const editorKey = `${course._id}-${spec._id}`;
+                                                specializationEditorRefs.current[editorKey]?.focus();
+                                                document.execCommand('insertUnorderedList');
+                                              }}
+                                              className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
+                                              title="Bullet List"
+                                            >
+                                              <List className="h-3 w-3" />
+                                            </button>
+
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                const editorKey = `${course._id}-${spec._id}`;
+                                                specializationEditorRefs.current[editorKey]?.focus();
+                                                document.execCommand('insertOrderedList');
+                                              }}
+                                              className="p-1 text-indigo-600 hover:bg-indigo-50 rounded"
+                                              title="Numbered List"
+                                            >
+                                              <ListOrdered className="h-3 w-3" />
+                                            </button>
+                                          </div>
+                                          
+                                          {/* Specialization content editor */}
+                                          <div
+                                            ref={(el) => {
+                                              if (el) {
+                                                specializationEditorRefs.current[`${course._id}-${spec._id}`] = el;
+                                              }
+                                            }}
+                                            contentEditable={!isSubmitting}
+                                            onInput={() => handleSpecializationContentChange(course._id, spec._id)}
+                                            className="min-h-32 p-3 border border-t-0 border-gray-200 rounded-b-lg focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white text-gray-900 text-xs"
+                                            style={{
+                                              fontSize: '12px',
+                                              lineHeight: '1.5',
+                                              fontFamily: 'system-ui, sans-serif'
+                                            }}
+                                            suppressContentEditableWarning={true}
+                                          />
+                                          <div className="text-xs text-gray-500 mt-1">
+                                            Write specialization details here...
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Main Course Content Editor */}
+              <div className="border-t pt-6">
+                <label className="block text-sm font-semibold text-gray-800 mb-2">
+                  General Course Content
+                </label>
+                
+                {/* Toolbar */}
+                <div className="border border-gray-200 rounded-t-lg bg-gray-50 p-3 flex flex-wrap gap-2">
+                  <select 
+                    onChange={(e) => changeFontSize(e.target.value)}
+                    className="px-2 py-1 border border-gray-200 rounded text-sm text-gray-900 bg-white"
+                    defaultValue="3"
+                    disabled={isSubmitting}
+                  >
+                    <option value="1">Small</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Normal</option>
+                    <option value="4">Large</option>
+                    <option value="5">Extra Large</option>
+                  </select>
+    
+                  <div className="h-6 w-px bg-gray-200"></div>
+    
+                  <button
+                    type="button"
+                    onClick={() => formatText('bold')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Bold"
+                    disabled={isSubmitting}
+                  >
+                    <Bold className="h-4 w-4" />
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => formatText('italic')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Italic"
+                    disabled={isSubmitting}
+                  >
+                    <Italic className="h-4 w-4" />
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => formatText('underline')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Underline"
+                    disabled={isSubmitting}
+                  >
+                    <Underline className="h-4 w-4" />
+                  </button>
+    
+                  <div className="h-6 w-px bg-gray-200"></div>
+    
+                  <button
+                    type="button"
+                    onClick={() => formatText('justifyLeft')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Align Left"
+                    disabled={isSubmitting}
+                  >
+                    <AlignLeft className="h-4 w-4" />
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => formatText('justifyCenter')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Align Center"
+                    disabled={isSubmitting}
+                  >
+                    <AlignCenter className="h-4 w-4" />
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => formatText('justifyRight')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Align Right"
+                    disabled={isSubmitting}
+                  >
+                    <AlignRight className="h-4 w-4" />
+                  </button>
+    
+                  <div className="h-6 w-px bg-gray-200"></div>
+    
+                  <button
+                    type="button"
+                    onClick={() => formatText('insertUnorderedList')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Bullet List"
+                    disabled={isSubmitting}
+                  >
+                    <List className="h-4 w-4" />
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => formatText('insertOrderedList')}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Numbered List"
+                    disabled={isSubmitting}
+                  >
+                    <ListOrdered className="h-4 w-4" />
+                  </button>
+    
+                  <div className="h-6 w-px bg-gray-200"></div>
+    
+                  <button
+                    type="button"
+                    onClick={insertLink}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Insert Link"
+                    disabled={isSubmitting}
+                  >
+                    <LinkIcon className="h-4 w-4" />
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={insertImage}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                    title="Insert Image"
+                    disabled={isSubmitting}
+                  >
+                    <ImageIcon className="h-4 w-4" />
+                  </button>
+                </div>
+    
+                {/* Main Editor */}
+                <div
+                  ref={editorRef}
+                  contentEditable={!isSubmitting}
+                  onInput={handleContentChange}
+                  className="min-h-96 p-4 border border-t-0 border-gray-200 rounded-b-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-gray-900"
+                  style={{
+                    fontSize: '16px',
+                    lineHeight: '1.6',
+                    fontFamily: 'system-ui, sans-serif',
+                    minHeight: '400px'
+                  }}
+                  suppressContentEditableWarning={true}
+                />
+                <div className="text-sm text-gray-600 mt-1">
+                  Write general course content here...
+                </div>
               </div>
             </div>
           )}
@@ -1576,7 +2043,7 @@ export default function UniversityCreateForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex items-center justify-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
+            className="flex items-center justify-center px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <>
@@ -1593,7 +2060,8 @@ export default function UniversityCreateForm() {
           <button
             type="button"
             onClick={resetForm}
-            className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 transition-colors"
+            disabled={isSubmitting}
+            className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Reset Form
           </button>

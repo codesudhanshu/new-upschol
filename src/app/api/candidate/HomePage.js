@@ -71,39 +71,10 @@ export const getAllcity = (id) => {
 }; 
 
 
-export const freecounsellingadd = (data) => {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/submit-free-counselling`;
+export const LeadsAdd = (data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/send-leads`;
   return axios.post(url, data).then((res) => {
     return res.data;
   }); 
 }; 
 
-
-export const universitypageadd = (data) => {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/univeristy-page`;
-  return axios.post(url, data).then((res) => {
-    return res.data;
-  }); 
-}; 
-
-export const enquirygadd = (data) => {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/enquiry-now`;
-  return axios.post(url, data).then((res) => {
-    return res.data;
-  }); 
-}; 
-
-export const contactusadd = (data) => {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/contact-us`;
-  return axios.post(url, data).then((res) => {
-    return res.data;
-  }); 
-}; 
-
-
-export const homepageadd = (data) => {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/home-page-enquiry`;
-  return axios.post(url, data).then((res) => {
-    return res.data;
-  }); 
-}; 

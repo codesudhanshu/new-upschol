@@ -1,13 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getAllstate, getAllcity } from '../api/candidate/HomePage';
+import { getAllstate, getAllcity, LeadsAdd } from '../api/candidate/HomePage';
 import { getAllCourses, searchUniversities } from "../api/admin/apiService";
 import Layout from "@/components/Candidatepagelayout";
+import Swal from "sweetalert2";
 
 const ScholarshipPage = () => {
   const [formData, setFormData] = useState({
     full_name: "",
-    phone: "",
+    phone_number: "",
     email: "",
     course: "",
     state: "",
@@ -141,7 +142,7 @@ const ScholarshipPage = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     
     const newErrors = {};
@@ -154,8 +155,8 @@ const ScholarshipPage = () => {
       newErrors.email = 'Please enter valid email.';
     }
     
-    if (!formData.phone || formData.phone.length !== 10) {
-      newErrors.phone = 'Please enter valid phone number.';
+    if (!formData.phone_number || formData.phone_number.length !== 10) {
+      newErrors.phone_number = 'Please enter valid phone number.';
     }
     
     if (!formData.course) {
@@ -174,27 +175,70 @@ const ScholarshipPage = () => {
       setErrors(newErrors);
       return;
     }
-
-    console.log("Scholarship form submitted:", formData);
     setLoading(true);
+
+    try {
+
+      // Find state name from statesData
+      const selectedState = statesData.find(state => state._id === formData.state);
+      const stateName = selectedState ? selectedState.state : formData.state;
+
+      // Find city name from citiesData
+      const selectedCity = citiesData.find(city => city.district === formData.city);
+      const cityName = selectedCity ? selectedCity.district : formData.city;
+
+      // Prepare data for API - field names according to your API response
+      const contactData = {
+        name: formData.full_name,
+        email: formData.email,
+        phoneNumber: formData.phone_number,
+        courseName: formData.course_type,
+        city: cityName,
+        state: stateName,
+        message: formData.message,
+      };
     
-    // Simulate API call
-    setTimeout(() => {
-      alert('Scholarship application submitted successfully!');
-      setLoading(false);
-      
-      // Reset form
-      setFormData({
-        full_name: "",
-        phone: "",
-        email: "",
-        course: "",
-        state: "",
-        city: "",
-        university_id: ""
+  const result = await LeadsAdd(contactData);
+
+      if (result.status === true) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: result.result?.message || 'Enquiry submitted successfully!',
+          confirmButtonColor: '#8D0DFE'
+        });
+        
+        // Reset form
+        setFormData({
+          full_name: "",
+          phone_number: "",
+          email: "",
+          university_id: "",
+          course_type: "",
+          state: "",
+          city: "",
+          message: "",
+        });
+        setErrors({});
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: result.result?.message || result.message || 'Enquiry not submitted successfully!',
+          confirmButtonColor: '#8D0DFE'
+        });
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Enquiry not submitted successfully!',
+        confirmButtonColor: '#8D0DFE'
       });
-      setErrors({});
-    }, 1000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -270,16 +314,16 @@ const ScholarshipPage = () => {
                     <input 
                       className="form-control" 
                       placeholder="Mobile Number*" 
-                      name="phone" 
+                      name="phone_number" 
                       type="text" 
-                      value={formData.phone}
+                      value={formData.phone_number}
                       onChange={handleInputChange}
                       onKeyPress={isNum}
                       maxLength="10"
                     />
-                    {errors.phone && (
+                    {errors.phone_number && (
                       <div className="error error_phone text-danger help-block">
-                        <small className="help-block">{errors.phone}</small>
+                        <small className="help-block">{errors.phone_number}</small>
                       </div>
                     )}
                   </div>
@@ -392,10 +436,11 @@ const ScholarshipPage = () => {
                     className="btn btn-primary" 
                     id="scholarship_form_btn"
                     disabled={loading}
+                    style={{backgroundColor: "#8D0DFE"}}
                   >
                     {loading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" ></span>
                         Submitting...
                       </>
                     ) : (

@@ -1,5 +1,5 @@
-// components/ContactSection.js
-import { homepageadd } from '@/app/api/candidate/HomePage';
+
+import { LeadsAdd } from '@/app/api/candidate/HomePage';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -26,7 +26,7 @@ export default function ContactSection() {
     setLoading(true);
 
     try {
-      const result = await homepageadd(formData)
+      const result = await LeadsAdd(formData)
 
       if (result.status == true) {
         // Success message with SweetAlert
@@ -85,7 +85,7 @@ export default function ContactSection() {
                       <p className="mb-0"><b>WhatsApp Number</b></p>
                       <small style={{color: '#000'}}>Connect with us on WhatsApp</small>
                     </div>
-                    <img src="images/redwp.png" alt="WhatsApp" />
+                    <img src="/images/whatsappicons-new.png" alt="WhatsApp" />
                   </a>
                 </div>
                 
@@ -98,7 +98,7 @@ export default function ContactSection() {
                       <p className="mb-0"><b>Send Email</b></p>
                       <small style={{color: '#000'}}>Send us your email</small>
                     </div>
-                    <img src="images/redmail.png" alt="Email Icon" />
+                    <img src="/images/emailicons-new.png" alt="Email Icon" />
                   </a>
                 </div>
               </div>

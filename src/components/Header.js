@@ -300,11 +300,11 @@ const UpScholHeader = () => {
                                   <div className="col-6 col-md-4 col-lg-3">
                                     <div className="specialisation-card p-3 border rounded shadow-sm h-100">
                                       <div className="d-flex align-items-center mb-2">
-                                        <img 
+                                        {/* <img 
                                           src="/uploads/dropdown/1753162924-dropdown-image.svg" 
                                           alt="Specialisation" 
                                           style={{ width: '30px', height: '30px', objectFit: 'contain', marginRight: '10px' }} 
-                                        />
+                                        /> */}
                                         <p className="course-title">Specialisation</p>
                                       </div>
                                       <a href="javascript:void(0);" className="card-link load-universities text-primary fw-semibold">
@@ -332,7 +332,7 @@ const UpScholHeader = () => {
           ))}
         </div>
         
-        <div className="bottom-stuff mt-4 pt-2" id="scli">
+        {/* <div className="bottom-stuff mt-4 pt-2" id="scli">
           <div className="socials-btn d-flex align-items-center justify-content-center mt-4">
             <a href="https://www.facebook.com/people/UpSchol/61552821882181/">
               <img src="/assets/icons/fb.webp" width="50" height="50" alt="Facebook" />
@@ -344,7 +344,7 @@ const UpScholHeader = () => {
               <img src="/assets/icons/inst.png" width="42" height="42" alt="Instagram" />
             </a>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   };

@@ -1,22 +1,36 @@
 "use client"
-import { enquirygadd } from '@/app/api/candidate/HomePage';
+import { LeadsAdd } from '@/app/api/candidate/HomePage';
 import { useState } from 'react';
-import Swal from 'sweetalert2'; // SweetAlert import जोड़ें
+import Swal from 'sweetalert2';
 
 const EnquireNow = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: '',
+    name: '',
     email: '',
-    phone_number: ''
+    phoneNumber: '',
+    universityName: '',
+    courseName: '',
+    couseCtaegory: '',
+    latestQualification: '',
+    Scored: '',
+    workingProfessional: false,
+    prefferedLearningMethod: '',
+    budget: '',
+    prefferedEMI: false,
+    EMIBudget: '',
+    city: '',
+    state: '',
+    message: '',
+    counsellorName: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
@@ -25,29 +39,43 @@ const EnquireNow = () => {
     setIsSubmitting(true);
 
     try {
-      const result = await enquirygadd({
-        name: formData.full_name,
-        email: formData.email,
-        phoneNumber: formData.phone_number
-      });
+      // Send complete form data to LeadsAdd
+      const result = await LeadsAdd(formData);
 
-      console.log('API Response:', result); // Debugging के लिए
-
-      if (result.status === true) {
+      if (result.result.message == 'Leads Submit successfully') {
         Swal.fire({
           icon: 'success',
           title: 'Success!',
-          text: result.result?.message || 'Enquiry submitted successfully!',
+          text: result.result.message || 'Enquiry submitted successfully!',
           confirmButtonColor: '#8D0DFE'
         });
         
         setIsModalOpen(false);
-        setFormData({ full_name: '', email: '', phone_number: '' });
+        // Reset form data
+        setFormData({
+          name: '',
+          email: '',
+          phoneNumber: '',
+          universityName: '',
+          courseName: '',
+          couseCtaegory: '',
+          latestQualification: '',
+          Scored: '',
+          workingProfessional: false,
+          prefferedLearningMethod: '',
+          budget: '',
+          prefferedEMI: false,
+          EMIBudget: '',
+          city: '',
+          state: '',
+          message: '',
+          counsellorName: ''
+        });
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Error!',
-          text: result.result?.message || result.message || 'Enquiry not submitted successfully!',
+          text: result.message || 'Enquiry not submitted successfully!',
           confirmButtonColor: '#8D0DFE'
         });
       }
@@ -130,8 +158,8 @@ const EnquireNow = () => {
                     <div className="w-full">
                       <input 
                         type="text" 
-                        name="full_name"
-                        value={formData.full_name}
+                        name="name"
+                        value={formData.name}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8D0DFE] focus:border-transparent outline-none transition-all duration-200"
                         placeholder="Full name*" 
@@ -156,8 +184,8 @@ const EnquireNow = () => {
                     <div className="w-full">
                       <input 
                         type="tel" 
-                        name="phone_number"
-                        value={formData.phone_number}
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8D0DFE] focus:border-transparent outline-none transition-all duration-200"
                         placeholder="Mobile number*" 
@@ -165,6 +193,7 @@ const EnquireNow = () => {
                         disabled={isSubmitting}
                       />
                     </div>
+
                   </div>
 
                   <div className="flex items-start mb-4">

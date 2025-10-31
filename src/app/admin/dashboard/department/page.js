@@ -8,20 +8,22 @@ import Swal from 'sweetalert2';
 const DepartmentManagement = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    isActive: true,
     subCourses: []
   });
 
   const [newSubCourse, setNewSubCourse] = useState('');
 
+  // ✅ Updated handler to correctly process checkbox (boolean)
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
@@ -44,7 +46,7 @@ const DepartmentManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.name.trim()) {
       Swal.fire({
         title: 'Validation Error',
@@ -57,13 +59,13 @@ const DepartmentManagement = () => {
 
     try {
       setLoading(true);
-      
+
       const payload = {
         ...formData
       };
 
       const response = await adddepartment(payload);
-      
+
       if (response.status && response.result) {
         Swal.fire({
           title: 'Success!',
@@ -71,7 +73,7 @@ const DepartmentManagement = () => {
           icon: 'success',
           confirmButtonColor: '#3b82f6'
         });
-        setFormData({ name: '', description: '', subCourses: [] });
+        setFormData({ name: '', description: '', subCourses: [], isActive: true });
         setShowModal(false);
       } else {
         throw new Error(response.message || 'Failed to create department');
@@ -94,7 +96,9 @@ const DepartmentManagement = () => {
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-xl font-semibold text-gray-900">Department Management</h2>
-            <p className="text-gray-600 mt-1">Manage your organization departments and their sub-courses</p>
+            <p className="text-gray-600 mt-1">
+              Manage your organization departments and their sub-courses
+            </p>
           </div>
           <button
             onClick={() => setShowModal(true)}
@@ -108,26 +112,41 @@ const DepartmentManagement = () => {
       </div>
 
       {showModal && (
-        <div className="bg-black bg-opacity-5 flex items-center justify-center z-50 " style={{marginTop: "-10em"}}>
+        <div
+          className="bg-black bg-opacity-5 flex items-center justify-center z-50"
+          style={{ marginTop: "-10em" }}
+        >
           <div className="bg-white rounded-xl p-8 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">
-                Add New Department
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900">Add New Department</h2>
               <button
                 onClick={() => setShowModal(false)}
                 className="text-gray-600 hover:text-gray-800 disabled:text-gray-400 disabled:cursor-not-allowed"
                 disabled={loading}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             <form onSubmit={handleSubmit}>
+              {/* Department Name */}
               <div className="mb-6">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-800 mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-800 mb-2"
+                >
                   Department Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -143,8 +162,12 @@ const DepartmentManagement = () => {
                 />
               </div>
 
+              {/* Description */}
               <div className="mb-6">
-                <label htmlFor="description" className="block text-sm font-medium text-gray-800 mb-2">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-800 mb-2"
+                >
                   Description
                 </label>
                 <textarea
@@ -159,48 +182,25 @@ const DepartmentManagement = () => {
                 />
               </div>
 
+              {/* ✅ Active Checkbox */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-800 mb-2">
-                  Sub Courses
-                </label>
-                <div className="flex gap-2 mb-3">
+                <div className="flex items-center">
                   <input
-                    type="text"
-                    value={newSubCourse}
-                    onChange={(e) => setNewSubCourse(e.target.value)}
-                    className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 text-gray-900 placeholder-gray-400 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
-                    placeholder="Enter sub course name"
+                    id="isActive"
+                    name="isActive"
+                    type="checkbox"
+                    checked={formData.isActive}
+                    onChange={handleInputChange}
+                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-200 rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
                     disabled={loading}
                   />
-                  <button
-                    type="button"
-                    onClick={addSubCourse}
-                    className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-4 py-3 rounded-lg transition-colors disabled:cursor-not-allowed"
-                    disabled={loading}
-                  >
-                    Add
-                  </button>
+                  <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
+                    Active department
+                  </label>
                 </div>
-                
-                {formData.subCourses.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {formData.subCourses.map((course, index) => (
-                      <span key={index} className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm flex items-center gap-2">
-                        {course}
-                        <button
-                          type="button"
-                          onClick={() => removeSubCourse(index)}
-                          className="text-indigo-600 hover:text-indigo-800 disabled:text-indigo-400 disabled:cursor-not-allowed"
-                          disabled={loading}
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
 
+              {/* Buttons */}
               <div className="flex justify-end space-x-4">
                 <button
                   type="button"
@@ -227,7 +227,6 @@ const DepartmentManagement = () => {
           </div>
         </div>
       )}
-      
     </div>
   );
 };

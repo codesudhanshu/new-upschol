@@ -6,9 +6,8 @@ import Link from "next/link";
 import '../../public/css/style.css';
 import '../../public/css/responsive.css';
 import '../../public/css/developer.css';
-import { useRouter } from "next/navigation";
 
-export default function UniversityClient({ collegeUrl }) {
+export default function CourseClient({ collegeUrl }) {
   const [university, setUniversity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -17,11 +16,10 @@ export default function UniversityClient({ collegeUrl }) {
   const [showFeeModal, setShowFeeModal] = useState(false);
   const sectionRefs = useRef({});
   const observerRef = useRef(null);
-  const router = useRouter()
 
   useEffect(() => {
     if (!collegeUrl) return;
-      localStorage.removeItem('selectedUniversity');
+
     const fetchUniversity = async () => {
       try {
         const data = await getUniversityByUrl(collegeUrl);
@@ -146,11 +144,6 @@ export default function UniversityClient({ collegeUrl }) {
     }
     
     return stars;
-  };
-
-    const handleRedirect = (university) => {
-    localStorage.setItem('selectedUniversity', JSON.stringify(university));
-    router.push('/university-page');
   };
 
   const sections = [
@@ -314,14 +307,15 @@ export default function UniversityClient({ collegeUrl }) {
                 </div>
                 
                 <div className="btn-group">
-                  <button className="btn-primary expbtn mr-2 d-flex align-items-center" style={{backgroundColor: "#8D0DFE"}}>
-                    <i className="fa fa-university btn-icon mr-2"></i> 
-                    <div onClick={() => handleRedirect(university)} style={{color: "white"}}>Apply Now</div>
+                  <button className="btn-primary expbtn mr-2">
+                    <i className="fa fa-university btn-icon"></i> 
+                    <Link href="/expert-advice" style={{color: "white"}}>Apply Now</Link>
                   </button>
-                    <button className="btn-primary expbtn d-flex align-items-center">
-                    <i className="fa fa-comment-dots btn-icon mr-2"></i>
-                    <div onClick={() => handleRedirect(university)} style={{color: "white"}}>Talk To Expert</div>
+                  <Link href="/expert-advice">
+                    <button className="btn-primary expbtn">
+                      Talk To Expert <i className="fa fa-comment-dots btn-icon"></i>
                     </button>
+                  </Link>
                 </div>
               </div>
             </div>

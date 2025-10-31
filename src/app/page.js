@@ -56,7 +56,7 @@ export default function Home() {
   const collegesathiData = {
     Search1: {
       title: "Search",
-      image: "/images/search-image.svg",
+      image: "/images/search_person_image.jpeg",
       features: [
         "<strong>50+</strong> Universities at one platform.",
         "Check admission <strong>eligibility</strong> criteria.",
@@ -65,7 +65,7 @@ export default function Home() {
     },
     Search2: {
       title: "Study",
-      image: "/images/study-image.svg",
+      image: "/images/search_person_image.jpeg",
       features: [
         "Find the university with best <strong>placements.</strong>",
         "Find the university with flexible <strong>payment</strong> options.",
@@ -75,7 +75,7 @@ export default function Home() {
     },
     Search3: {
       title: "Support",
-      image: "/images/support-image.svg",
+      image: "/images/search_person_image.jpeg",
       features: [
         "Experienced <strong>experts.</strong>",
         "<strong>Unbiased</strong> guidance.",
@@ -141,18 +141,18 @@ export default function Home() {
         <div className="container">
           <div className="card-container d-flex justify-content-center mx-auto flex-nowrap">
             <div className="top-card d-flex flex-column justify-content-center align-items-center px-2">
-              <div className="d-none d-md-block">
+              <div className="d-none d-md-block  border-radius-10px">
                 <Image
-                  src="/images/website icons-05.svg" 
+                  src="/images/rating_image.jpeg" 
                   alt="Desktop Icon"
                   width={250}
                   height={250}
-                  className="img-fluid"
+                  className="img-fluid rounded-4"
                 />
               </div>
               <div className="d-md-none">
                 <Image 
-                  src="/images/website icons phone-08-08-06.svg" 
+                  src="/images/rating_image.jpeg" 
                   alt="Mobile Icon"
                   width={40}
                   height={40}
@@ -164,16 +164,16 @@ export default function Home() {
             <div className="top-card d-flex flex-column justify-content-center align-items-center px-2">
               <div className="d-none d-md-block">
                 <Image 
-                  src="/images/website icons-03.svg" 
+                  src="/images/programs_image.jpeg" 
                   alt="Desktop Icon"
                   width={250}
                   height={250}
-                  className="img-fluid"
+                  className="img-fluid rounded-4"
                 />
               </div>
               <div className="d-md-none">
                 <Image 
-                  src="/images/website icons phone-08-08-07.svg" 
+                  src="/images/programs_image.jpeg" 
                   alt="Mobile Icon"
                   width={40}
                   height={40}
@@ -185,16 +185,16 @@ export default function Home() {
             <div className="top-card d-flex flex-column justify-content-center align-items-center px-2">
               <div className="d-none d-md-block">
                 <Image 
-                  src="/images/website icons-04.svg" 
+                  src="/images/students_image.jpeg" 
                   alt="Desktop Icon"
                   width={250}
                   height={250}
-                  className="img-fluid"
+                  className="img-fluid rounded-4"
                 />
               </div>
               <div className="d-md-none">
                 <Image 
-                  src="/images/website icons phone-08-08-08.svg" 
+                  src="/images/students_image.jpeg" 
                   alt="Mobile Icon"
                   width={40}
                   height={40}

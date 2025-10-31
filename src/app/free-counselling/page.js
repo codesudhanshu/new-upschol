@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { getAllstate, getAllcity, freecounsellingadd, getAllIndustryExpertData } from '../api/candidate/HomePage';
+import { getAllstate, getAllcity, LeadsAdd, getAllIndustryExpertData } from '../api/candidate/HomePage';
 import Layout from '@/components/Candidatepagelayout';
 
 
@@ -170,7 +170,7 @@ const EducationForm = () => {
         city: selectedCity?.district || ''
       };
 
-      const response = await freecounsellingadd(submitData);
+      const response = await LeadsAdd(submitData);
       
       if (response.status) {
         alert('Form submitted successfully!');

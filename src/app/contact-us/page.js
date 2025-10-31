@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
-import { getAllstate, getAllcity, contactusadd } from '../api/candidate/HomePage';
+import { getAllstate, getAllcity, LeadsAdd } from '../api/candidate/HomePage';
 import { getAllCourses, searchUniversities } from "../api/admin/apiService";
 import Layout from "@/components/Candidatepagelayout";
 
@@ -195,12 +195,8 @@ const ContactUsPage = () => {
         message: formData.message,
       };
 
-      console.log("Sending data to API:", contactData);
-
       // Send data to API
-      const result = await contactusadd(contactData);
-
-      console.log("API Response:", result);
+      const result = await LeadsAdd(contactData);
 
       if (result.status === true) {
         Swal.fire({
@@ -508,7 +504,7 @@ const ContactUsPage = () => {
                   </div>
                   
                   <div className="contact_btn">
-                    <button className="btn btn-primary submit_btn" type="button" onClick={handleSubmit} disabled={loading}>
+                    <button className="btn btn-primary submit_btn" type="button" onClick={handleSubmit} disabled={loading} style={{backgroundColor: "#8D0DFE"}}>
                       {loading ? "Submitting..." : "Submit"}
                     </button>
                   </div>
