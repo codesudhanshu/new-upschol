@@ -149,8 +149,13 @@ export default function UniversityClient({ collegeUrl }) {
   };
 
     const handleRedirect = (university) => {
-    localStorage.setItem('selectedUniversity', JSON.stringify(university));
+    localStorage.setItem('selectedUniversity', JSON.stringify({ universityName : university.universityName}));
     router.push('/university-page');
+  };
+
+   const handleRedirect2 = (university) => {
+    localStorage.setItem('expertadvice', JSON.stringify({ universityName : university.universityName}));
+    router.push('/expert-advice');
   };
 
   const sections = [
@@ -320,7 +325,7 @@ export default function UniversityClient({ collegeUrl }) {
                   </button>
                     <button className="btn-primary expbtn d-flex align-items-center">
                     <i className="fa fa-comment-dots btn-icon mr-2"></i>
-                    <div onClick={() => handleRedirect(university)} style={{color: "white"}}>Talk To Expert</div>
+                    <div onClick={() => handleRedirect2(university)} style={{color: "white"}}>Talk To Expert</div>
                     </button>
                 </div>
               </div>

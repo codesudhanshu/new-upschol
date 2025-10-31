@@ -10,6 +10,16 @@ export default function QuestionFlow({ categoryId, initialProgress = 22.22 }) {
   const [filteredQuestions, setFilteredQuestions] = useState([])
   const router = useRouter()
 
+  // Load existing expertadvice from localStorage on component mount
+  useEffect(() => {
+    const savedExpertAdvice = localStorage.getItem("expertadvice")
+    if (savedExpertAdvice) {
+      const expertAdviceData = JSON.parse(savedExpertAdvice)
+      // Set answers from existing expertadvice data
+      setAnswers(expertAdviceData)
+    }
+  }, [])
+
   useEffect(() => {
     // All possible questions
     const allQuestions = [
@@ -94,8 +104,16 @@ export default function QuestionFlow({ categoryId, initialProgress = 22.22 }) {
   }, [questions, answers])
 
   const handleAnswer = (field, value) => {
-    const newAnswers = { ...answers, [field]: value }
+    // Get existing expertadvice data
+    const existingExpertAdvice = localStorage.getItem("expertadvice")
+    let expertAdviceData = existingExpertAdvice ? JSON.parse(existingExpertAdvice) : {}
+    
+    // Update with new answer
+    const newAnswers = { ...expertAdviceData, [field]: value }
     setAnswers(newAnswers)
+
+    // Save to localStorage under "expertadvice" key
+    localStorage.setItem("expertadvice", JSON.stringify(newAnswers))
 
     // Re-filter questions after answering
     const updatedFilteredQuestions = questions.filter(question => {
@@ -109,7 +127,6 @@ export default function QuestionFlow({ categoryId, initialProgress = 22.22 }) {
     let nextStep = currentStep + 1
     if (nextStep >= updatedFilteredQuestions.length) {
       // All questions completed
-      localStorage.setItem("answers", JSON.stringify(newAnswers))
       router.push("/free-counselling")
       return
     }

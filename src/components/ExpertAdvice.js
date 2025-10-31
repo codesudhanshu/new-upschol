@@ -10,6 +10,7 @@ const ExpertAdvice = () => {
   const [error, setError] = useState(null);
   const [selectedDegree, setSelectedDegree] = useState(null);
   const router = useRouter();
+     const [answers, setAnswers] = useState({})
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -32,7 +33,13 @@ const ExpertAdvice = () => {
 
   const handleDegreeSelect = (category) => {
     setSelectedDegree(category._id);
-    localStorage.setItem("degree",category.name)
+    const existingExpertAdvice = localStorage.getItem("expertadvice")
+    let expertAdviceData = existingExpertAdvice ? JSON.parse(existingExpertAdvice) : {}
+
+    const newAnswers = { ...expertAdviceData, degree: category.name }
+    setAnswers(newAnswers)
+
+    localStorage.setItem("expertadvice", JSON.stringify(newAnswers))
     setTimeout(() => {
       router.push(`/expert-advice/${category._id}`);
     }, 300);

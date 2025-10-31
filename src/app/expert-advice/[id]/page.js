@@ -13,6 +13,7 @@ const CoursesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
+   const [answers, setAnswers] = useState({})
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -38,7 +39,22 @@ const CoursesPage = () => {
     fetchCategory();
   }, [id]);
 
+    useEffect(() => {
+    const savedExpertAdvice = localStorage.getItem("expertadvice")
+    if (savedExpertAdvice) {
+      const expertAdviceData = JSON.parse(savedExpertAdvice)
+      setAnswers(expertAdviceData)
+    }
+  }, [])
+
   const handleCourseSelect = (course) => {
+    const existingExpertAdvice = localStorage.getItem("expertadvice")
+    let expertAdviceData = existingExpertAdvice ? JSON.parse(existingExpertAdvice) : {}
+
+    const newAnswers = { ...expertAdviceData, courseName: course.courseName }
+    setAnswers(newAnswers)
+
+    localStorage.setItem("expertadvice", JSON.stringify(newAnswers))
     setSelectedCourse(course);
   }
 

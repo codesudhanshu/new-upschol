@@ -185,7 +185,7 @@ const handleSubmit = async () => {
         name: formData.full_name.trim(),
         email: formData.email.trim(),
         phoneNumber: Number(formData.phone_number.trim()),
-        universityName: universityName,
+        universityName: universityName || "",
         state: selectedState?.state || '',
         city: selectedCity?.district || ''
       };
