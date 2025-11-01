@@ -47,7 +47,6 @@ export default function AdminSidebar({ isOpen, onClose }) {
     { icon: Star, label: 'Testimonials', href: '/admin/dashboard/testimonials', active: pathname === '/admin/dashboard/testimonials' },
     { icon: BarChart2, label: 'Industry Experts', href: '/admin/dashboard/industry-experts', active: pathname === '/admin/dashboard/industry-experts' },
     { icon: Star, label: 'Industry Testimonials', href: '/admin/dashboard/industry-experts-testimonials', active: pathname === '/admin/dashboard/industry-experts-testimonials' },
-    { icon: Handshake, label: 'Our Partner', href: '/admin/dashboard/our-partner', active: pathname === '/admin/dashboard/our-partner' },
     { icon: FileText, label: 'Blogs', href: '/admin/dashboard/blogs', active: pathname === '/admin/dashboard/blogs' },
     { icon: FileText, label: 'Specialization', href: '/admin/dashboard/specialization', active: pathname === '/admin/dashboard/specialization' },
     { icon: GraduationCap, label: 'Careers', href: '/admin/dashboard/careers', active: pathname === '/admin/dashboard/careers' },
