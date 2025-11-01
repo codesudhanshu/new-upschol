@@ -170,12 +170,14 @@ const handleSubmit = async () => {
       const universityData = localStorage.getItem('selectedUniversity');
       let universityName = '';
       let collegeUrl = '';
+       let formAdditionalData = {};
       
       if (universityData) {
         try {
           const university = JSON.parse(universityData);
           universityName = university.universityName || '';
           collegeUrl = university.collegeUrl || '';
+           formAdditionalData = JSON.parse(universityData);
         } catch (error) {
           console.error('Error parsing university data:', error);
         }
@@ -187,7 +189,9 @@ const handleSubmit = async () => {
         phoneNumber: Number(formData.phone_number.trim()),
         universityName: universityName || "",
         state: selectedState?.state || '',
-        city: selectedCity?.district || ''
+        city: selectedCity?.district || '',
+        courseName: formAdditionalData.courseName || "",
+        couseCategory: formAdditionalData.degree || "",
       };
 
       const response = await LeadsAdd(submitData);
@@ -222,7 +226,7 @@ const handleSubmit = async () => {
             router.push(`/university/${collegeUrl}`);
           } else {
             // Fallback redirect if no collegeUrl
-            router.push('/universities');
+            router.push('/university');
           }
         }
       } else {

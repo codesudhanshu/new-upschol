@@ -170,26 +170,16 @@ const handleSubmit = async () => {
       const universityData = localStorage.getItem('expertadvice');
       let universityName = '';
       let collegeUrl = '';
+       let formAdditionalData = {};
       
       if (universityData) {
         try {
           const university = JSON.parse(universityData);
           universityName = university.universityName || '';
           collegeUrl = university.collegeUrl || '';
+          formAdditionalData = JSON.parse(universityData);
         } catch (error) {
           console.error('Error parsing university data:', error);
-        }
-      }
-
-      // Get additional form data from localStorage
-      const additionalData = localStorage.getItem('additionalFormData');
-      let formAdditionalData = {};
-      
-      if (additionalData) {
-        try {
-          formAdditionalData = JSON.parse(additionalData);
-        } catch (error) {
-          console.error('Error parsing additional form data:', error);
         }
       }
 
@@ -201,9 +191,8 @@ const handleSubmit = async () => {
         universityName: universityName || "",
         state: selectedState?.state || '',
         city: selectedCity?.district || '',
-        // Add the additional fields from localStorage
         courseName: formAdditionalData.courseName || "",
-        couseCtaegory: formAdditionalData.degree || "", // Note: Fix typo to match your model - "couseCtaegory" should probably be "courseCategory"
+        couseCategory: formAdditionalData.degree || "",
         latestQualification: formAdditionalData.qualification || "",
         Scored: formAdditionalData.percentage || "",
         workingProfessional: formAdditionalData.professional || "",
@@ -211,9 +200,8 @@ const handleSubmit = async () => {
         budget: formAdditionalData.budget || "",
         prefferedEMI: formAdditionalData.emi_preferred || "",
         EMIBudget: formAdditionalData.emi_budget || "",
-        // Add empty fields for optional data
         message: "",
-        counsellorName: ""
+        counsellorName: formAdditionalData.counsellorName || ""
       };
 
       const response = await LeadsAdd(submitData);

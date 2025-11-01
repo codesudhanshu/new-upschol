@@ -149,12 +149,12 @@ export default function UniversityClient({ collegeUrl }) {
   };
 
     const handleRedirect = (university) => {
-    localStorage.setItem('selectedUniversity', JSON.stringify({ universityName : university.universityName}));
+    localStorage.setItem('selectedUniversity', JSON.stringify({ universityName : university.universityName, collegeUrl : university.collegeUrl}));
     router.push('/university-page');
   };
 
    const handleRedirect2 = (university) => {
-    localStorage.setItem('expertadvice', JSON.stringify({ universityName : university.universityName}));
+    localStorage.setItem('expertadvice', JSON.stringify({ universityName : university.universityName, collegeUrl : university.collegeUrl}));
     router.push('/expert-advice');
   };
 

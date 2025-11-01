@@ -12,10 +12,12 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 import { getAllIndustryExpertData } from "@/app/api/candidate/HomePage";
+import { useRouter } from "next/navigation";
 
 export default function AllIndustryExpert() {
   const [experts, setExperts] = useState([]);
   const [selectedExpert, setSelectedExpert] = useState(null);
+  const router = useRouter()
 
   // Fetch experts data
   useEffect(() => {
@@ -34,6 +36,11 @@ export default function AllIndustryExpert() {
 
   const closePopup = () => {
     setSelectedExpert(null);
+  };
+
+    const handleRedirect = (couselorname) => {
+    localStorage.setItem('expertadvice', JSON.stringify({ counsellorName : couselorname.name,}));
+    router.push('/expert-advice');
   };
 
   return (
@@ -90,7 +97,7 @@ export default function AllIndustryExpert() {
                         // onClick={() => openPopup(expert)}
                         className="btn btn-navi"
                       >
-                       <Link href="/expert-advice" style={{color: "white"}}>Consult Now</Link>
+                       <div  onClick={() => handleRedirect(expert)} style={{color: "white"}}>Consult Now</div>
                       </button>
                     </div>
                   </div>

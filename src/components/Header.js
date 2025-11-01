@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X, ChevronDown, Menu, Phone, ChevronRight } from 'lucide-react';
 import { getAllCourses } from '@/app/api/admin/apiService';
+import HeaderSearchTrigger from "@/components/HeaderSearchTrigger"
+import SearchModal from "@/components/SearchModal"
 
 const UpScholHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,6 +13,7 @@ const UpScholHeader = () => {
   const [activeSpec, setActiveSpec] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Fetch categories data
   useEffect(() => {
@@ -367,7 +370,7 @@ const UpScholHeader = () => {
               </a>
 
               {/* Desktop Navigation */}
-              <div className="navigation" style={{ marginRight: '103px' }}>
+              <div className="navigation" style={{ marginRight: '170px' }}>
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0" id="desk">
                   <li className="nav-item">
                     <div className="responsive_nav">
@@ -452,6 +455,12 @@ const UpScholHeader = () => {
                   </li>
                 </ul>
               </div>
+
+              <HeaderSearchTrigger onClick={() => setIsSearchModalOpen(true)} />
+                     <SearchModal 
+        isOpen={isSearchModalOpen} 
+        onClose={() => setIsSearchModalOpen(false)} 
+      />
               
               <button className="menu" onClick={toggleMobileMenu}>
                 <span></span>

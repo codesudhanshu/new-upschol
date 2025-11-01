@@ -6,6 +6,7 @@ import Link from 'next/link';
 const Allcourses = () => {
   const [coursesData, setCoursesData] = useState([]);
   const [activeTab, setActiveTab] = useState('');
+     const [answers, setAnswers] = useState({})
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,11 +28,17 @@ const Allcourses = () => {
 
   const handleTabClick = (categoryName) => {
     const tabId = categoryName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+     localStorage.setItem('selectedUniversity', JSON.stringify({  degree : categoryName}));
     setActiveTab(tabId);
   };
 
   const handleCourseClick = (course) => {
-    console.log('Redirecting to university page for course:', course.courseName);
+      const existingExpertAdvice = localStorage.getItem("selectedUniversity")
+    let expertAdviceData = existingExpertAdvice ? JSON.parse(existingExpertAdvice) : {}
+
+    const newAnswers = { ...expertAdviceData, courseName: course.courseName }
+    setAnswers(newAnswers)
+     localStorage.setItem('selectedUniversity', JSON.stringify(newAnswers));
     window.location.href = '/university-page';
   };
 
