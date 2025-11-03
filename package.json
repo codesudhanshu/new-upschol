@@ -26,6 +26,7 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-select": "^5.10.2",
+    "reactjs-popup": "^2.0.6",
     "sweetalert2": "^11.22.2",
     "swiper": "^11.2.10",
     "tiptap": "^1.32.2"

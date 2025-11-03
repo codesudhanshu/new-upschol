@@ -15,14 +15,9 @@ export const getBlogById = (id) => {
   return axios.get(`${API_BASE_URL}/admin/blog/${id}`).then(res => res.data);
 };
 
-export const getTrendingPosts = (id) => {
-  return axios.get(`${API_BASE_URL}/admin/trending-blogs/${id}`).then(res => res.data);
+export const getBlogByIds = (id) => {
+  return axios.get(`${API_BASE_URL}/admin/blogs/${id}`).then(res => res.data);
 };
-
-export const getTrendingPostsAll = () => {
-  return axios.get(`${API_BASE_URL}/admin/trending-blogs-data`).then(res => res.data);
-};
-
 
 export const updateBlog = (id, data) => {
   return axios.put(`${API_BASE_URL}/admin/blog/${id}`, data).then(res => res.data);
@@ -30,6 +25,14 @@ export const updateBlog = (id, data) => {
 
 export const deleteBlog = (id) => {
   return axios.delete(`${API_BASE_URL}/admin/blog/${id}`).then(res => res.data);
+};
+
+export const getTrendingPosts = (id) => {
+  return axios.get(`${API_BASE_URL}/admin/trending-blogs/${id}`).then(res => res.data);
+};
+
+export const getTrendingPostsAll = () => {
+  return axios.get(`${API_BASE_URL}/admin/trending-blogs-data`).then(res => res.data);
 };
 
 // Testimonial APIs
@@ -252,10 +255,6 @@ export const getAllfooterdata = () => {
 };
 
 
-
-// specialization 
-
-// Blog APIs
 export const createSpecialization = (data) => {
   return axios.post(`${API_BASE_URL}/admin/create-specialization`, data).then(res => res.data);
 };

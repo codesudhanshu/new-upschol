@@ -37,7 +37,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
   const sidebarItems = [
     { icon: Home, label: 'Dashboard', href: '/admin/dashboard', active: pathname === '/admin/dashboard' },
     { icon: ClipboardList, label: 'Leads', href: '/admin/dashboard/leads', active: pathname === '/admin/dashboard/leads' },
-    { icon: ClipboardList, label: 'Announcement', href: '/admin/dashboard/announcement', active: pathname === '/admin/dashboard/announcement' },
+    // { icon: ClipboardList, label: 'Announcement', href: '/admin/dashboard/announcement', active: pathname === '/admin/dashboard/announcement' },
     { icon: BookOpen, label: 'Courses', href: '/admin/dashboard/courses', active: pathname === '/admin/dashboard/courses' },
     { icon: School, label: 'University', href: '/admin/dashboard/university', active: pathname === '/admin/dashboard/university' },
     { icon: Layers, label: 'Course Category', href: '/admin/dashboard/course-category', active: pathname === '/admin/dashboard/course-category' },

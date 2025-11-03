@@ -78,3 +78,10 @@ export const LeadsAdd = (data) => {
   }); 
 }; 
 
+export const LeadsDeatils = (params = {}) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/leads`;
+  return axios.get(url, { params }).then((res) => {
+    return res.data;
+  });
+};
+

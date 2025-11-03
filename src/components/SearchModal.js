@@ -81,46 +81,11 @@ const SearchModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      zIndex: 1050,
-      display: 'block',
-      paddingLeft: '0px'
-    }}>
-      <div className="modal-dialog" ref={modalRef} style={{
-        position: 'relative',
-        width: 'auto',
-        margin: '0.5rem',
-        maxWidth: '800px',
-        margin: '50px auto'
-      }}>
-        <div className="modal-content" style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          pointerEvents: 'auto',
-          backgroundColor: '#fff',
-          backgroundClip: 'padding-box',
-          border: '1px solid rgba(0, 0, 0, 0.2)',
-          borderRadius: '0.3rem',
-          outline: 0
-        }}>
-          <div className="modal-header" style={{
-            display: 'flex',
-            flexShrink: 0,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '1rem 1rem',
-            borderBottom: '1px solid #dee2e6',
-            borderTopLeftRadius: 'calc(0.3rem - 1px)',
-            borderTopRightRadius: 'calc(0.3rem - 1px)'
-          }}>
+    <div className="modal fade fade-flip search-popup show"> 
+    <div className="modal-overlay" >
+      <div className="modal-dialog" ref={modalRef} >
+        <div className="modal-content" >
+          <div className="modal-header" >
             <button 
               type="button" 
               className="btn-close" 
@@ -153,7 +118,7 @@ const SearchModal = ({ isOpen, onClose }) => {
                   <figure style={{ margin: 0, textAlign: 'center' }}>
                     <img 
                       className="img-fluid" 
-                      src="/images/COLLEGESATHI-8-years.svg" 
+                      src="/images/logo.jpeg" 
                       alt="logo"
                       style={{ maxWidth: '200px', height: 'auto' }}
                     />
@@ -312,6 +277,7 @@ const SearchModal = ({ isOpen, onClose }) => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
