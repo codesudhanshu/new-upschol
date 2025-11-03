@@ -124,7 +124,7 @@ export default function GetAllIndustryExpertsTesti() {
                               </p>
                               <div className="red-box d-flex align-items-center">
                                 <img 
-                                  src="/images/redbox.svg" 
+                                  src="/images/left.png" 
                                   className="red-icon" 
                                   alt="icon" 
                                   decoding="async" 

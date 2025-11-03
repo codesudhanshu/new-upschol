@@ -127,14 +127,14 @@ const CoursesPage = () => {
                         <span>
                           <img 
                             className="main_img" 
-                            src="https://www.collegesathi.com/images/degree_icon.svg" 
+                            src="/images/degree.png" 
                             alt="img" 
                           />
                         </span>
                         <span>
                           <img 
                             className="white_img" 
-                            src="https://www.collegesathi.com/images/degree_icon_white.svg" 
+                            src="/images/degree.png" 
                             alt="img" 
                           />
                         </span>

@@ -1,6 +1,7 @@
 "use client";
-import { getAlljob } from "@/app/api/admin/apiService";
+import { getAlljob, applyForJob } from "@/app/api/admin/apiService";
 import { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
 
 export default function JobListings() {
   const [isApplicationOpen, setIsApplicationOpen] = useState(false);
@@ -17,7 +18,6 @@ export default function JobListings() {
     resume: null
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState("");
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -26,7 +26,6 @@ export default function JobListings() {
         console.log("API Response:", data);
 
         if (data.status && data.result && data.result.jobs) {
-          // Filter only active jobs
           const activeJobs = data.result.jobs.filter(job => job.status === "active");
           setJobs(activeJobs);
         } else {
@@ -50,7 +49,6 @@ export default function JobListings() {
   const handleApplyClick = (job) => {
     setSelectedJob(job);
     setIsApplicationOpen(true);
-    setSubmitMessage("");
     setApplicationData(prev => ({
       ...prev,
       job_position: job.title
@@ -68,7 +66,6 @@ export default function JobListings() {
       resume: null,
       job_position: ""
     });
-    setSubmitMessage("");
   };
 
   const handleInputChange = (e) => {
@@ -91,16 +88,48 @@ export default function JobListings() {
     setIsSubmitting(true);
 
     try {
-      // Here you would typically send the application data to your backend
-      // For now, we'll simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const formData = new FormData();
+      formData.append('name', applicationData.name);
+      formData.append('email', applicationData.email);
+      formData.append('mobile_number', applicationData.mobile_number);
+      formData.append('job_position', applicationData.job_position);
+      formData.append('description', applicationData.description);
+      formData.append('resume', applicationData.resume);
+
+      const result = await applyForJob(selectedJob._id, formData);
       
-      setSubmitMessage("Application submitted successfully! We'll get back to you soon.");
-      setTimeout(() => {
+      if (result.status) {
+        // Success Swal
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your application has been submitted successfully!',
+          icon: 'success',
+          confirmButtonColor: '#3b82f6',
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true
+        });
+        
         closeApplicationModal();
-      }, 2000);
+      } else {
+        // Error Swal
+        Swal.fire({
+          title: 'Error!',
+          text: result.error || 'Failed to submit application',
+          icon: 'error',
+          confirmButtonColor: '#ef4444'
+        });
+      }
     } catch (err) {
-      setSubmitMessage("Error submitting application. Please try again.");
+      console.error("Application error:", err);
+      
+      // Error Swal with detailed message
+      Swal.fire({
+        title: 'Application Failed!',
+        text: err.response?.data?.error || 'Error submitting application. Please try again.',
+        icon: 'error',
+        confirmButtonColor: '#ef4444'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -111,6 +140,7 @@ export default function JobListings() {
     return budget.includes("Laks") ? budget : `${budget} Lacs`;
   };
 
+  // Loading Swal
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center mx-4 my-12 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20">
@@ -124,6 +154,7 @@ export default function JobListings() {
     );
   }
 
+  // Error Swal alternative (since we can't use Swal in render)
   if (error) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center mx-2 my-12 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20">
@@ -148,6 +179,12 @@ export default function JobListings() {
               Error Loading Jobs
             </h3>
             <p className="text-red-600 text-sm sm:text-base">{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Try Again
+            </button>
           </div>
         </div>
       </div>
@@ -274,15 +311,16 @@ export default function JobListings() {
 
       {/* Application Modal */}
       {isApplicationOpen && selectedJob && (
-        <div className="modal modalJob show" style={{ display: 'block', paddingLeft: '0px' }}>
+        <div className="modal modalJob show" style={{ display: 'block', paddingLeft: '0px', backgroundColor: "rgb(0,0,0,.5)"}}>
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Apply Jobs</h5>
+                <h5 className="modal-title">Apply for {selectedJob.title}</h5>
                 <button 
                   type="button" 
                   className="btn-close" 
                   onClick={closeApplicationModal}
+                  disabled={isSubmitting}
                 ></button>
               </div>
               <div className="modal-body">
@@ -305,6 +343,7 @@ export default function JobListings() {
                         value={applicationData.name}
                         onChange={handleInputChange}
                         required
+                        disabled={isSubmitting}
                       />
                     </div>
                     
@@ -316,18 +355,28 @@ export default function JobListings() {
                         value={applicationData.email}
                         onChange={handleInputChange}
                         required
+                        disabled={isSubmitting}
                       />
                     </div>
                     
                     <div className="form-group">
-                      <input 
-                        type="number" 
-                        placeholder="Mobile Number*" 
-                        name="mobile_number" 
-                        value={applicationData.mobile_number}
-                        onChange={handleInputChange}
-                        required
-                      />
+                     <input
+  type="text"
+  inputMode="numeric"
+  placeholder="Mobile Number*"
+  name="mobile_number"
+  value={applicationData.mobile_number}
+  onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, ''); // remove non-numeric characters
+    if (value.length <= 10) {
+      handleInputChange({ target: { name: 'mobile_number', value } });
+    }
+  }}
+  maxLength={10}
+  required
+  disabled={isSubmitting}
+/>
+
                     </div>
                     
                     <div className="form-group">
@@ -337,16 +386,19 @@ export default function JobListings() {
                         name="job_position" 
                         value={applicationData.job_position || selectedJob.title}
                         readOnly
+                        disabled={isSubmitting}
                       />
                     </div>
                     
                     <div className="form-group">
                       <textarea 
-                        placeholder="Description*" 
+                        placeholder="Tell us why you're a good fit for this position*" 
                         name="description" 
                         value={applicationData.description}
                         onChange={handleInputChange}
                         required
+                        disabled={isSubmitting}
+                        rows="4"
                       ></textarea>
                     </div>
                     
@@ -359,26 +411,31 @@ export default function JobListings() {
                           onChange={handleInputChange}
                           accept=".pdf,.doc,.docx"
                           required
+                          disabled={isSubmitting}
                         />
                         <span>
                           <img src="https://www.collegesathi.com/images/cloud_upload.svg" alt="Img" />
-                          <div>Upload CV</div>
+                          <div className="text-[#8D0DFE]">
+                            {applicationData.resume ? applicationData.resume.name : 'Upload CV (PDF, DOC, DOCX)'}
+                          </div>
                         </span>
                       </label>
                     </div>
 
-                    {submitMessage && (
-                      <div className={`alert ${submitMessage.includes('Error') ? 'alert-danger' : 'alert-success'} mt-3`}>
-                        {submitMessage}
-                      </div>
-                    )}
-
                     <button 
                       type="submit" 
-                      className="btn btn-primary" 
+                      className="btn btn-primary w-100" 
                       disabled={isSubmitting}
+                      style={{backgroundColor: "#8D0DFE"}}
                     >
-                      {isSubmitting ? 'Submitting...' : 'Apply'}
+                      {isSubmitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                          Submitting...
+                        </>
+                      ) : (
+                        'Submit Application'
+                      )}
                     </button>
                   </form>
                 </div>

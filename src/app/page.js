@@ -66,7 +66,7 @@ export default function Home() {
     },
     Search2: {
       title: "Study",
-      image: "/images/search_person_image.jpeg",
+      image: "/images/search_2.png",
       features: [
         "Find the university with best <strong>placements.</strong>",
         "Find the university with flexible <strong>payment</strong> options.",
@@ -76,7 +76,7 @@ export default function Home() {
     },
     Search3: {
       title: "Support",
-      image: "/images/search_person_image.jpeg",
+      image: "/images/search3.png",
       features: [
         "Experienced <strong>experts.</strong>",
         "<strong>Unbiased</strong> guidance.",
@@ -228,13 +228,21 @@ export default function Home() {
           <ul className="nav nav-pills navbarPill" id="pillsss-tab" role="tablist">
             {tabs.map((tab) => (
               <li key={tab.id} className="nav-item" role="presentation">
-                <button 
-                  className={`nav-link ${activeTab === tab.id ? 'active' : ''}`}
-                  onClick={() => handleTabClick(tab.id)}
-                  type="button" 
-                  role="tab"
-                  aria-selected={activeTab === tab.id}
-                >
+              <button
+  className="nav-link"
+  onClick={() => handleTabClick(tab.id)}
+  type="button"
+  role="tab"
+  aria-selected={activeTab === tab.id}
+  style={{
+    backgroundColor: activeTab === tab.id ? '#8D0DFE' : 'transparent',
+    color: activeTab === tab.id ? 'white' : 'black',
+    borderRadius: '8px',
+    padding: '8px 16px',
+    transition: 'background-color 0.3s ease'
+  }}
+>
+
                   {tab.label}
                 </button>
               </li>

@@ -227,6 +227,23 @@ export const updatejob = (id, data) => {
   return axios.put(`${API_BASE_URL}/admin/job/${id}`, data).then(res => res.data);
 };
 
+export const deletejob = (id, data) => {
+  return axios.delete(`${API_BASE_URL}/admin/job/${id}`, data).then(res => res.data);
+};
+
+
+export const applyForJob = (jobId, formData) => {
+  return axios.post(`${API_BASE_URL}/admin/apply/${jobId}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }).then(res => res.data);
+};
+
+// Get all applications (admin)
+export const getAllApplications = (id) => {
+  return axios.get(`${API_BASE_URL}/admin/applications/${id}`).then(res => res.data);
+};
 
 export const getUniversityByUrl = (collegeUrl) => {
   return axios
@@ -259,22 +276,26 @@ export const createSpecialization = (data) => {
   return axios.post(`${API_BASE_URL}/admin/create-specialization`, data).then(res => res.data);
 };
 
-export const getAllSpecializations = () => {
-  return axios.get(`${API_BASE_URL}/admin/specializations`).then(res => res.data);
+export const getAllspecializations = () => {
+  return axios.get(`${API_BASE_URL}/admin/specialization`).then(res => res.data);
 };
 
 export const getAllSpecializationshome = () => {
   return axios.get(`${API_BASE_URL}/admin/specializations-home`).then(res => res.data);
 };
 
-export const getSpecializationById = (url) => {
+export const getspecializationById = (url) => {
   return axios.get(`${API_BASE_URL}/admin/specialization/${url}`).then(res => res.data);
 };
 
-export const updateSpecialization = (id, data) => {
+export const getspecializationsById = (id) => {
+  return axios.get(`${API_BASE_URL}/admin/specializations/${id}`).then(res => res.data);
+};
+
+export const updatespecialization = (id, data) => {
   return axios.put(`${API_BASE_URL}/admin/specialization/${id}`, data).then(res => res.data);
 };
 
-export const deleteSpecialization = (id) => {
+export const deletespecialization = (id) => {
   return axios.delete(`${API_BASE_URL}/admin/specialization/${id}`).then(res => res.data);
 };
