@@ -35,12 +35,55 @@ export const departmentList = () => {
   }); 
 }; 
 
-   export const addcoursecatgory = (data) => {
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/add-course-category`;
-    return axios.post(url,data).then((res) => {
-      return res.data;
-    });
-  };
+export const updateCourse = (id, data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/update-course/${id}`;
+  return axios.put(url, data).then((res) => {
+    return res.data;
+  });
+};
+
+export const deleteCourse = (id) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/delete-course/${id}`;
+  return axios.delete(url).then((res) => {
+    return res.data;
+  });
+};
+
+export const getCourseById = (id) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/course/${id}`;
+  return axios.get(url).then((res) => {
+    return res.data;
+  });
+};
+
+   // api/admin/courseapi.js
+export const addcoursecatgory = (data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/add-course-category`;
+  return axios.post(url, data).then((res) => {
+    return res.data;
+  });
+};
+
+export const getCourseCategories = () => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/course-category`;
+  return axios.get(url).then((res) => {
+    return res.data;
+  });
+};
+
+export const updateCourseCategory = (id, data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/update-course-category/${id}`;
+  return axios.put(url, data).then((res) => {
+    return res.data;
+  });
+};
+
+export const deleteCourseCategory = (id) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/delete-course-category/${id}`;
+  return axios.delete(url).then((res) => {
+    return res.data;
+  });
+};
 
   export const adddepartment = (data) => {
     const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/add-department`;
