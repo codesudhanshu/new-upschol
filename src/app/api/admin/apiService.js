@@ -284,7 +284,7 @@ export const getAllSpecializationshome = () => {
   return axios.get(`${API_BASE_URL}/admin/specializations-home`).then(res => res.data);
 };
 
-export const getspecializationById = (url) => {
+export const getSpecializationById = (url) => {
   return axios.get(`${API_BASE_URL}/admin/specialization/${url}`).then(res => res.data);
 };
 
