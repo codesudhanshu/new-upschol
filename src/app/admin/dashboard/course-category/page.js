@@ -256,7 +256,7 @@ const CourseCategoryManagement = () => {
     <div className="bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8">
       <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl shadow-lg p-6 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Course Category Management</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Degree Management</h1>
           <p className="text-gray-600">Manage your course categories</p>
         </div>
       </div>

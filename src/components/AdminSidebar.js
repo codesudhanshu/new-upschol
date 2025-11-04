@@ -41,7 +41,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
     { icon: School, label: 'University', href: '/admin/dashboard/university', active: pathname === '/admin/dashboard/university' },
     { icon: Layers, label: 'Degree', href: '/admin/dashboard/course-category', active: pathname === '/admin/dashboard/course-category' },
     { icon: BookOpen, label: 'Courses', href: '/admin/dashboard/courses', active: pathname === '/admin/dashboard/courses' },
-    // { icon: Building2, label: 'Department', href: '/admin/dashboard/department', active: pathname === '/admin/dashboard/department' },
+    { icon: Building2, label: 'Department', href: '/admin/dashboard/department', active: pathname === '/admin/dashboard/department' },
     { icon: FileText, label: 'Specialization', href: '/admin/dashboard/specialization', active: pathname === '/admin/dashboard/specialization' },
     { icon: Handshake, label: 'Affiliated Institution', href: '/admin/dashboard/affiliate-institute', active: pathname === '/admin/dashboard/affiliate-institute' },
     { icon: Briefcase, label: 'Company Associated', href: '/admin/dashboard/company-associated', active: pathname === '/admin/dashboard/company-associated' },

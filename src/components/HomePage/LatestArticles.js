@@ -11,6 +11,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { CalendarCheck, MoveRight } from 'lucide-react';
 
 export default function LatestArticles() {
   const [trendingPosts, setTrendingPosts] = useState([]);
@@ -142,13 +143,7 @@ export default function LatestArticles() {
                     </p>
                     
                     <div className="date mt-3 d-flex align-items-center text-muted flex-grow-0">
-                      <Image 
-                        src="/images/date.svg" 
-                        alt="calendar icon" 
-                        width={16} 
-                        height={16}
-                        className="me-2"
-                      />
+                      <CalendarCheck style={{color:"#8D0DFE"}} className="mr-2" />
                       {formatDate(blog.createdAt)} | {blog.createdBy}
                     </div>
                   </div>
@@ -159,13 +154,8 @@ export default function LatestArticles() {
                       className=" d-flex align-items-center justify-content-end  fw-semibold"
                      
                     >
-                      <span className="me-2" style={{color:"#8D0DFE",}}>Continue Reading</span>
-                      <Image 
-                        src="/images/rightarrow.svg" 
-                        alt="arrow icon" 
-                        width={16} 
-                        height={16}
-                      />
+                      <span className="me-2" style={{color:"#8D0DFE"}}>Continue Reading</span>
+                      <MoveRight style={{color:"#8D0DFE"}}/>
                     </Link>
                   </div>
                 </div>

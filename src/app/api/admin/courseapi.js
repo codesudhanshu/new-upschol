@@ -7,12 +7,41 @@ export const courseCategoryList = () => {
   }); 
 }; 
 
+
 export const departmentList = () => {
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/course-departments`;
-    return axios.get(url,).then((res) => {
-      return res.data;
-    });
-  };
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/course-departments`;
+  return axios.get(url).then((res) => {
+    return res.data;
+  });
+};
+
+export const getDepartmentById = (id) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/course-departments/${id}`;
+  return axios.get(url).then((res) => {
+    return res.data;
+  });
+};
+
+export const adddepartment = (data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/add-department`;
+  return axios.post(url, data).then((res) => {
+    return res.data;
+  });
+};
+
+export const updatedepartment = (id, data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/update-department/${id}`;
+  return axios.put(url, data).then((res) => {
+    return res.data;
+  });
+};
+
+export const deletedepartment = (id) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/delete-department/${id}`;
+  return axios.delete(url).then((res) => {
+    return res.data;
+  });
+};
 
   export const subcourseList = () => {
     const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/subcourse-department/`;
@@ -84,13 +113,6 @@ export const deleteCourseCategory = (id) => {
     return res.data;
   });
 };
-
-  export const adddepartment = (data) => {
-    const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/add-department`;
-    return axios.post(url,data).then((res) => {
-      return res.data;
-    });
-  };
 
 //university APIs
 export const createuniversity = (data) => {
