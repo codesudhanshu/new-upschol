@@ -64,30 +64,42 @@ const getComparisonUrl = () => {
   return `/compare-universities/${urls.join('-vs-')}`;
 };
 
-  const StarRating = ({ rating }) => {
-    const stars = [];
-    const fullStars = Math.floor(rating || 0);
+ const StarRating = ({ rating }) => {
+  const stars = [];
+  const fullStars = Math.floor(rating || 0);
+  
+  for (let i = 0; i < 5; i++) {
+    const isFullStar = i < fullStars;
+    const starType = isFullStar ? "on" : "off";
     
-    for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        stars.push(
-          <img key={i} src="/images/star-on.png" alt={`${i+1}`} title="good" />
-        );
-      } else {
-        stars.push(
-          <img key={i} src="/images/star-off.png" alt={`${i+1}`} title="good" />
-        );
-      }
-      if (i < 4) stars.push(<>&nbsp;</>);
-    }
-    
-    return (
-      <span className="rating" data-score={rating} title="good">
-        {stars}
-        <input name="score" type="hidden" value={rating} readOnly />
-      </span>
+    stars.push(
+      <img 
+        key={i} 
+        src={`/images/star-${starType}.png`} 
+        alt={isFullStar ? "Full star" : "Empty star"} 
+        title={`Rating: ${rating}`}
+        className="star-icon"
+        onError={(e) => {
+          // Fallback if image fails to load
+          e.target.style.display = 'none';
+        }}
+        style={{height: "14px"}}
+      />
     );
-  };
+    
+    // Add space between stars (except after last one)
+    if (i < 4) {
+      stars.push(<span key={`space-${i}`}>&nbsp;</span>);
+    }
+  }
+  
+  return (
+    <div className="rating d-flex" data-score={rating} title={`Rating: ${rating}`}>
+      {stars}
+      <input name="score" type="hidden" value={rating} readOnly />
+    </div>
+  );
+};
 
   return (
     <>
@@ -192,9 +204,9 @@ const getComparisonUrl = () => {
                           </a>
                         </div>
 
-                        <h6>
-                          {university.affiliations?.join(', ')}
-                        </h6>
+                      <h6>
+  {university.affiliatedInstitutes?.join(', ')}
+</h6>
                       </div>
 
                       <div className="card-footer d-flex">
@@ -221,7 +233,7 @@ const getComparisonUrl = () => {
                             </label>
                           </div>
                         </div>
-                        <Link href={`/university/${university.universityurl}`} className="btn btn-primary">
+                        <Link href={`/university/${university.universityurl}`} className="btn btn-primary" style={{backgroundColor: "#8D0DFE"}}>
                           View details
                         </Link>
                       </div>
@@ -233,7 +245,7 @@ const getComparisonUrl = () => {
 
             {universities.length > 0 && (
               <div className="collage_listing_btn seemore">
-                <a className="btn btn-primary view_more" href="javascript:void(0);">View More</a>
+                <a className="btn btn-primary view_more" href="javascript:void(0);" style={{backgroundColor: "#8D0DFE"}}>View More</a>
               </div>
             )}
           </div>

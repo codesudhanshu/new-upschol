@@ -1,0 +1,950 @@
+
+.header_container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 10px 15em;
+}
+
+.header_button{
+    background-color: #0D133D;
+    padding: 1em;
+    color: white;
+    border-radius: 10px;
+}
+
+
+.ugcourse{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2em 3em;
+    flex-wrap: wrap;
+}
+
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 12vh; /* Ensure the parent div takes full viewport height */
+}
+
+.buttons_course {
+    padding: 1em;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, 
+                rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    background-color: white;
+}
+
+.button_ug, .button_pg {
+    border-radius: 20px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.buttoncontainer{
+    padding: 1em;
+    border-radius: 30px;
+    background-color: #DCA503 ;
+    color: white;
+}
+
+.buttoncontainer2{
+    padding: 1em;
+    border-radius: 30px;
+    background-color: #003366 ;
+    color: white;
+}
+
+.linking:hover{
+    color: white;
+}
+
+.logo{
+    height: 4em;
+}
+
+.button_ug {
+    background-color: whitesmoke;
+    color: #073D84;
+    margin-left: 1em;
+}
+
+.button_pg {
+    background-color: whitesmoke;
+    color: #073D84;
+}
+
+/* Selected Button Style */
+.selected {
+    background-color: #073D84 !important;
+    color: white !important;
+}
+
+.ugcourse_container{
+    /* width: 30%; */
+    height: 25em;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    margin: 2em 1em;
+    border-radius: 10px;
+    flex-grow: 3;
+    flex-basis: 200;
+}
+
+.ugcourse_container_img{
+    width: 100%;
+    height: 15em;
+    object-fit:cover;
+    border-radius: 10px 10px 0 0;
+}
+
+.apply::after {
+    content: '>>';
+    color: blue;
+}
+
+.apply{
+    color: blue;
+}
+
+.apply:hover{
+    transition: 0.3s;
+    color: blue;
+    padding: 1em;
+    background-color: #073D84;
+    color: white;
+}
+
+.apply:hover:after {
+    content: '>>';
+    color: rgb(255, 255, 255);
+}
+
+
+.ug_content{
+    padding: 10px;
+}
+
+.ugtenure{
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+.eligibility{
+    margin: 10px 0;
+}
+
+.main_container {
+    position: relative;
+    background-image: url('/amity/banners.jpeg');
+    height: 85.5vh;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.forms{
+    margin-bottom: -2em;
+}
+
+.main_container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 25%, rgba(0, 0, 0, 0) 100%);
+    z-index: 1; /* Overlay sirf background ke upar rahega */
+}
+
+.main_container * {
+    position: relative;
+    z-index: 2; /* Content background overlay ke upar dikhega */
+}
+
+.main_headings {
+    border-left: 2px solid yellow;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 3em;
+    color: white;
+    background-color: rgba(255, 165, 0, 0.6); /* Orange with 60% opacity */
+}
+
+.main_headings2{
+    border-left: 2px solid yellow;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 1.5em;
+    color: white;
+    background-color: rgba(255, 165, 0, 0.6); /* Orange with 60% opacity */
+}
+
+.main_data{
+    padding: 5em 0 0 3em;
+}
+
+.main_container_flex{
+    display: flex;
+    justify-content: space-between;
+    padding: 3em 5em;
+    flex-wrap: wrap;
+}
+
+.process_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0 10em;
+}
+
+.step {
+    /* border-left: 5px solid rgb(255, 187, 0); */
+    background-color: #FFD700;
+    padding: 20px;
+    width: 250px;
+    height: 10em;
+    position: relative;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    clip-path: polygon(80% 0, 100% 50%, 80% 100%, 0 100%, 0 0);
+
+}
+
+
+.step_number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #003366;
+}
+.step_text {
+    margin-left: 1em;
+    font-size: 14px;
+    margin-top: 10px;
+    color: #073D84;
+}
+
+.advantage{
+    background-image: linear-gradient(180deg, #1C2B76 0%, #0D133D 100%);
+    background-size:contain;
+    padding: 2em;
+    margin: 2em 0 0 0;
+}
+
+.adv_name{
+    text-align: center;
+    color: white;
+    font-size: 2em;
+}
+
+.adv_container {
+    padding: 2em 0 2em 7em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Distributes space evenly */
+    gap: 1em; /* Adds spacing between items */
+}
+
+.adv_containers {
+    flex: 1 1 calc(33.33% - 2em);
+    padding: 3em 5em;
+    margin: 1em 0;
+    border-left: 5px solid yellow;
+    border-radius: 2px;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+}
+
+.adv_p {
+    color: white;
+    margin: 16px 0 0 0;
+    font-size: 18px;
+    transition: color 0.3s ease-in-out;
+}
+
+.adv_containers:hover {
+    border-left: 5px solid #FFD700;
+    background-color: #FFD700;
+    border-radius: 2px;
+}
+
+/* Change Text Color on Hover */
+.adv_containers:hover .adv_p {
+    color: #073D84;
+}
+
+/* Flip Image on Hover & Change Background */
+.adv_containers:hover .adv_img {
+    transform: rotateY(180deg);
+    background-color: #073D84;
+    transition: transform 0.5s ease-in-out, background-color 0.3s ease-in-out;
+    border-radius: 50%; /* Optional: Makes background rounded */
+}
+
+/* Ensure smooth flipping effect */
+.adv_img {
+    width: 3em;
+    height: 3em;
+    object-fit: contain;
+    transition: transform 0.5s ease-in-out, background-color 0.3s ease-in-out;
+    padding: 0.5em; /* Ensure some spacing */
+}
+
+
+
+
+.accedration{
+    padding: 3em 0;
+    text-align: center;
+    background-color: whitesmoke;
+}
+
+.htext{
+    text-align: center;
+    padding: 1em;
+    font-size: 2em;
+}
+
+.carousel_container {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    /* background-color: #f9f9f9; */
+}
+
+.carousel_track {
+    display: flex;
+    width: max-content;
+    animation: scroll 15s linear infinite;
+    margin: 0 -20px 0 0 ;
+}
+
+.cimg {
+    height: 100px;
+    margin: 0 40px;
+    width: 12em;
+    background-color: white;
+    padding: 10px;
+}
+
+/* .cimg:nth-child(5) {
+    height: 100px;
+    margin: 0 0px;
+}
+.cimg:nth-child(10) {
+    height: 100px;
+    margin: 0 0px;
+} */
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.amity_online{
+    display: flex;
+    padding: 3em 5em;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.amity_onlinecont{
+    padding: 1em 0 0 0;
+}
+
+.online_cont{
+    padding: 10px 0;
+}
+
+.benifits{
+    font-size: 1.5em;
+    color: blue;
+    font-weight: 800;
+}
+
+.benifits_cont{
+    padding: 2em 0;
+}
+
+.amity_online_heading{
+    font-size: 2em;
+}
+
+.online_img{
+    width: 30%;
+    height: 10%;
+}
+
+.online_img img {
+    width: 100%;
+    height: 100%;
+}
+
+.services{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 1em 0;
+}
+
+.subservices{
+    border-left: 3px solid blue;
+    padding: 1em;
+    margin-top:  1em;
+}
+
+
+.subservices:nth-child(2){
+    margin-left: 15em;
+}
+
+
+
+.footer{
+    padding: 1em 0;
+    background-color: #1C2B76;
+    text-align: center;
+    color: white;
+}
+
+.admissonsection{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+    padding: 3em 3em;  
+    color: white;
+    width: 100%;
+}
+
+.ad_admissionsection1{
+    background-color: #EC3D6A;
+    width: 23%;
+    border-radius: 25px;
+    padding: 20px 32px; 
+    height: 10em;
+    margin: 1em;
+}
+
+.ad_admissionsection2{
+    border: 6px solid #5DCA7B;
+    border-radius: 25px;
+    padding: 20px 32px;  
+    width: 23%;
+    height: 10em;
+    margin: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.ad_admissionsection3{
+    border: 6px solid #4194F4;
+    border-radius: 25px;
+    padding: 20px 32px;
+    width: 23%;
+    height: 10em;
+    margin: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.ad_admissionsection4{
+    border: 6px solid #FFC907;
+    border-radius: 25px;
+    padding: 20px 32px;
+    width: 23%;
+    height: 10em;
+    margin: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.heading_admision{
+    color: #1A325D;
+    font-family: "Lato", Sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.p_admision{
+    color: #1A325D;
+    font-family: "Roboto", Sans-serif;
+    font-weight: 400;
+    line-height: 2em;
+    font-size: 14px;
+}
+
+.heading_unique{
+    color: #FFFFFF;
+    font-family: "Lato", Sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 2rem;
+}
+
+.para_unique{
+    color: #FFFFFF;
+    font-family: "Lato", Sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 2em;
+}
+
+.fees{
+    box-shadow: 4px 4px 40px 0px rgba(198.9, 198.9, 198.9, 0.35);
+    border-radius: 25px;
+    padding: 40px 0;
+    margin: 3em 5em;
+}
+
+.feessection{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px; 
+    color: white;
+    width: 100%;
+}
+
+.feessection1{
+    background-color: #0D133D;
+    align-items: center;
+    border-radius: 25px;
+    padding: 20px 32px;
+    width: 30%;
+    height: 13em;
+    margin: 1em;
+    box-shadow: 5px 5px 50px 10px rgba(198.9, 198.9, 198.9, 0.35);
+    overflow: hidden;
+}
+
+.feessection2{
+    border-radius: 25px;
+    padding: 20px 32px;
+    width: 30%;
+    height: 13em;
+    margin: 1em;
+    box-shadow: 5px 5px 50px 10px rgba(198.9, 198.9, 198.9, 0.35);
+    overflow: hidden;
+}
+
+.feessection3{
+    border-radius: 25px;
+    padding: 20px 32px;
+    width: 30%;
+    height: 13em;
+    margin: 1em;
+    box-shadow: 5px 5px 50px 10px rgba(198.9, 198.9, 198.9, 0.35);
+    overflow: hidden;
+}
+
+.feessections{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.para_unique2{
+    color: #003366;
+    font-family: "Lato", Sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 2em;
+}
+
+
+.overview_container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brochure{
+    font-size: 16px;
+    padding: 1em;
+    margin: 1em 0 0 0;
+    border-radius: 25px;
+    background-color: #003366;
+    color: white;
+}
+
+.overview_program{
+    box-shadow: 4px 4px 40px 0px rgba(198.9, 198.9, 198.9, 0.35);
+    border-radius: 25px;
+    padding: 40px;
+    margin: 3em 5em;
+}
+
+.projecthead{
+    color: #323232;
+    font-family: "Lato", Sans-serif;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.2em;
+}
+
+.para_conatainer{
+    color: #323232;
+    font-family: "Lato", Sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5em;
+    padding: 2em 0 0 0;
+}
+
+.titles{
+    font-family: "Lato", Sans-serif;
+    font-size: 25px;
+    color: #323232;
+}
+
+.item_containers{
+    padding: 2em 0 0 0;
+}
+
+@media screen and (max-width:767px) {
+
+    .adv_container {
+        padding: 2em 0 2em 0em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-between; /* Distributes space evenly */
+        gap: 1em; /* Adds spacing between items */
+    }
+    .process_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 0 0;
+    }
+    .buttoncontainer2{
+        display: none;
+    }
+}
+
+@media screen and (max-width:1105px){
+    .main_data{
+        padding: 3em 0 0 3em;
+    }
+    .admissonsection{
+        display: block;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        border-radius: 25px;
+        padding: 3em 3em;  
+        color: white;
+        width: 100%;
+        margin: 12em 0 0 0;
+    }
+    
+    .ad_admissionsection1{
+        background-color: #EC3D6A;
+        width: 100%;
+        border-radius: 25px;
+        padding: 20px 32px; 
+        height: 10em;
+        margin: 1em 0;
+    }
+    
+    .ad_admissionsection2{
+        border: 6px solid #5DCA7B;
+        border-radius: 25px;
+        padding: 20px 32px;  
+        width: 100%;
+        height: 10em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        overflow: hidden;
+        margin: 1em 0;
+    }
+    
+    .ad_admissionsection3{
+        border: 6px solid #4194F4;
+        border-radius: 25px;
+        padding: 20px 32px;
+        width: 100%;
+        height: 10em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        overflow: hidden;
+        margin: 1em 0;
+    }
+    
+    .ad_admissionsection4{
+        border: 6px solid #FFC907;
+        border-radius: 25px;
+        padding: 20px 32px;
+        width: 100%;
+        height: 10em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1em 0;
+        overflow: hidden;
+    }
+    
+    .heading_admision{
+        color: #1A325D;
+        font-family: "Lato", Sans-serif;
+        font-size: 32px;
+        font-weight: 900;
+    }
+    
+    .p_admision{
+        color: #1A325D;
+        font-family: "Roboto", Sans-serif;
+        font-weight: 400;
+        line-height: 2em;
+        font-size: 14px;
+    }
+    
+    .heading_unique{
+        color: #FFFFFF;
+        font-family: "Lato", Sans-serif;
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 2rem;
+    }
+    
+    .para_unique{
+        color: #FFFFFF;
+        font-family: "Lato", Sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 2em;
+    }
+    
+    .fees{
+        box-shadow: 4px 4px 40px 0px rgba(198.9, 198.9, 198.9, 0.35);
+        border-radius: 25px;
+        padding: 40px 0;
+        margin: 2em 1em;
+    }
+    
+    .feessection{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        border-radius: 25px; 
+        color: white;
+        width: 100%;
+    }
+    
+    .feessection1{
+        background-color: #0D133D;
+        align-items: center;
+        border-radius: 25px;
+        padding: 20px 32px;
+        width: 100%;
+        height: 13em;
+        margin: 1em;
+        box-shadow: 5px 5px 50px 10px rgba(198.9, 198.9, 198.9, 0.35);
+        overflow: hidden;
+    }
+    
+    .feessection2{
+        border-radius: 25px;
+        padding: 20px 32px;
+        width: 100%;
+        height: 13em;
+        margin: 1em;
+        box-shadow: 5px 5px 50px 10px rgba(198.9, 198.9, 198.9, 0.35);
+        overflow: hidden;
+    }
+    
+    .feessection3{
+        border-radius: 25px;
+        padding: 20px 32px;
+        width: 100%;
+        height: 13em;
+        margin: 1em;
+        box-shadow: 5px 5px 50px 10px rgba(198.9, 198.9, 198.9, 0.35);
+        overflow: hidden;
+    }
+    
+    .feessections{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .para_unique2{
+        color: #003366;
+        font-family: "Lato", Sans-serif;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 2em;
+    }
+    
+    
+    .overview_container{
+        display: block;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .brochure{
+        font-size: 16px;
+        padding: 1em;
+        border-radius: 25px;
+        background-color: #003366;
+        color: white;
+    }
+    
+    .overview_program{
+        box-shadow: 4px 4px 40px 0px rgba(198.9, 198.9, 198.9, 0.35);
+        border-radius: 25px;
+        padding: 40px;
+        margin: 1em 1em;
+    }
+    
+    .projecthead{
+        color: #323232;
+        font-family: "Lato", Sans-serif;
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 1.2em;
+    }
+    
+    .para_conatainer{
+        color: #323232;
+        font-family: "Lato", Sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.5em;
+        padding: 2em 0 0 0;
+    }
+    
+    .titles{
+        font-family: "Lato", Sans-serif;
+        font-size: 25px;
+        color: #323232;
+    }
+}
+
+@media screen and (max-width:980px) {
+
+    .ugcourse_container{
+        width: 100%;
+        height: 24em;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        margin: 2em 1em;
+        border-radius: 10px;
+    }
+
+    .ugcourse{
+        padding: 2em 1em;
+    }
+    .online_img {
+        width: 100%;
+        height: auto;
+        order: -1; /* Image ko upar lane ke liye */
+        margin-bottom: 1em;
+    }
+
+    .subservices:nth-child(2) {
+        margin-left: 0; /* Mobile view ke liye margin hatana */
+    }
+
+    .amity_online{
+        display: flex;
+        padding: 3em 1em;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+    .subservices:nth-child(2){
+        margin-left: 0;
+    }
+
+    .main_headings {
+        border-left: 2px solid yellow;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 2em;
+        color: white;
+        background-color: rgba(255, 165, 0, 0.6); /* Orange with 60% opacity */
+    }
+    .main_container_flex{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1em 1em;
+        flex-wrap: wrap;
+    }
+    .main_data{
+        padding: 2em 0 0 0em;
+    }
+}
+
+
+@media screen and (max-width: 1496px)
+{
+    #tenure{
+        display: none;
+    }
+    .main_headings {
+        border-left: 2px solid yellow;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 2em;
+        color: white;
+        background-color: rgba(255, 165, 0, 0.6); /* Orange with 60% opacity */
+    }
+}
+
+
+
+@media screen and (max-width:800px) {
+    .admissonsection{
+        display: block;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        border-radius: 25px;
+        padding: 3em 3em;  
+        color: white;
+        width: 100%;
+        margin: 13em 0 0 0;
+    }
+    .forms{
+        margin-top: 4em;
+    }
+}
+

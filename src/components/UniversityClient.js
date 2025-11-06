@@ -265,57 +265,6 @@ export default function UniversityClient({ collegeUrl }) {
                       </fieldset>
                     </div>
                   </div>
-                  
-                  <div className="col-md-6 col-12 PeripheralRating" style={{ marginLeft: '15%' }}>
-                    <div className="d-flex flex-column">
-                      <div className="mb-2">
-                        <span className="fw-semibold" style={{ float: 'left' }}>Peripheral Rating</span>
-                        <span style={{ fontSize: '.875rem', color: '#999', float: 'left', fontWeight: 400 }}>
-                          (Out of 5)
-                        </span>
-                      </div>
-
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Average Ratings</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">4.0</span>
-                          <div className="d-flex">
-                            {renderPeripheralStars(4.0)}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Digital Infrastructure</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">4.1</span>
-                          <div className="d-flex">
-                            {renderPeripheralStars(4.1)}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Curriculum</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">3.9</span>
-                          <div className="d-flex">
-                            {renderPeripheralStars(3.9)}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div style={{ fontWeight: 400, fontSize: '13px' }}>Value For Money</div>
-                        <div className="d-flex align-items-center">
-                          <span className="me-3 fw-bold">3.9</span>
-                          <div className="d-flex">
-                            {renderPeripheralStars(3.9)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 
                 <div className="btn-group">
@@ -769,33 +718,6 @@ export default function UniversityClient({ collegeUrl }) {
           </div>
         </div>
       </section>
-
-<style jsx>{`
-    .icon-circle {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background-color: #f5f5f5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .icon-img {
-        /* width: 18px;
-        height: 18px; */
-        object-fit: contain;
-    }
-
-    .list-group-item {
-        display: flex;
-        align-items: center;
-         padding: 10px; 
-         font-size: 14px;
-    }
-         `}
-</style>
 
     </div>
   );

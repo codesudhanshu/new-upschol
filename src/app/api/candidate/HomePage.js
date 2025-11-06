@@ -78,6 +78,37 @@ export const LeadsAdd = (data) => {
   }); 
 }; 
 
+export const nmimsAdd = (data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/send-nmims`;
+  return axios.post(url, data).then((res) => {
+    return res.data;
+  }); 
+}; 
+
+
+export const manipalAdd = (data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/send-manipal`;
+  return axios.post(url, data).then((res) => {
+    return res.data;
+  }); 
+}; 
+
+
+export const LpuAdd = (data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/send-lpu`;
+  return axios.post(url, data).then((res) => {
+    return res.data;
+  }); 
+}; 
+
+
+export const AmityAdd = (data) => {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/send-amity`;
+  return axios.post(url, data).then((res) => {
+    return res.data;
+  }); 
+}; 
+
 export const LeadsDeatils = (params = {}) => {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/candidate/leads`;
   return axios.get(url, { params }).then((res) => {

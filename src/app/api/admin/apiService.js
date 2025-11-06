@@ -262,7 +262,7 @@ export const getAllCourses = () => {
 export const searchUniversities = (data) => {
   const datam = data ? data : "";
   return axios
-    .get(`${API_BASE_URL}/candidate/search-universities/${datam}`)
+    .get(`${API_BASE_URL}/candidate/search-universities`)
     .then(res => res.data);
 };
 
