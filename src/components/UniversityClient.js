@@ -518,7 +518,7 @@ export default function UniversityClient({ collegeUrl }) {
                     </table>
                   </div>
                   <div className="text-center mt-3">
-                    <button className="btn btn-primary" onClick={() => setShowFeeModal(true)} style={{ backgroundColor: "#8D0DFE", border: 'none' }}>
+                    <button className="btn btn-primary"  onClick={() => handleRedirect(university)} style={{ backgroundColor: "#8D0DFE", border: 'none' }}>
                       Click here to view fee details
                     </button>
                   </div>

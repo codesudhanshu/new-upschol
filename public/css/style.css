@@ -8248,7 +8248,7 @@ figure.placement-support_logo {
     width: 75%;
 }
 .university_details_section .university_program_listing .list-group ul li.active a::before{
-    min-width: 338px;
+    min-width: 330px;
 }
 }
 
