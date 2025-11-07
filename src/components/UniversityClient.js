@@ -327,7 +327,7 @@ export default function UniversityClient({ collegeUrl }) {
                 <div className="programs_crousel_item">
                   <div className="program_img_box">
                     <figure>
-                      <img src={university.universityHomeImage || "https://via.placeholder.com/585x405"} alt="University Campus" />
+                      <img src={university.universityHomeImage || "https://via.placeholder.com/585x405"} alt="University Campus" className="w-100"/>
                     </figure>
                     <div className="small_logo">
                       <figure className="university_logo_explore_program">
