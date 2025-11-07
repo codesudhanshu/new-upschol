@@ -1,12 +1,9 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { getUniversityByUrl } from "@/app/api/admin/apiService";
-import { Star, CheckCircle, Download, ChevronRight, ChevronDown, X } from 'lucide-react';
-import Link from "next/link";
-import '../../public/css/style.css';
-import '../../public/css/responsive.css';
-import '../../public/css/developer.css';
+import { Star, CheckCircle, Download, ChevronRight, ChevronDown, X, Check } from 'lucide-react';
 import { useRouter } from "next/navigation";
+import { getUniversityByUrl } from "@/app/api/admin/apiService";
+import UniversityRatingGauge from "./UniversityRatingGauge";
 
 export default function UniversityClient({ collegeUrl }) {
   const [university, setUniversity] = useState(null);
@@ -17,15 +14,21 @@ export default function UniversityClient({ collegeUrl }) {
   const [showFeeModal, setShowFeeModal] = useState(false);
   const sectionRefs = useRef({});
   const observerRef = useRef(null);
-  const router = useRouter()
+  const router = useRouter();
+  const gaugeCanvasRef = useRef(null);
+
+  // Slider refs
+  const approvalSliderRef = useRef(null);
+  const hiringSliderRef = useRef(null);
 
   useEffect(() => {
     if (!collegeUrl) return;
-      localStorage.removeItem('selectedUniversity');
+    localStorage.removeItem('selectedUniversity');
+    
     const fetchUniversity = async () => {
       try {
         const data = await getUniversityByUrl(collegeUrl);
-        if (data?.status) {
+       if (data?.status) {
           setUniversity(data.result.data);
         } else {
           setError("University not found");
@@ -40,7 +43,43 @@ export default function UniversityClient({ collegeUrl }) {
     fetchUniversity();
   }, [collegeUrl]);
 
-  // Intersection Observer for active tab highlighting
+  // Draw gauge when university data is loaded
+  useEffect(() => {
+    if (university && gaugeCanvasRef.current) {
+      drawGauge(university.universityRating || 4.0);
+    }
+  }, [university]);
+
+  // Auto-scroll sliders
+  useEffect(() => {
+    const autoScroll = (sliderRef) => {
+      if (!sliderRef.current) return;
+      
+      const slider = sliderRef.current;
+      let scrollAmount = 0;
+      const step = 2;
+      
+      const scroll = () => {
+        scrollAmount += step;
+        if (scrollAmount >= slider.scrollWidth - slider.clientWidth) {
+          scrollAmount = 0;
+        }
+        slider.scrollLeft = scrollAmount;
+      };
+      
+      return setInterval(scroll, 30);
+    };
+
+    const approvalInterval = autoScroll(approvalSliderRef);
+    const hiringInterval = autoScroll(hiringSliderRef);
+
+    return () => {
+      clearInterval(approvalInterval);
+      clearInterval(hiringInterval);
+    };
+  }, [university]);
+
+  // Intersection Observer
   useEffect(() => {
     const options = {
       root: null,
@@ -56,7 +95,6 @@ export default function UniversityClient({ collegeUrl }) {
       });
     }, options);
 
-    // Observe all sections
     Object.values(sectionRefs.current).forEach(section => {
       if (section) {
         observerRef.current.observe(section);
@@ -70,135 +108,168 @@ export default function UniversityClient({ collegeUrl }) {
     };
   }, [university]);
 
-  const renderStars = (rating) => {
-    const stars = [];
-    const ratings = [5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5];
-    
-    ratings.forEach((value, index) => {
-      const id = `rating${10 - index}`;
-      const isHalf = value % 1 !== 0;
-      const isActive = value <= rating;
-      
-      stars.push(
-        <input 
-          key={`input-${id}`}
-          type="radio" 
-          id={id} 
-          name="rating" 
-          value={value} 
-          disabled 
-        />
-      );
-      
-      stars.push(
-        <label 
-          key={`label-${id}`}
-          htmlFor={id}
-          title={`${value} ${value === 1 ? 'star' : 'stars'}`}
-          className={`${isHalf ? 'half' : ''} ${isActive ? 'active-star' : ''}`}
-        ></label>
-      );
+  // Draw Gauge Function
+  const drawGauge = (rating) => {
+    const canvas = gaugeCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 100;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw background arc
+    ctx.beginPath();
+    ctx.arc(centerX, centerY - 20, radius, Math.PI, 2 * Math.PI);
+    ctx.lineWidth = 20;
+    ctx.strokeStyle = '#e8e8e8';
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Color segments
+    const segments = [
+      { start: 0, end: 0.2, color: '#ff5252' },
+      { start: 0.2, end: 0.4, color: '#ffb300' },
+      { start: 0.4, end: 0.6, color: '#fdd835' },
+      { start: 0.6, end: 0.8, color: '#9ccc65' },
+      { start: 0.8, end: 1, color: '#66bb6a' }
+    ];
+
+    segments.forEach(seg => {
+      ctx.beginPath();
+      const startAngle = Math.PI + (seg.start * Math.PI);
+      const endAngle = Math.PI + (seg.end * Math.PI);
+      ctx.arc(centerX, centerY - 20, radius, startAngle, endAngle);
+      ctx.strokeStyle = seg.color;
+      ctx.lineWidth = 20;
+      ctx.lineCap = 'round';
+      ctx.stroke();
     });
-    
-    return stars;
+
+    // Draw needle
+    const needleAngle = Math.PI + (rating / 5 * Math.PI);
+    const needleLength = radius - 25;
+
+    ctx.save();
+    ctx.translate(centerX, centerY - 20);
+    ctx.rotate(needleAngle);
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -needleLength);
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#333';
+    ctx.fill();
+
+    ctx.restore();
   };
 
-  const renderPeripheralStars = (rating) => {
+  const renderStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     
-    // Full stars
     for (let i = 0; i < fullStars; i++) {
-      stars.push(
-        <img 
-          key={`full-${i}`}
-          src="/images/star-on.png" 
-          alt="Filled Star" 
-          style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
-        />
-      );
+      stars.push(<Star key={`full-${i}`} className="text-warning" fill="currentColor" size={20} />);
     }
     
-    // Half star
     if (hasHalfStar) {
-      stars.push(
-        <img 
-          key="half"
-          src="/images/star-on.png"
-          alt="Half Star" 
-          style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
-        />
-      );
+      stars.push(<Star key="half" className="text-warning" fill="currentColor" size={20} style={{ clipPath: 'inset(0 50% 0 0)' }} />);
     }
     
-    // Empty stars
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(
-        <img 
-          key={`empty-${i}`}
-          src="/images/star-off.png" 
-          alt="Empty Star" 
-          style={{ marginTop: '6px', marginBottom: '6px', width: '15px' }} 
-        />
-      );
+      stars.push(<Star key={`empty-${i}`} className="text-muted" size={20} />);
     }
     
     return stars;
   };
 
-    const handleRedirect = (university) => {
-    localStorage.setItem('selectedUniversity', JSON.stringify({ universityName : university.universityName, collegeUrl : university.collegeUrl}));
+  // Get active star classes for fieldset
+  const getStarClasses = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalf = rating % 1 >= 0.5;
+    
+    return {
+      fullStars,
+      hasHalf
+    };
+  };
+
+  const handleRedirect = (university) => {
+    localStorage.setItem('selectedUniversity', JSON.stringify({ 
+      universityName: university.universityName, 
+      collegeUrl: university.collegeUrl 
+    }));
     router.push('/university-page');
   };
 
-   const handleRedirect2 = (university) => {
-    localStorage.setItem('expertadvice', JSON.stringify({ universityName : university.universityName, collegeUrl : university.collegeUrl}));
+  const handleRedirect2 = (university) => {
+    localStorage.setItem('expertadvice', JSON.stringify({ 
+      universityName: university.universityName, 
+      collegeUrl: university.collegeUrl 
+    }));
     router.push('/expert-advice');
+  };
+
+  const handleApprovalClick = (approval) => {
+    if (approval.link) {
+      window.open(approval.link, '_blank');
+    }
+  };
+
+  const handleCompanyClick = (company) => {
+    if (company.link) {
+      window.open(company.link, '_blank');
+    }
   };
 
   const sections = [
     { id: 'About', name: 'About', image: 'About' },
-    { id: 'Approvals', name: 'Approvals',image: 'Approvals' },
+    { id: 'Approvals', name: 'Approvals', image: 'Approvals' },
     { id: 'Ranking', name: 'Ranking', image: 'Ranking' },
-    { id: 'Courses', name: 'Courses',  image: 'Courses' },
+    { id: 'Courses', name: 'Courses', image: 'Courses' },
+    { id: 'SampleCertificate', name: 'Sample Certificate', image: 'Examination Pattern' },
     { id: 'ExaminationPattern', name: 'Examination Pattern', image: 'Examination Pattern' },
-    { id: 'EducationLoanEMI', name: 'Financial Aid' , image: 'Education loan- Monthly EMI' },
     { id: 'Campuses', name: 'Campuses', image: 'Similar Universities' },
+    { id: 'advantage', name: 'Advantages', image: 'Examination Pattern' },
+    { id: 'FinancialAid', name: 'Financial Aid', image: 'Hiring partners' },
     { id: 'PlacementPartners', name: 'Hiring Partners', image: 'Hiring partners' },
     { id: 'AdmissionOpen', name: 'Admission Open 2025', image: 'Admission Open 2025' },
     { id: 'FAQ', name: 'FAQ', image: 'FAQ' },
-    { id: 'OtherUniversities', name: 'Similar Universities', image: 'Similar Universities' },
-    { id: 'TestimonialsReviews', name: 'Reviews',  image: 'Reviews' }
+    { id: 'TestimonialsReviews', name: 'Reviews', image: 'Reviews' }
   ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white d-flex align-items-center justify-content-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#14081E] mx-auto mb-4"></div>
-          <div className="text-xl font-semibold text-[#14081E]">Loading university data...</div>
+          <div className="spinner-border text-primary mb-4" style={{ width: '3rem', height: '3rem' }} role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <div className="fs-5 fw-semibold">Loading university data...</div>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !university) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center text-red-600 font-semibold text-xl">{error}</div>
+      <div className="min-h-screen bg-white d-flex align-items-center justify-content-center">
+        <div className="text-center text-danger fw-semibold fs-5">{error || "No university data found"}</div>
       </div>
     );
   }
 
-  if (!university) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center text-gray-600 font-semibold text-xl">No university data found</div>
-      </div>
-    );
-  }
+  const { fullStars, hasHalf } = getStarClasses(university.universityRating || 4.0);
 
   return (
     <div>
@@ -209,22 +280,23 @@ export default function UniversityClient({ collegeUrl }) {
             <div className="programs_details">
               <div className="programs_details_contant">
                 <h1>{university.universityName}</h1>
-                <div className="certificate_listing uni-shor-des">
-                  {university.startingKeyPoints?.filter(p => p && p !== "na").length > 0 && (
+                
+                {university.startingKeyPoints?.filter(p => p && p !== "na").length > 0 && (
+                  <div className="certificate_listing uni-shor-des">
                     <ul>
                       {university.startingKeyPoints.filter(p => p && p !== "na").map((point, index) => (
                         <li key={index}>{point}</li>
                       ))}
                     </ul>
-                  )}
-                </div>
+                  </div>
+                )}
                 
                 <div className="d-md-flex logobrand-card align-items-center">
                   <div className="info_logo">
-                    <ul className="flex items-center">
+                    <ul className="d-flex align-items-center">
                       {university.selectedApprovals?.slice(0, 4).map((approval, index) => (
                         <li key={index}>
-                          <figure className="flex">
+                          <figure className="d-flex">
                             <img src={approval.image} alt={approval.title} className="images-section" width="57" height="57" />
                           </figure>
                         </li>
@@ -233,49 +305,19 @@ export default function UniversityClient({ collegeUrl }) {
                   </div>
                 </div>
                 
-                <div className="compare_btn_box">
-                  <div className="download_prospectus compare_btn_section">
-                    <a href="" className="btn">
-                      <span>Download Prospectus</span>
-                    </a>
-                  </div>
-                  
-                  <div className="d-flex addto_compare_box">
-                    <div className="compare_btn">
-                      <a href="javascript:void(0);">
-                        <img className="plus_icon" src="/images/plus_icon.svg" alt="img" />
-                        <img className="plus_icon_white" src="/images/plus_icon_white.svg" alt="img" />
-                        Review Rating
-                      </a>
-                    </div>
-                  </div>
-                </div>
+           
+<UniversityRatingGauge rating={university.universityRating || 4.0} />
                 
-                {/* Star Rating Section */}
-                <div className="star_rating" id="gauge-rating" data-rating={university.universityRating || 4}>
-                  <div className="gauge-container" style={{ justifySelf: 'anchor-center' }}>
-                    <div className="gauge-text">
-                      <div className="gauge-label">Overall Ratings :</div>
-                      <div className="gauge-score">
-                        <span id="scoreValue">{university.universityRating || 4}</span>
-                        <span className="gauge-small"> / 5</span>
-                      </div>
-                      <fieldset className="gauge-container-rate d-flex">
-                        {renderPeripheralStars(university.universityRating || 4)}
-                      </fieldset>
-                    </div>
-                  </div>
-                </div>
                 
-                <div className="btn-group">
-                  <button className="btn-primary expbtn mr-2 d-flex align-items-center" style={{backgroundColor: "#8D0DFE"}}>
-                    <i className="fa fa-university btn-icon mr-2"></i> 
-                    <div onClick={() => handleRedirect(university)} style={{color: "white"}}>Apply Now</div>
+                <div className="btn-group gap-2">
+                  <button className="btn btn-primary d-flex align-items-center" style={{ backgroundColor: "#8D0DFE", border: 'none' }} onClick={() => handleRedirect(university)}>
+                    <i className="fa fa-university me-2"></i>
+                    Apply Now
                   </button>
-                    <button className="btn-primary expbtn d-flex align-items-center">
-                    <i className="fa fa-comment-dots btn-icon mr-2"></i>
-                    <div onClick={() => handleRedirect2(university)} style={{color: "white"}}>Talk To Expert</div>
-                    </button>
+                  <button className="btn btn-primary d-flex align-items-center" style={{ backgroundColor: "#8D0DFE", border: 'none' }} onClick={() => handleRedirect2(university)}>
+                    <i className="fa fa-comment-dots me-2"></i>
+                    Talk To Expert
+                  </button>
                 </div>
               </div>
             </div>
@@ -285,11 +327,7 @@ export default function UniversityClient({ collegeUrl }) {
                 <div className="programs_crousel_item">
                   <div className="program_img_box">
                     <figure>
-                      <img 
-                        src={university.universityHomeImage || "https://via.placeholder.com/585x405"} 
-                        alt="University Campus" 
-                        className=""
-                      />
+                      <img src={university.universityHomeImage || "https://via.placeholder.com/585x405"} alt="University Campus" />
                     </figure>
                     <div className="small_logo">
                       <figure className="university_logo_explore_program">
@@ -314,77 +352,49 @@ export default function UniversityClient({ collegeUrl }) {
         </div>
       </section>
 
-      {/* Fee Details Modal */}
+      {/* Fee Modal */}
       {showFeeModal && (
-        <div className="modal show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} id="enquiryModal">
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-lg modal-dialog-centered">
             <div className="modal-content border-0 rounded-3 overflow-hidden">
               <div className="modal-body p-0">
                 <div className="row g-0">
-                  {/* Left Section */}
                   <div className="col-md-5 d-flex justify-content-center align-items-center p-3" style={{ background: 'linear-gradient(135deg, #eb7676ff, #ffcccc)' }}>
                     <img src="/images/Find Programs Form side Image 2-100.jpeg" className="img-fluid" alt="Promo" style={{ maxHeight: '400px' }} />
                   </div>
 
-                  {/* Right Section */}
                   <div className="col-md-7 p-4" style={{ background: 'linear-gradient(90deg, #fff5f5, #ffecec)' }}>
-                    {/* Close Button */}
-                    <button 
-                      className="btn-close position-absolute top-0 end-0 m-3" 
-                      onClick={() => setShowFeeModal(false)}
-                      style={{ zIndex: 10 }}
-                    ></button>
+                    <button className="btn-close position-absolute top-0 end-0 m-3" onClick={() => setShowFeeModal(false)}></button>
 
-                    {/* Logos Slider */}
                     <div className="logo-slider mb-4 overflow-hidden">
-                      <div className="d-flex align-items-center logo-track">
-                    
+                      <div className="d-flex align-items-center">
                         <img src={university.logo} alt="University Logo" className="mx-3" style={{ height: '40px' }} />
                       </div>
                     </div>
 
                     <h4 className="fw-bold mb-3">Enquire Now</h4>
 
-                    <form id="FeesForm"  method="POST">
-                      <input type="hidden" id="selectedCourseId" name="course_id" value="15" />
-
+                    <form>
                       <div className="row">
                         <div className="col-md-6 mb-3">
-                          <input type="text" className="form-control rounded-pill" id="fullName" name="fullName" placeholder="Your Name" required />
-                          <div id="error" style={{ color: 'red', fontSize: '14px' }}></div>
+                          <input type="text" className="form-control rounded-pill" placeholder="Your Name" required />
                         </div>
                         <div className="col-md-6 mb-3">
-                          <input type="email" className="form-control rounded-pill" id="email" name="email" placeholder="Email Address" required />
+                          <input type="email" className="form-control rounded-pill" placeholder="Email Address" required />
                         </div>
                       </div>
 
                       <div className="row">
                         <div className="col-md-6 mb-3">
-                          <input type="tel" id="mobileNumber" className="form-control rounded-pill mobile02" name="mobileNumber" maxLength="10" placeholder="Mobile Number" required />
+                          <input type="tel" className="form-control rounded-pill" maxLength="10" placeholder="Mobile Number" required />
                         </div>
                         <div className="col-md-6 mb-3">
-                          <div className="form_col_12 otpAction">
-                            <input type="text" id="txtotpmobile02" maxLength="6" className="form-control rounded-pill txtotp txtotpmobile02" placeholder="OTP" required />
-
-                            <div className="otpActionBtn mt-2 d-flex gap-2 feefrm">
-                              <input id="enquiryBtnVerifymobile02" className="btn btn-outline-danger btn-sm" type="button" value="Verify" />
-                              <input id="enquiryBtnResendmobile02" className="btn btn-outline-secondary btn-sm" type="button" value="Resend" />
-                              <input id="enquiryBtnVerifySuccessmobile02" className="btn btn-success btn-sm" type="button" value="Verified" style={{ display: 'none' }} />
-                            </div>
-
-                            <span className="error help-inline otp_error_div help-block">
-                              <small className="help-block" data-fv-validator="notEmpty" data-fv-for="otp_veryfy" data-fv-result="NOT_VALIDATED" style={{ display: 'none' }}>
-                                Please enter OTP.
-                              </small>
-                            </span>
-                          </div>
+                          <input type="text" className="form-control rounded-pill" maxLength="6" placeholder="OTP" required />
                         </div>
                       </div>
 
-                      <div className="form-group text-center">
-                        <button type="submit" className="btn btn-danger rounded-pill px-5">
-                          Submit
-                        </button>
+                      <div className="text-center">
+                        <button type="submit" className="btn btn-danger rounded-pill px-5">Submit</button>
                       </div>
                     </form>
                   </div>
@@ -399,11 +409,11 @@ export default function UniversityClient({ collegeUrl }) {
       <section className="programs_details_section university_details_section">
         <div className="container">
           <div className="programs_tab_listing d-flex">
-            {/* Left Sidebar Navigation */}
+            {/* Left Sidebar */}
             <div className="university_program_listing">
-              <div id="ProgramsListScroll" className="list-group bg-white box_shadow programs_listing">
+              <div className="list-group bg-white box_shadow programs_listing">
                 <ul>
-                  {sections.map((section, index) => (
+                  {sections.map((section) => (
                     <li key={section.id} className={`nav-item ${activeTab === section.id ? 'active' : ''}`}>
                       <a 
                         className="list-group-item list-group-item-action d-flex align-items-center gap-2" 
@@ -424,265 +434,44 @@ export default function UniversityClient({ collegeUrl }) {
                 </ul>
               </div>
             </div>
-            
+
             {/* Right Content */}
             <div className="university_program_detaile">
               <div className="bg-white box_shadow scrollspy-example">
                 {/* About Section */}
                 <section id="About" className="about_main_section mt-4" ref={el => sectionRefs.current['About'] = el}>
                   <div className="about">
-                    <h2 className="heading_program_details">{university.universityName} online</h2>
+                    <h2 className="heading_program_details">{university.universityName} Online</h2>
                     <p>{university.aboutCollege}</p>
-                    
-                    {/* Course Fees Section */}
-                    <div className="course_fees">
-                      <h2 className="heading_program_details">Updated Course Fees for 2025</h2>
-                      <div className="table-responsive tableformat">
-                        <table className="table-responsive align-middle text-start" 
-                               style={{ border: '2px solid #8D0DFE', width: '100%', tableLayout: 'fixed' }}>
-                          <thead>
-                            <tr className="tophead" style={{ backgroundColor: '#8D0DFE', color: '#ffff' }}>
-                              <th className="p-3 text-start align-middle" style={{ borderRight: '1px solid #F47C80' }}>
-                                Course
-                              </th>
-                              <th>Per Semester</th>
-                              <th>Total Fees</th>
-                              <th>One Time Fees</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {university.selectedCourses?.map((course, index) => (
-                              <tr key={index} style={{ border: '1px solid #f47c80' }}>
-                                <th style={{ borderRight: '1px solid #f47c80', fontWeight: 500 }}>
-                                  {course.courseName}
-                                </th>
-                                <td>₹{course.pricing?.semesterPrice?.toLocaleString('en-IN') || 'N/A'}/-</td>
-                                <td>₹{course.pricing?.totalAmount?.toLocaleString('en-IN') || 'N/A'}/-</td>
-                                <td>₹{course.pricing?.totalAmount?.toLocaleString('en-IN') || 'N/A'}/-</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div className="text-center mt-3">
-                        <button 
-                          className="btn btn-primary"
-                          onClick={() => setShowFeeModal(true)}
-                          style={{backgroundColor:"#8D0DFE"}}
-                        >
-                          Click here to view fee details
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </section>
 
-                {/* Approvals Section */}
+                {/* Approvals Section with Slider */}
                 <section id="Approvals" className="university_approved_main_section" ref={el => sectionRefs.current['Approvals'] = el}>
                   {university.selectedApprovals?.length > 0 && (
                     <>
                       <div className="university_approved">
-                        <h2 className="heading_program_details mb-2 w-100">
-                          {university.universityName} Approvals
-                        </h2>
-                        <p>
-                          {university.universityName} is one of the leading universities in India, offering high-quality online education. 
-                          The following accreditations and approvals prove the educational standards of the university. 
-                          These approvals make the degrees acceptable and approved all over the world.
-                        </p>
+                        <h2 className="heading_program_details mb-3">{university.universityName} Approvals</h2>
+                        <p>{university.universityName} is one of the leading universities in India, offering high-quality online education.</p>
                       </div>
                       
-                      <div className="university_approved_crousel">
-                        <div className="slider approved_crousel">
-                          {university.selectedApprovals.map((approval, index) => (
-                            <div key={index} className="approved_logo_box">
-                              <div className="approved_logo">
-                                <figure>
-                                  <img src={approval.image} alt={approval.title} className="" />
-                                </figure>
-                                <div className="logo_details">
-                                  <strong>{approval.title}</strong>
-                                </div>
-                              </div>
+                      <div 
+                        ref={approvalSliderRef}
+                        className="d-flex gap-3 overflow-auto pb-3"
+                        style={{ scrollBehavior: 'smooth', scrollbarWidth: 'thin' }}
+                      >
+                        {university.selectedApprovals.map((approval, index) => (
+                          <div 
+                            key={index} 
+                            className="card shadow-sm flex-shrink-0" 
+                            style={{ width: '150px', cursor: approval.link ? 'pointer' : 'default', transition: 'transform 0.2s' }}
+                            onClick={() => handleApprovalClick(approval)}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                          >
+                            <div className="card-body text-center p-3 d-flex justify-content-center align-items-center">
+                              <img src={approval.image} alt={approval.title} className="img-fluid mb-2" style={{ height: '80px', objectFit: 'contain' }} />
                             </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </section>
-
-                {/* Ranking Section */}
-                <section className="certificate_main_section mt-5" id="Ranking" ref={el => sectionRefs.current['Ranking'] = el}>
-                  <div className="courses_box">
-                    <h2 className="heading_program_details pb-0">
-                      {university.universityName} Ranking
-                    </h2>
-                  </div>
-                  <div className="certificate_listing mb-0">
-                    <p>
-                      {university.universityName} is a prestigious university with various rankings and memberships 
-                      in top associations. These credentials demonstrate the university's commitment to academic excellence 
-                      and quality education standards.
-                    </p>
-                  </div>
-                </section>
-
-                {/* Courses Section */}
-                <section className="courses_main_section mt-5 mb-5" id="Courses" ref={el => sectionRefs.current['Courses'] = el}>
-                  {university.selectedCourses?.length > 0 && (
-                    <>
-                      <div className="courses_box">
-                        <h2 className="heading_program_details">Courses</h2>
-                        
-                        <div className="slider courses_crousel slider_inner_content">
-                          {university.selectedCourses.map((course, index) => (
-                            <div key={index} className="crousel_item">
-                              <div className="course_details eq_course_details card">
-                                <div className="course-img-wrapper">
-                                  <img 
-                                    src={university.universityHomeImage || "https://via.placeholder.com/300x200"}
-                                    alt={course.courseName}
-                                    width="300" 
-                                    height="200"
-                                  />
-                                </div>
-
-                                <div className="card-body">
-                                  <div className="small_logo_box">
-                                    <figure className="university_logo_explore_program">
-                                      <img src={university.logo || "https://via.placeholder.com/64"} alt="University Logo" />
-                                    </figure>
-                                  </div>
-
-                                  <span className="courses-h5-classes">{course.courseName}</span>
-                                  <p>Book Your seat now</p>
-                                </div>
-
-                                <div className="card-footer">
-                                  <button className="btn btn-outline-primary">
-                                    Read More
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </section>
-
-                {/* Examination Pattern Section */}
-                <section id="ExaminationPattern" className="mt-5" ref={el => sectionRefs.current['ExaminationPattern'] = el}>
-                  {university.examinationPatterns?.filter(p => p.pattern && p.pattern !== "na").length > 0 && (
-                    <>
-                      <h2 className="heading_program_details">Examination Pattern</h2>
-                      <div className="prose max-w-none text-gray-700">
-                        {university.examinationPatterns
-                          .filter(p => p.pattern && p.pattern !== "na")
-                          .map((pattern, index) => (
-                          <p key={index} className="mb-4">{pattern.pattern}</p>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </section>
-
-                {/* Financial Aid Section */}
-                <section id="EducationLoanEMI" className="mt-5" ref={el => sectionRefs.current['EducationLoanEMI'] = el}>
-                  {university.financialOptions?.filter(f => f.category && f.category !== "na").length > 0 && (
-                    <>
-                      <h2 className="heading_program_details">Financial Aid</h2>
-                      <div className="table-responsive">
-                        <table className="table table-bordered">
-                          <thead className="tophead" style={{ backgroundColor: '#8D0DFE', color: '#fff' }}>
-                            <tr>
-                              <th>Category</th>
-                              <th>Scholarship Credit</th>
-                              <th>Eligibility Documents</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {university.financialOptions
-                              .filter(f => f.category && f.category !== "na")
-                              .map((option, index) => (
-                              <tr key={index}>
-                                <td>{option.category}</td>
-                                <td>{option.scholarshipCredit || 'N/A'}</td>
-                                <td>{option.eligibilityDocuments || 'N/A'}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </>
-                  )}
-                </section>
-
-                {/* Placement Partners Section */}
-                <section id="PlacementPartners" className="mt-5" ref={el => sectionRefs.current['PlacementPartners'] = el}>
-                  {university.selectedCompanies?.length > 0 && (
-                    <>
-                      <h2 className="heading_program_details">Hiring Partners</h2>
-                      <div className="university_approved_crousel">
-                        <div className="slider approved_crousel">
-                          {university.selectedCompanies.map((company, index) => (
-                            <div key={index} className="approved_logo_box">
-                              <div className="approved_logo">
-                                <figure>
-                                  <img src={company.image} alt={company.title} className="" />
-                                </figure>
-                                <div className="logo_details">
-                                  <strong>{company.title}</strong>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </section>
-
-                {/* Admission Open Section */}
-                <section id="AdmissionOpen" className="mt-5" ref={el => sectionRefs.current['AdmissionOpen'] = el}>
-                  {university.admissionProcess && (
-                    <>
-                      <h2 className="heading_program_details">Admission Open 2025</h2>
-                      <div className="prose max-w-none text-gray-700">
-                        <p>{university.admissionProcess}</p>
-                      </div>
-                    </>
-                  )}
-                </section>
-
-                {/* FAQ Section */}
-                <section id="FAQ" className="mt-5" ref={el => sectionRefs.current['FAQ'] = el}>
-                  {university.faqs?.filter(f => f.question && f.question !== "na").length > 0 && (
-                    <>
-                      <h2 className="heading_program_details">FAQ</h2>
-                      <div className="space-y-4">
-                        {university.faqs
-                          .filter(f => f.question && f.question !== "na")
-                          .map((faq, index) => (
-                          <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
-                            <button
-                              className="w-full px-5 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between"
-                              onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
-                            >
-                              <span className="font-medium text-gray-900">{faq.question}</span>
-                              {expandedFAQ === index ? (
-                                <ChevronDown className="w-5 h-5 text-gray-500" />
-                              ) : (
-                                <ChevronDown className="w-5 h-5 text-gray-500" />
-                              )}
-                            </button>
-                            {expandedFAQ === index && (
-                              <div className="px-5 py-4 bg-white">
-                                <p className="text-gray-700">{faq.answer}</p>
-                              </div>
-                            )}
                           </div>
                         ))}
                       </div>
@@ -690,28 +479,255 @@ export default function UniversityClient({ collegeUrl }) {
                   )}
                 </section>
 
-                {/* Similar Universities Section */}
-                <section id="OtherUniversities" className="mt-5" ref={el => sectionRefs.current['OtherUniversities'] = el}>
-                  <h2 className="heading_program_details">Similar Universities</h2>
-                  <div className="prose max-w-none text-gray-700">
-                    <p>Content for similar universities will be displayed here.</p>
+                {/* Ranking Section */}
+                <section className="mt-5" id="Ranking" ref={el => sectionRefs.current['Ranking'] = el}>
+                  <h2 className="heading_program_details">{university.universityName} Ranking</h2>
+                  <div className="certificate_listing">
+                    {university.rankings?.map((ranking, index) => (
+                      <div key={index} className="d-flex align-items-start gap-2 mb-2">
+                        <Check className="text-success mt-1" size={20} />
+                        <p className="mb-0">{ranking.RatingNumber}</p>
+                      </div>
+                    ))}
                   </div>
+                </section>
+
+                {/* Course Fees */}
+                <div className="course_fees mt-5">
+                  <h2 className="heading_program_details">Updated Course Fees for 2025</h2>
+                  <div className="table-responsive">
+                    <table className="table table-bordered align-middle">
+                      <thead className="table-primary" style={{ backgroundColor: '#8D0DFE', color: 'white' }}>
+                        <tr>
+                          <th>Course</th>
+                          <th>Per Semester</th>
+                          <th>Total Fees</th>
+                          <th>One Time Fees</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {university.selectedDepartments?.map((course, index) => (
+                          <tr key={index}>
+                            <td>{course.departmentContent}</td>
+                            <td>₹{course.feeDetails?.semesterFee?.toLocaleString('en-IN') || 'N/A'}/-</td>
+                            <td>₹{course.feeDetails?.totalAmount?.toLocaleString('en-IN') || 'N/A'}/-</td>
+                            <td>₹{course.feeDetails?.oneTimeFee?.toLocaleString('en-IN') || 'N/A'}/-</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="text-center mt-3">
+                    <button className="btn btn-primary" onClick={() => setShowFeeModal(true)} style={{ backgroundColor: "#8D0DFE", border: 'none' }}>
+                      Click here to view fee details
+                    </button>
+                  </div>
+                </div>
+
+                {/* Courses Section */}
+                <section className="mt-5" id="Courses" ref={el => sectionRefs.current['Courses'] = el}>
+                  {university.selectedCourses?.length > 0 && (
+                    <>
+                      <h2 className="heading_program_details">Courses</h2>
+                      <div className="row g-3">
+                        {university.selectedCourses.map((course, index) => (
+                          <div key={index} className="col-md-4">
+                            <div className="card h-100 shadow-sm">
+                              <img src={university.universityHomeImage || "https://via.placeholder.com/300x200"} className="card-img-top" alt={course.courseName} />
+                              <div className="card-body">
+                                <div className="small_logo_box mb-2">
+                                  <img src={university.logo || "https://via.placeholder.com/64"} alt="Logo" style={{ height: '40px' }} />
+                                </div>
+                                <h5 className="card-title">{course.courseName}</h5>
+                                <p className="card-text small text-muted">Book Your seat now</p>
+                              </div>
+                              <div className="card-footer bg-transparent">
+                                <button className="btn btn-outline-primary btn-sm w-100">Read More</button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </section>
+
+                {/* Sample Certificate */}
+                <section id="SampleCertificate" className="mt-5" ref={el => sectionRefs.current['SampleCertificate'] = el}>
+                  {university.sampleCertificate && (
+                    <>
+                      <h2 className="heading_program_details">Sample Certificate</h2>
+                      <img src={university.sampleCertificate} alt="Sample Certificate" className="img-fluid rounded shadow" />
+                    </>
+                  )}
+                </section>
+
+                {/* Examination Pattern */}
+                <section id="ExaminationPattern" className="mt-5" ref={el => sectionRefs.current['ExaminationPattern'] = el}>
+                  {university.examinationPatterns?.filter(p => p.pattern && p.pattern !== "na").length > 0 && (
+                    <>
+                      <h2 className="heading_program_details">Examination Pattern</h2>
+                      {university.examinationPatterns.filter(p => p.pattern && p.pattern !== "na").map((pattern, index) => (
+                        <p key={index} className="mb-3">{pattern.pattern}</p>
+                      ))}
+                    </>
+                  )}
+                </section>
+
+                {/* Campuses */}
+                <section id="Campuses" className="mt-5" ref={el => sectionRefs.current['Campuses'] = el}>
+                  {university.collegeType && (
+                    <>
+                      <h2 className="heading_program_details">{university.universityName} Campuses</h2>
+                      <p className="badge fs-6" style={{backgroundColor: "#8D0DFE"}}>{university.collegeType === "local" ? "All Over India" : "Study Abroad"}</p>
+                    </>
+                  )}
+                </section>
+
+                {/* Advantages */}
+                <section id="advantage" className="mt-5" ref={el => sectionRefs.current['advantage'] = el}>
+                  {university.advantages?.length > 0 && (
+                    <>
+                      <h2 className="heading_program_details">{university.universityName} Advantages</h2>
+                      {university.advantages.map((adv, index) => (
+                        <div key={index} className="d-flex align-items-start gap-2 mb-3">
+                          <CheckCircle className="text-success mt-1" size={20} />
+                          <p className="mb-0">{adv.description}</p>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </section>
+
+                {/* Financial Aid */}
+                <section id="FinancialAid" className="mt-5" ref={el => sectionRefs.current['FinancialAid'] = el}>
+                  {university.financialAidContent && (
+                    <>
+                      <h2 className="heading_program_details">Financial Aid</h2>
+                      <div dangerouslySetInnerHTML={{ __html: university.financialAidContent }} />
+                    </>
+                  )}
+                </section>
+
+                {/* Hiring Partners with Slider */}
+                <section id="PlacementPartners" className="mt-5" ref={el => sectionRefs.current['PlacementPartners'] = el}>
+                  {university.selectedCompanies?.length > 0 && (
+                    <>
+                      <h2 className="heading_program_details">Hiring Partners</h2>
+                      <div 
+                        ref={hiringSliderRef}
+                        className="d-flex gap-3 overflow-auto pb-3"
+                        style={{ scrollBehavior: 'smooth', scrollbarWidth: 'thin' }}
+                      >
+                        {university.selectedCompanies.map((company, index) => (
+                          <div 
+                            key={index} 
+                            className="card shadow-sm flex-shrink-0" 
+                            style={{ width: '150px', cursor: company.link ? 'pointer' : 'default', transition: 'transform 0.2s' }}
+                            onClick={() => handleCompanyClick(company)}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                          >
+                            <div className="card-body text-center p-3 d-flex justify-content-center align-items-center">
+                              <img src={company.image} alt={company.title} className="img-fluid mb-2" style={{ height: '80px', objectFit: 'contain' }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </section>
+
+                {/* Admission Open */}
+                <section id="AdmissionOpen" className="mt-5" ref={el => sectionRefs.current['AdmissionOpen'] = el}>
+                  {university.admissionProcess && (
+                    <>
+                      <h2 className="heading_program_details">Admission Open 2025</h2>
+                      <p>{university.admissionProcess}</p>
+                    </>
+                  )}
+                </section>
+
+                {/* FAQ */}
+                <section id="FAQ" className="mt-5" ref={el => sectionRefs.current['FAQ'] = el}>
+                  {university.faqs?.filter(f => f.question && f.question !== "na").length > 0 && (
+                    <>
+                      <h2 className="heading_program_details">Frequently Asked Questions</h2>
+                      <div className="accordion" id="faqAccordion">
+                        {university.faqs.filter(f => f.question && f.question !== "na").map((faq, index) => (
+                          <div key={index} className="accordion-item mb-2 border rounded">
+                            <h2 className="accordion-header">
+                              <button 
+                                className={`accordion-button ${expandedFAQ !== index ? 'collapsed' : ''}`}
+                                type="button"
+                                onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
+                              >
+                                {faq.question}
+                              </button>
+                            </h2>
+                            <div className={`accordion-collapse collapse ${expandedFAQ === index ? 'show' : ''}`}>
+                              <div className="accordion-body">
+                                {faq.answer}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </section>
 
                 {/* Reviews Section */}
                 <section id="TestimonialsReviews" className="mt-5" ref={el => sectionRefs.current['TestimonialsReviews'] = el}>
-                  <h2 className="heading_program_details">Reviews</h2>
-                  <div className="prose max-w-none text-gray-700">
-                    <p>Student reviews and testimonials will be displayed here.</p>
-                  </div>
+                  {university.reviews?.length > 0 && (
+                    <>
+                      <h2 className="heading_program_details">Student Reviews</h2>
+                      <div className="row g-3">
+                        {university.reviews.map((review, index) => (
+                          <div key={index} className="col-md-6">
+                            <div className="card shadow-sm h-100" style={{ borderLeft: '4px solid #8D0DFE' }}>
+                              <div className="card-body">
+                                <div className="d-flex align-items-center mb-3">
+                                  <div className="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '60px', height: '60px' }}>
+                                    <i className="fa fa-user fa-2x text-muted"></i>
+                                  </div>
+                                  <div className="flex-grow-1">
+                                    <h5 className="mb-1 fw-bold">{review.name || 'Anonymous'}</h5>
+                                    <div className="d-flex align-items-center gap-1">
+                                      {renderStars(review.Rating || 5)}
+                                      <span className="badge bg-success ms-2">{review.Rating || 5}/5</span>
+                                    </div>
+                                  </div>
+                                  <div className="text-end">
+                                    <CheckCircle className="text-success" size={24} />
+                                    <small className="d-block text-muted">Verified</small>
+                                  </div>
+                                </div>
+                                <p className="mb-0 text-muted">{review.description}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </section>
 
                 {/* Apply Now CTA */}
-                <section className="bg-[#8D0DFE] text-white p-8 rounded-lg mt-5">
-                  <h2 className="text-2xl font-bold mb-4">Ready to Apply to {university.universityName}?</h2>
-                  <button className="bg-white text-[#8D0DFE] hover:bg-gray-100 px-6 py-3 rounded-lg font-medium flex items-center gap-2">
-                    Begin Application <ChevronRight className="w-5 h-5" />
-                  </button>
+                <section className="mt-5 mb-5">
+                  <div className="card text-white" style={{ background: 'linear-gradient(135deg, #8D0DFE, #B84FFF)' }}>
+                    <div className="card-body p-4">
+                      <h4 className="card-title mb-3">Ready to Apply to {university.universityName}?</h4>
+                      <p className="mb-4">Start your journey towards a successful career. Apply now and unlock your potential!</p>
+                      <button 
+                        className="btn btn-light btn-md d-inline-flex align-items-center gap-2"
+                        onClick={() => handleRedirect(university)}
+                        style={{ color: '#8D0DFE', fontWeight: 'bold' }}
+                      >
+                        Begin Application <ChevronRight size={18} />
+                      </button>
+                    </div>
+                  </div>
                 </section>
               </div>
             </div>
@@ -719,6 +735,276 @@ export default function UniversityClient({ collegeUrl }) {
         </div>
       </section>
 
+      <style jsx>{`
+        .gauge-container {
+          position: relative;
+          width: 300px;
+          height: 300px;
+          background: white;
+          border-radius: 15px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+          padding: 20px;
+        }
+
+        #gaugeCanvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .gauge-text {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          z-index: 10;
+          width: 100%;
+          margin-top: 20px;
+        }
+
+        .gauge-label {
+          font-size: 12px;
+          color: #999;
+          margin-bottom: 8px;
+        }
+
+        .gauge-score {
+          font-size: 42px;
+          font-weight: 700;
+          color: #333;
+          margin-bottom: 10px;
+          line-height: 1;
+        }
+
+        .gauge-small {
+          font-size: 16px;
+          font-weight: 400;
+          color: #999;
+        }
+
+        .gauge-container-rate {
+          border: none;
+          display: flex;
+          flex-direction: row-reverse;
+          justify-content: center;
+          gap: 2px;
+        }
+
+        .gauge-container-rate input {
+          display: none;
+        }
+
+        .gauge-container-rate label {
+          cursor: default;
+          width: 24px;
+          height: 24px;
+          background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>') no-repeat center;
+          background-size: contain;
+        }
+
+        .gauge-container-rate label.active-star {
+          background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffc107"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>') no-repeat center;
+          background-size: contain;
+        }
+
+        .gauge-container-rate label.half {
+          width: 12px;
+          margin-right: -12px;
+          background-position: left center;
+          z-index: 2;
+        }
+
+        .gauge-container-rate label.half.active-star {
+          background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><defs><linearGradient id="half"><stop offset="50%" stop-color="%23ffc107"/><stop offset="50%" stop-color="%23333"/></linearGradient></defs><path fill="url(%23half)" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>') no-repeat center;
+          background-size: contain;
+        }
+
+        .icon-circle {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background-color: #f5f5f5;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .icon-img {
+          width: 18px;
+          height: 18px;
+          object-fit: contain;
+        }
+
+        .list-group-item {
+          border: none;
+          border-left: 3px solid transparent;
+          transition: all 0.3s ease;
+        }
+
+        .list-group-item:hover {
+          background-color: #f8f9fa;
+         
+        }
+
+        .nav-item.active .list-group-item {
+          background-color: #f0e6ff
+          font-weight: 600;
+        }
+
+        .overflow-auto::-webkit-scrollbar {
+          height: 8px;
+        }
+
+        .overflow-auto::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        .overflow-auto::-webkit-scrollbar-thumb {
+          background: #8D0DFE;
+          border-radius: 10px;
+        }
+
+        .overflow-auto::-webkit-scrollbar-thumb:hover {
+          background: #7a0bd9;
+        }
+
+        .card {
+          transition: all 0.3s ease;
+        }
+
+        .card:hover {
+          box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .star_rating svg {
+          transition: transform 0.2s ease;
+        }
+
+        .star_rating svg:hover {
+          transform: scale(1.2);
+        }
+
+        .modal.show {
+          animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        .accordion-button:not(.collapsed) {
+          background-color: #f0e6ff;
+          color: #8D0DFE;
+          font-weight: 600;
+        }
+
+        .accordion-button:focus {
+          box-shadow: 0 0 0 0.25rem rgba(141, 13, 254, 0.25);
+        }
+
+        .card[style*="borderLeft"] {
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        .table-bordered {
+          border: 2px solid #8D0DFE;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+          border-color: #d4b3ff;
+        }
+
+        .table-primary {
+          --bs-table-bg: #8D0DFE;
+          --bs-table-color: white;
+        }
+
+        .btn {
+          transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+          transform: translateY(0);
+        }
+
+        .badge {
+          padding: 0.5em 1em;
+        }
+
+       
+
+        @media (max-width: 768px) {
+          .programs_tab_listing {
+            flex-direction: column;
+          }
+
+          .university_program_listing {
+            width: 100%;
+            margin-bottom: 20px;
+          }
+
+          .university_program_detaile {
+            width: 100%;
+          }
+
+          .overflow-auto {
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .gauge-container {
+            width: 250px;
+            height: 250px;
+          }
+
+          .gauge-score {
+            font-size: 36px;
+          }
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        .spinner-border {
+          border-width: 3px;
+        }
+
+        img {
+          transition: transform 0.3s ease;
+        }
+
+        .card:hover img {
+          transform: scale(1.05);
+        }
+
+        ::selection {
+          background-color: #8D0DFE;
+          color: white;
+        }
+
+        a:focus,
+        button:focus {
+      
+          outline-offset: 2px;
+        }
+      `}</style>
     </div>
   );
 }

@@ -27,11 +27,13 @@
     "next": "^15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-gauge-chart": "^0.5.1",
     "react-icons": "^5.5.0",
     "react-owl-carousel": "^2.3.3",
     "react-select": "^5.10.2",
     "react-slick": "^0.31.0",
     "reactjs-popup": "^2.0.6",
+    "recharts": "^3.3.0",
     "sweetalert2": "^11.22.2",
     "swiper": "^11.2.10",
     "tiptap": "^1.32.2"
