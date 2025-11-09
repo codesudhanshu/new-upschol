@@ -114,7 +114,7 @@ export default function BlogBanner({ featuredBlog }) {
               </div>
               
               <div className="blog_btnbox">
-                <Link href={`/blogs/${featuredBlog.url}`} className="btn btn-primary" style={{backgroundColor:"#8D0DFE"}}>
+                <Link href={`/blogs/${featuredBlog.url}`} className="btn btn-primary" style={{backgroundColor:"#7004e5"}}>
                   Read More
                 </Link>
               </div>

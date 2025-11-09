@@ -1,0 +1,31 @@
+input[type="checkbox"] {
+  appearance: none;
+  background-color: #D9D9D9;
+  margin-top: 3px;
+  font: inherit;
+  color: currentColor;
+  width: 1.15em;
+  height: 1.15em;
+  border: 1px solid rgba(16, 24, 40, 0.22);
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+  display: grid;
+  grid-template-columns: auto auto;
+
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.99em;
+  height: 0.99em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  background-color: #6941C6;
+
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+

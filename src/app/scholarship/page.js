@@ -205,7 +205,7 @@ const ScholarshipPage = () => {
           icon: 'success',
           title: 'Success!',
           text: result.result?.message || 'Enquiry submitted successfully!',
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
         
         // Reset form
@@ -225,7 +225,7 @@ const ScholarshipPage = () => {
           icon: 'error',
           title: 'Error!',
           text: result.result?.message || result.message || 'Enquiry not submitted successfully!',
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
       }
     } catch (error) {
@@ -234,7 +234,7 @@ const ScholarshipPage = () => {
         icon: 'error',
         title: 'Error!',
         text: 'Enquiry not submitted successfully!',
-        confirmButtonColor: '#8D0DFE'
+        confirmButtonColor: '#7004e5'
       });
     } finally {
       setLoading(false);
@@ -436,7 +436,7 @@ const ScholarshipPage = () => {
                     className="btn btn-primary" 
                     id="scholarship_form_btn"
                     disabled={loading}
-                    style={{backgroundColor: "#8D0DFE"}}
+                    style={{backgroundColor: "#7004e5"}}
                   >
                     {loading ? (
                       <>

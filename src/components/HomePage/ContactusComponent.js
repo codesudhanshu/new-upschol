@@ -34,7 +34,7 @@ export default function ContactSection() {
           icon: 'success',
           title: 'Success!',
           text: result.result.message,
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
 
         // Reset form
@@ -50,7 +50,7 @@ export default function ContactSection() {
           icon: 'error',
           title: 'Error!',
           text: result.message || 'Something went wrong!',
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
       }
     } catch (error) {
@@ -58,7 +58,7 @@ export default function ContactSection() {
         icon: 'error',
         title: 'Error!',
         text: 'Network error! Please try again.',
-        confirmButtonColor: '#8D0DFE'
+        confirmButtonColor: '#7004e5'
       });
     } finally {
       setLoading(false);
@@ -166,7 +166,7 @@ export default function ContactSection() {
                     type="submit" 
                     className="btn w-100"
                     disabled={loading}
-                    style={{backgroundColor: "#8D0DFE", color: 'white'}}
+                    style={{backgroundColor: "#7004e5", color: 'white'}}
                   >
                     {loading ? 'SUBMITTING...' : 'SUBMIT'}
                   </button>
@@ -199,7 +199,7 @@ export default function ContactSection() {
         }
 
         .btn-red {
-          background-color: #8D0DFE;
+          background-color: #7004e5;
           color: white;
           border: none;
           padding: 10px 20px;

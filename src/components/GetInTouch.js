@@ -60,7 +60,7 @@ const GetInTouch = () => {
           icon: 'success',
           title: 'Success!',
           text: result.result.message || 'Enquiry submitted successfully!',
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
         
         setIsModalOpen(false);
@@ -89,7 +89,7 @@ const GetInTouch = () => {
           icon: 'error',
           title: 'Error!',
           text: result.message || 'Enquiry not submitted successfully!',
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
       }
     } catch (error) {
@@ -98,7 +98,7 @@ const GetInTouch = () => {
         icon: 'error',
         title: 'Error!',
         text: error.message || 'Failed to submit enquiry. Please try again.',
-        confirmButtonColor: '#8D0DFE'
+        confirmButtonColor: '#7004e5'
       });
     } finally {
       setIsSubmitting(false);
@@ -124,7 +124,7 @@ const GetInTouch = () => {
       {/* Fixed Enquire Now Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed right-0 top-1/2 transform -translate-y-1/2 z-[100] bg-[#8D0DFE] text-white px-2 py-3 rounded-l-lg font-semibold shadow-lg hover:bg-[#7a0be0] transition-colors duration-300 cursor-pointer"
+        className="fixed right-0 top-1/2 transform -translate-y-1/2 z-[100] bg-[#7004e5] text-white px-2 py-3 rounded-l-lg font-semibold shadow-lg hover:bg-[#7a0be0] transition-colors duration-300 cursor-pointer"
         style={{
           writingMode: 'vertical-rl',
           textOrientation: 'mixed'
@@ -174,7 +174,7 @@ const GetInTouch = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8D0DFE] focus:border-transparent outline-none transition-all duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7004e5] focus:border-transparent outline-none transition-all duration-200"
                         placeholder="Full name*" 
                         required
                         disabled={isSubmitting}
@@ -187,7 +187,7 @@ const GetInTouch = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8D0DFE] focus:border-transparent outline-none transition-all duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7004e5] focus:border-transparent outline-none transition-all duration-200"
                         placeholder="Email address*" 
                         required
                         disabled={isSubmitting}
@@ -200,7 +200,7 @@ const GetInTouch = () => {
                         name="phoneNumber"
                         value={formData.phoneNumber}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8D0DFE] focus:border-transparent outline-none transition-all duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7004e5] focus:border-transparent outline-none transition-all duration-200"
                         placeholder="Mobile number*" 
                         required
                         disabled={isSubmitting}
@@ -229,7 +229,7 @@ const GetInTouch = () => {
                   <div className="text-center">
                     <button 
                       type="submit" 
-                      className="w-full bg-[#8D0DFE] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#7a0be0] transition-colors duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      className="w-full bg-[#7004e5] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#7a0be0] transition-colors duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? 'Submitting...' : 'Enquire Now!'}

@@ -119,8 +119,10 @@ export const createuniversity = (data) => {
   return axios.post(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/create-university`, data).then(res => res.data);
 };
 
-export const getAlluniversity = () => {
-  return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/universities`).then(res => res.data);
+export const getAlluniversity = (params = {}) => {
+  const queryString = new URLSearchParams(params).toString();
+  return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/universities?${queryString}`)
+    .then(res => res.data);
 };
 
 export const getuniversityById = (id) => {
@@ -131,6 +133,9 @@ export const updateuniversity = (id, data) => {
   return axios.put(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/university/${id}`, data).then(res => res.data);
 };
 
+export const deleteuniversity = (id) => {
+  return axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/university/${id}`).then(res => res.data);
+};
 
 export const getAllpartnersdata = () => {
   return axios.get(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/admin/partner-university`).then(res => res.data);

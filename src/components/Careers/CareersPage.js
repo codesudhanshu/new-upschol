@@ -415,7 +415,7 @@ export default function JobListings() {
                         />
                         <span>
                           <img src="https://www.collegesathi.com/images/cloud_upload.svg" alt="Img" />
-                          <div className="text-[#8D0DFE]">
+                          <div className="text-[#7004e5]">
                             {applicationData.resume ? applicationData.resume.name : 'Upload CV (PDF, DOC, DOCX)'}
                           </div>
                         </span>
@@ -426,7 +426,7 @@ export default function JobListings() {
                       type="submit" 
                       className="btn btn-primary w-100" 
                       disabled={isSubmitting}
-                      style={{backgroundColor: "#8D0DFE"}}
+                      style={{backgroundColor: "#7004e5"}}
                     >
                       {isSubmitting ? (
                         <>

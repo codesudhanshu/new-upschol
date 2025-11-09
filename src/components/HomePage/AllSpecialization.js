@@ -46,7 +46,7 @@ const SpecializationsSection = () => {
         <div className="row align-items-center">
           <div className="col-xl-5">
             <div className="left-stuf txt-center-sm mb-lg-10">
-              <h2>Best <strong style={{color:"#8D0DFE"}}>Trending Specialization</strong> of 2025 </h2>
+              <h2>Best <strong style={{color:"#7004e5"}}>Trending Specialization</strong> of 2025 </h2>
               <p>These emerging fields offer exciting opportunities for professionals to drive impactful change and lead the future of innovation</p>
               <Link href="/specialization" className="btn btn-red">View All</Link>
             </div>

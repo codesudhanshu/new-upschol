@@ -233,7 +233,7 @@ const getComparisonUrl = () => {
                             </label>
                           </div>
                         </div>
-                        <Link href={`/university/${university.universityurl}`} className="btn btn-primary" style={{backgroundColor: "#8D0DFE"}}>
+                        <Link href={`/university/${university.universityurl}`} className="btn btn-primary" style={{backgroundColor: "#7004e5", border: "none"}}>
                           View details
                         </Link>
                       </div>
@@ -245,7 +245,7 @@ const getComparisonUrl = () => {
 
             {universities.length > 0 && (
               <div className="collage_listing_btn seemore">
-                <a className="btn btn-primary view_more" href="javascript:void(0);" style={{backgroundColor: "#8D0DFE"}}>View More</a>
+                <a className="btn btn-primary view_more" href="javascript:void(0);" style={{backgroundColor: "#7004e5"}}>View More</a>
               </div>
             )}
           </div>

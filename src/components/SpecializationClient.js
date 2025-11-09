@@ -479,9 +479,9 @@ export default function SpecializationClient({ collegeUrl }) {
                       <h2 className="heading_program_details">Updated Course Fees for 2025</h2>
                       <div className="table-responsive tableformat">
                         <table className="table-responsive align-middle text-start" 
-                               style={{ border: '2px solid #8D0DFE', width: '100%', tableLayout: 'fixed' }}>
+                               style={{ border: '2px solid #7004e5', width: '100%', tableLayout: 'fixed' }}>
                           <thead>
-                            <tr className="tophead" style={{ backgroundColor: '#8D0DFE', color: '#ffff' }}>
+                            <tr className="tophead" style={{ backgroundColor: '#7004e5', color: '#ffff' }}>
                               <th className="p-3 text-start align-middle" style={{ borderRight: '1px solid #F47C80' }}>
                                 Course
                               </th>
@@ -508,7 +508,7 @@ export default function SpecializationClient({ collegeUrl }) {
                         <button 
                           className="btn btn-primary"
                           onClick={() => setShowFeeModal(true)}
-                          style={{backgroundColor:"#8D0DFE"}}
+                          style={{backgroundColor:"#7004e5"}}
                         >
                           Click here to view fee details
                         </button>
@@ -636,7 +636,7 @@ export default function SpecializationClient({ collegeUrl }) {
                       <h2 className="heading_program_details">Financial Aid</h2>
                       <div className="table-responsive">
                         <table className="table table-bordered">
-                          <thead className="tophead" style={{ backgroundColor: '#8D0DFE', color: '#fff' }}>
+                          <thead className="tophead" style={{ backgroundColor: '#7004e5', color: '#fff' }}>
                             <tr>
                               <th>Category</th>
                               <th>Scholarship Credit</th>
@@ -747,9 +747,9 @@ export default function SpecializationClient({ collegeUrl }) {
                 </section>
 
                 {/* Apply Now CTA */}
-                <section className="bg-[#8D0DFE] text-white p-8 rounded-lg mt-5">
+                <section className="bg-[#7004e5] text-white p-8 rounded-lg mt-5">
                   <h2 className="text-2xl font-bold mb-4">Ready to Apply to {university.universityName}?</h2>
-                  <button className="bg-white text-[#8D0DFE] hover:bg-gray-100 px-6 py-3 rounded-lg font-medium flex items-center gap-2">
+                  <button className="bg-white text-[#7004e5] hover:bg-gray-100 px-6 py-3 rounded-lg font-medium flex items-center gap-2">
                     Begin Application <ChevronRight className="w-5 h-5" />
                   </button>
                 </section>

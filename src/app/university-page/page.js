@@ -103,7 +103,7 @@ const EducationForm = () => {
       icon: 'success',
       title: 'Success!',
       text: message,
-      confirmButtonColor: '#8D0DFE',
+      confirmButtonColor: '#7004e5',
     });
   };
 
@@ -112,7 +112,7 @@ const EducationForm = () => {
       icon: 'error',
       title: 'Error!',
       text: message,
-      confirmButtonColor: '#8D0DFE',
+      confirmButtonColor: '#7004e5',
       confirmButtonText: 'OK'
     });
   };
@@ -122,7 +122,7 @@ const EducationForm = () => {
       icon: 'warning',
       title: 'Warning!',
       text: message,
-      confirmButtonColor: '#8D0DFE',
+      confirmButtonColor: '#7004e5',
       confirmButtonText: 'OK'
     });
   };
@@ -202,7 +202,7 @@ const handleSubmit = async () => {
           icon: 'success',
           title: 'Success!',
           text: 'Form submitted successfully! Our team will contact you soon.',
-          confirmButtonColor: '#8D0DFE',
+          confirmButtonColor: '#7004e5',
         });
         
         // User clicked OK, now redirect
@@ -424,7 +424,7 @@ const handleSubmit = async () => {
                     onClick={handleSubmit}
                     disabled={isSubmitting}
                     style={{ 
-                      backgroundColor: "#8D0DFE",
+                      backgroundColor: "#7004e5",
                       opacity: isSubmitting ? 0.6 : 1
                     }}
                   >

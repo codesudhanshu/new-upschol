@@ -75,7 +75,7 @@ const Allcourses = () => {
                   key={category._id} 
                   className="nav-item" 
                   role="presentation" 
-                  style={{ borderRadius: '7px', border: '2px solid #8D0DFE' }}
+                  style={{ borderRadius: '7px', border: '2px solid #7004e5' }}
                 >
                   <button
                     className={`nav-link ${isActive ? 'active' : ''}`}

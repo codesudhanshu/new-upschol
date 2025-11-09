@@ -310,11 +310,11 @@ export default function UniversityClient({ collegeUrl }) {
                 
                 
                 <div className="btn-group gap-2">
-                  <button className="btn btn-primary d-flex align-items-center" style={{ backgroundColor: "#8D0DFE", border: 'none' }} onClick={() => handleRedirect(university)}>
+                  <button className="btn btn-primary d-flex align-items-center" style={{ backgroundColor: "#7004e5", border: 'none' }} onClick={() => handleRedirect(university)}>
                     <i className="fa fa-university me-2"></i>
                     Apply Now
                   </button>
-                  <button className="btn btn-primary d-flex align-items-center" style={{ backgroundColor: "#8D0DFE", border: 'none' }} onClick={() => handleRedirect2(university)}>
+                  <button className="btn btn-primary d-flex align-items-center" style={{ backgroundColor: "#7004e5", border: 'none' }} onClick={() => handleRedirect2(university)}>
                     <i className="fa fa-comment-dots me-2"></i>
                     Talk To Expert
                   </button>
@@ -497,7 +497,7 @@ export default function UniversityClient({ collegeUrl }) {
                   <h2 className="heading_program_details">Updated Course Fees for 2025</h2>
                   <div className="table-responsive">
                     <table className="table table-bordered align-middle">
-                      <thead className="table-primary" style={{ backgroundColor: '#8D0DFE', color: 'white' }}>
+                      <thead className="table-primary" style={{ backgroundColor: '#7004e5', color: 'white' }}>
                         <tr>
                           <th>Course</th>
                           <th>Per Semester</th>
@@ -518,7 +518,7 @@ export default function UniversityClient({ collegeUrl }) {
                     </table>
                   </div>
                   <div className="text-center mt-3">
-                    <button className="btn btn-primary"  onClick={() => handleRedirect(university)} style={{ backgroundColor: "#8D0DFE", border: 'none' }}>
+                    <button className="btn btn-primary"  onClick={() => handleRedirect(university)} style={{ backgroundColor: "#7004e5", border: 'none' }}>
                       Click here to view fee details
                     </button>
                   </div>
@@ -579,7 +579,7 @@ export default function UniversityClient({ collegeUrl }) {
                   {university.collegeType && (
                     <>
                       <h2 className="heading_program_details">{university.universityName} Campuses</h2>
-                      <p className="badge fs-6" style={{backgroundColor: "#8D0DFE"}}>{university.collegeType === "local" ? "All Over India" : "Study Abroad"}</p>
+                      <p className="badge fs-6" style={{backgroundColor: "#7004e5"}}>{university.collegeType === "local" ? "All Over India" : "Study Abroad"}</p>
                     </>
                   )}
                 </section>
@@ -685,7 +685,7 @@ export default function UniversityClient({ collegeUrl }) {
                       <div className="row g-3">
                         {university.reviews.map((review, index) => (
                           <div key={index} className="col-md-6">
-                            <div className="card shadow-sm h-100" style={{ borderLeft: '4px solid #8D0DFE' }}>
+                            <div className="card shadow-sm h-100" style={{ borderLeft: '4px solid #7004e5' }}>
                               <div className="card-body">
                                 <div className="d-flex align-items-center mb-3">
                                   <div className="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style={{ width: '60px', height: '60px' }}>
@@ -715,14 +715,14 @@ export default function UniversityClient({ collegeUrl }) {
 
                 {/* Apply Now CTA */}
                 <section className="mt-5 mb-5">
-                  <div className="card text-white" style={{ background: 'linear-gradient(135deg, #8D0DFE, #B84FFF)' }}>
+                  <div className="card text-white" style={{ background: 'linear-gradient(135deg, #7004e5, #B84FFF)' }}>
                     <div className="card-body p-4">
                       <h4 className="card-title mb-3">Ready to Apply to {university.universityName}?</h4>
                       <p className="mb-4">Start your journey towards a successful career. Apply now and unlock your potential!</p>
                       <button 
                         className="btn btn-light btn-md d-inline-flex align-items-center gap-2"
                         onClick={() => handleRedirect(university)}
-                        style={{ color: '#8D0DFE', fontWeight: 'bold' }}
+                        style={{ color: '#7004e5', fontWeight: 'bold' }}
                       >
                         Begin Application <ChevronRight size={18} />
                       </button>
@@ -865,7 +865,7 @@ export default function UniversityClient({ collegeUrl }) {
         }
 
         .overflow-auto::-webkit-scrollbar-thumb {
-          background: #8D0DFE;
+          background: #7004e5;
           border-radius: 10px;
         }
 
@@ -904,7 +904,7 @@ export default function UniversityClient({ collegeUrl }) {
 
         .accordion-button:not(.collapsed) {
           background-color: #f0e6ff;
-          color: #8D0DFE;
+          color: #7004e5;
           font-weight: 600;
         }
 
@@ -918,7 +918,7 @@ export default function UniversityClient({ collegeUrl }) {
         }
 
         .table-bordered {
-          border: 2px solid #8D0DFE;
+          border: 2px solid #7004e5;
         }
 
         .table-bordered th,
@@ -927,7 +927,7 @@ export default function UniversityClient({ collegeUrl }) {
         }
 
         .table-primary {
-          --bs-table-bg: #8D0DFE;
+          --bs-table-bg: #7004e5;
           --bs-table-color: white;
         }
 
@@ -995,7 +995,7 @@ export default function UniversityClient({ collegeUrl }) {
         }
 
         ::selection {
-          background-color: #8D0DFE;
+          background-color: #7004e5;
           color: white;
         }
 

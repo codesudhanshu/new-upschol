@@ -235,7 +235,7 @@ export default function Home() {
   role="tab"
   aria-selected={activeTab === tab.id}
   style={{
-    backgroundColor: activeTab === tab.id ? '#8D0DFE' : 'transparent',
+    backgroundColor: activeTab === tab.id ? '#7004e5' : 'transparent',
     color: activeTab === tab.id ? 'white' : 'black',
     borderRadius: '8px',
     padding: '8px 16px',

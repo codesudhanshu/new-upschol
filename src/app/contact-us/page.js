@@ -203,7 +203,7 @@ const ContactUsPage = () => {
           icon: 'success',
           title: 'Success!',
           text: result.result?.message || 'Enquiry submitted successfully!',
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
         
         // Reset form
@@ -223,7 +223,7 @@ const ContactUsPage = () => {
           icon: 'error',
           title: 'Error!',
           text: result.result?.message || result.message || 'Enquiry not submitted successfully!',
-          confirmButtonColor: '#8D0DFE'
+          confirmButtonColor: '#7004e5'
         });
       }
     } catch (error) {
@@ -232,7 +232,7 @@ const ContactUsPage = () => {
         icon: 'error',
         title: 'Error!',
         text: 'Enquiry not submitted successfully!',
-        confirmButtonColor: '#8D0DFE'
+        confirmButtonColor: '#7004e5'
       });
     } finally {
       setLoading(false);
@@ -504,7 +504,7 @@ const ContactUsPage = () => {
                   </div>
                   
                   <div className="contact_btn">
-                    <button className="btn btn-primary submit_btn" type="button" onClick={handleSubmit} disabled={loading} style={{backgroundColor: "#8D0DFE"}}>
+                    <button className="btn btn-primary submit_btn" type="button" onClick={handleSubmit} disabled={loading} style={{backgroundColor: "#7004e5"}}>
                       {loading ? "Submitting..." : "Submit"}
                     </button>
                   </div>

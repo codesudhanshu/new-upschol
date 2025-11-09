@@ -26,6 +26,10 @@ export default function UniversityCreateForm() {
     universityName: '',
     keywordDescription: '',
     universityRating: '',
+    valueForMoney: '',
+    curriculum: '',
+    digitalInfrastructure: '',
+    averageRating: '',
     aboutCollege: '',
     startingKeyPoints: ['', ''],
     sampleCertificateDescription: '',
@@ -501,6 +505,10 @@ export default function UniversityCreateForm() {
           universityName: '',
           keywordDescription: '',
           universityRating: '',
+          valueForMoney: '',
+    curriculum: '',
+    digitalInfrastructure: '',
+    averageRating: '',
           aboutCollege: '',
           startingKeyPoints: ['', ''],
           sampleCertificateDescription: '',
@@ -661,6 +669,61 @@ export default function UniversityCreateForm() {
                   </div>
                 </div>
 
+
+                  <div className="grid grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">Average Rating</label>
+                    <input
+                      type="number"
+                      name="averageRating"
+                      value={formData.averageRating}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      className="w-full px-4 py-3 border rounded-lg"
+                    />
+                  </div>
+                   <div>
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">Digital Infrastructure</label>
+                    <input
+                      type="number"
+                      name="digitalInfrastructure"
+                      value={formData.digitalInfrastructure}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      className="w-full px-4 py-3 border rounded-lg"
+                    />
+                  </div>
+                   <div>
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">curriculum</label>
+                    <input
+                      type="number"
+                      name="curriculum"
+                      value={formData.curriculum}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      className="w-full px-4 py-3 border rounded-lg"
+                    />
+                  </div>
+                   <div>
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">value For Money</label>
+                    <input
+                      type="number"
+                      name="valueForMoney"
+                      value={formData.valueForMoney}
+                      onChange={handleInputChange}
+                      min="0"
+                      max="5"
+                      step="0.1"
+                      className="w-full px-4 py-3 border rounded-lg"
+                    />
+                  </div>
+                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-800 mb-2">University Rating</label>

@@ -69,7 +69,7 @@ export default function AboutUs() {
       <section className="relative py-5 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-blue-50 to-white opacity-70"></div>
         <div className="relative max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
+          <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#7004e5] text-white text-sm font-semibold mb-6">
             <Award className="w-4 h-4 mr-2" />
             Your Pathway to a Recognized Online Degree
           </div>
@@ -129,7 +129,7 @@ export default function AboutUs() {
       <section className="py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#7004e5] text-white text-sm font-semibold mb-6">
               <BookOpen className="w-4 h-4 mr-2" />
               What We Do
             </div>
@@ -159,7 +159,7 @@ export default function AboutUs() {
       <section className="py-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-purple-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#7004e5] text-white text-sm font-semibold mb-6">
               <Users className="w-4 h-4 mr-2" />
               Who We Help
             </div>
@@ -205,7 +205,7 @@ export default function AboutUs() {
       {/* CTA Section */}
       <section className="py-5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#8D0DFE] text-white text-sm font-semibold mb-6">
+          <div className="inline-flex items-center px-4 py-2 rounded-full  bg-[#7004e5] text-white text-sm font-semibold mb-6">
             <CheckCircle className="w-4 h-4 mr-2" />
             Ready to Start?
           </div>

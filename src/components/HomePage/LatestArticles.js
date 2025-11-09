@@ -143,7 +143,7 @@ export default function LatestArticles() {
                     </p>
                     
                     <div className="date mt-3 d-flex align-items-center text-muted flex-grow-0">
-                      <CalendarCheck style={{color:"#8D0DFE"}} className="mr-2" />
+                      <CalendarCheck style={{color:"#7004e5"}} className="mr-2" />
                       {formatDate(blog.createdAt)} | {blog.createdBy}
                     </div>
                   </div>
@@ -154,8 +154,8 @@ export default function LatestArticles() {
                       className=" d-flex align-items-center justify-content-end  fw-semibold"
                      
                     >
-                      <span className="me-2" style={{color:"#8D0DFE"}}>Continue Reading</span>
-                      <MoveRight style={{color:"#8D0DFE"}}/>
+                      <span className="me-2" style={{color:"#7004e5"}}>Continue Reading</span>
+                      <MoveRight style={{color:"#7004e5"}}/>
                     </Link>
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function LatestArticles() {
           </Swiper>
           
           <div className="blog_btn text-center mt-4">
-            <Link href="/blogs" className="btn btn-primary px-4 py-2" style={{backgroundColor:"#8D0DFE"}}>
+            <Link href="/blogs" className="btn btn-primary px-4 py-2" style={{backgroundColor:"#7004e5"}}>
               View All Blog
             </Link>
           </div>

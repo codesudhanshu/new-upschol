@@ -34,7 +34,7 @@ const SpecializationDetailPage = () => {
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-        <div className="spinner-border" role="status" style={{ width: '3rem', height: '3rem' , color: "#8D0DFE"}}>
+        <div className="spinner-border" role="status" style={{ width: '3rem', height: '3rem' , color: "#7004e5"}}>
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -86,7 +86,7 @@ const SpecializationDetailPage = () => {
             </h1>
             
             <div className="author_details" style={{ marginBottom: '30px', color: '#6c757d', fontSize: '14px' }}>
-              <span>by <a href="javascript:void(0);" style={{ color: '#8D0DFE', textDecoration: 'none' }}>
+              <span>by <a href="javascript:void(0);" style={{ color: '#7004e5', textDecoration: 'none' }}>
                 {specialization.createdBy || 'Admin'}
               </a></span>
               <span> - {new Date(specialization.createdAt).toLocaleDateString('en-US', { 

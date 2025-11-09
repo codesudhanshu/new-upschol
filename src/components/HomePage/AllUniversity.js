@@ -59,9 +59,9 @@ export default function AllUniversity() {
         {/* Title */}
     <div className="d-flex justify-content-between align-items-center mb-4">
   <h2 className="h1 fw-bold">
-    Discover <span style={{color: "#8D0DFE"}}>Leading Universities</span>
+    Discover <span style={{color: "#7004e5"}}>Leading Universities</span>
   </h2>
-  <a href="/universities" className="btn fw-medium" style={{backgroundColor: "#8D0DFE", color: "white"}}>
+  <a href="/universities" className="btn fw-medium" style={{backgroundColor: "#7004e5", color: "white"}}>
     View All &gt;
   </a>
 </div>
@@ -217,7 +217,7 @@ export default function AllUniversity() {
           transform: translateY(-50%);
           width: 40px;
           height: 40px;
-          background: #8D0DFE;
+          background: #7004e5;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -231,7 +231,7 @@ export default function AllUniversity() {
         
         .swiper-button-prev:hover,
         .swiper-button-next:hover {
-          background: #8D0DFE;
+          background: #7004e5;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         

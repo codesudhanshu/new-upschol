@@ -200,7 +200,7 @@ export default function AllIndustryExpert() {
           transform: translateY(-50%);
           width: 40px;
           height: 40px;
-          background: #8D0DFE;
+          background: #7004e5;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -214,7 +214,7 @@ export default function AllIndustryExpert() {
         
         .swiper-button-prev:hover,
         .swiper-button-next:hover {
-          background: #8D0DFE;
+          background: #7004e5;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         

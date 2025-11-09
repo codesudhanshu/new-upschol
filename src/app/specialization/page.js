@@ -34,7 +34,7 @@ const AllSpecializations = () => {
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <div className="spinner-border" role="status" style={{ width: '3rem', height: '3rem' , color: "#8D0DFE"}}>
+        <div className="spinner-border" role="status" style={{ width: '3rem', height: '3rem' , color: "#7004e5"}}>
           <span className="visually-hidden">Loading...</span>
         </div>
       </div>
@@ -50,7 +50,7 @@ const AllSpecializations = () => {
           <div className="col-12">
             <div className="text-center mb-5">
               <h2 className="fw-bold mb-3" style={{ fontSize: '2.5rem' }}>
-                All <span style={{ color: '#8D0DFE' }}>Specializations</span>
+                All <span style={{ color: '#7004e5' }}>Specializations</span>
               </h2>
               <p className="text-muted" style={{ fontSize: '1.1rem' }}>
                 Explore all available specializations to find the perfect fit for your career goals
@@ -99,7 +99,7 @@ const AllSpecializations = () => {
                       <p className="card-text text-muted mb-3" style={{ fontSize: '14px' }}>
                         {truncateDescription(specialization.description)}
                       </p>
-                      <div className="d-flex align-items-center" style={{ color: '#8D0DFE', fontSize: '14px', fontWeight: '600' }}>
+                      <div className="d-flex align-items-center" style={{ color: '#7004e5', fontSize: '14px', fontWeight: '600' }}>
                         Learn More <span className="ms-2">→</span>
                       </div>
                     </div>

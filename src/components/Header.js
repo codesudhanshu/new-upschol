@@ -440,7 +440,7 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
                       position: 'absolute',
                       top: '-12px',
                       left: '43px',
-                      backgroundColor: '#8D0DFE',
+                      backgroundColor: '#7004e5',
                       borderRadius: '15px',
                       padding: '1px 10px',
                       color: 'white',
