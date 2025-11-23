@@ -88,7 +88,7 @@ const EditTipsInsights = () => {
           icon: 'success',
           title: 'Success!',
           text: 'Banner updated successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         router.push('/admin/dashboard/tips-insights');
       } else {

@@ -147,7 +147,7 @@ const EditIndustryExpert = () => {
           icon: 'success',
           title: 'Success!',
           text: 'Industry expert updated successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         router.push('/admin/dashboard/industry-experts');
       } else {

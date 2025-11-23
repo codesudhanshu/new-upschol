@@ -9,8 +9,6 @@ export default function EditFAQPage({ params }) {
   const router = useRouter();
   const { id } = params;
 
-  console.log('id is here:', id);
-
   const [formData, setFormData] = useState({
     title: '',
     description: ''
@@ -25,7 +23,7 @@ export default function EditFAQPage({ params }) {
       icon: 'success',
       title: 'Success!',
       text: message,
-      confirmButtonColor: '#3b82f6',
+      confirmButtonColor: '#7004e5',
       confirmButtonText: 'OK'
     });
   };
@@ -45,13 +43,10 @@ export default function EditFAQPage({ params }) {
   useEffect(() => {
     const fetchFAQ = async () => {
       try {
-        console.log('Fetching FAQ with ID:', id);
         const response = await getAllfaq();
-        console.log('API Response:', response);
         
         if (response.status === true) {
           const faq = response.result.find(f => f._id === id);
-          console.log('Found FAQ:', faq);
           
           if (faq) {
             setFormData({

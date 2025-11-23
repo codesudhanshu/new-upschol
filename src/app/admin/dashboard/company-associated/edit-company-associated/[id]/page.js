@@ -88,7 +88,7 @@ const EditCompanyAssociated = () => {
           icon: 'success',
           title: 'Success!',
           text: 'Company updated successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         router.push('/admin/dashboard/company-associated');
       } else {

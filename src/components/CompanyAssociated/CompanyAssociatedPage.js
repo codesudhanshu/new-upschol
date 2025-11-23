@@ -15,7 +15,6 @@ export default function CompanyAssociatedPage() {
     const fetchcompanies = async () => {
       try {
         const data = await getAllCompanies();
-        console.log("API Response:", data);
 
         if (data.status && data.result && data.result.companies) {
           setcompanies(data.result.companies);

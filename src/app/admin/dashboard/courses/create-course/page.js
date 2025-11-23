@@ -35,7 +35,7 @@ export default function CourseCreateForm() {
           icon: 'error',
           title: 'Error',
           text: error.message || 'Failed to load required data. Please refresh the page.',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
       } finally {
         setIsLoading(false);
@@ -65,7 +65,7 @@ export default function CourseCreateForm() {
         icon: 'error',
         title: 'Missing Information',
         html: `Please fill in: <strong>${errors.join(', ')}</strong>`,
-        confirmButtonColor: '#3b82f6'
+        confirmButtonColor: '#7004e5'
       });
       return;
     }
@@ -99,7 +99,7 @@ export default function CourseCreateForm() {
         icon: 'success',
         title: 'Success!',
         text: 'Course created successfully',
-        confirmButtonColor: '#3b82f6',
+        confirmButtonColor: '#7004e5',
         timer: 3000
       });
 
@@ -117,7 +117,7 @@ export default function CourseCreateForm() {
         icon: 'error',
         title: 'Error',
         text: error.message || 'Failed to create course',
-        confirmButtonColor: '#3b82f6'
+        confirmButtonColor: '#7004e5'
       });
     } finally {
       setIsSubmitting(false);

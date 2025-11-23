@@ -15,7 +15,6 @@ export default function TipsandinsightsPage() {
     const fetchbanners = async () => {
       try {
         const data = await getAllBanners();
-        console.log("API Response:", data);
 
         if (data.status && data.result && data.result.banners) {
           setbanners(data.result.banners);

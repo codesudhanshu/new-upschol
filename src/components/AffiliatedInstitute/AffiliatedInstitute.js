@@ -15,7 +15,6 @@ export default function AffiliatedInstitute() {
     const fetchApprovals = async () => {
       try {
         const data = await getAllApprovals();
-        console.log("API Response:", data);
 
         if (data.status && data.result && data.result.approvals) {
           setApprovals(data.result.approvals);

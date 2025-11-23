@@ -23,7 +23,6 @@ export default function JobListings() {
     const fetchJobs = async () => {
       try {
         const data = await getAlljob();
-        console.log("API Response:", data);
 
         if (data.status && data.result && data.result.jobs) {
           const activeJobs = data.result.jobs.filter(job => job.status === "active");
@@ -104,7 +103,7 @@ export default function JobListings() {
           title: 'Success!',
           text: 'Your application has been submitted successfully!',
           icon: 'success',
-          confirmButtonColor: '#3b82f6',
+          confirmButtonColor: '#7004e5',
           confirmButtonText: 'OK',
           timer: 3000,
           timerProgressBar: true

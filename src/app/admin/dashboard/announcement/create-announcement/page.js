@@ -48,8 +48,6 @@ const AnnouncementForm = () => {
         status: formData.status
       };
       
-      console.log('Data to send:', dataToSend);
-      
       const result = await createAnnouncement(dataToSend);
 
       if (result.status == true) {
@@ -57,7 +55,7 @@ const AnnouncementForm = () => {
           icon: 'success',
           title: 'Success!',
           text: result.result.message,
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         setFormData({ title: '', status: 'active' });
       } else {

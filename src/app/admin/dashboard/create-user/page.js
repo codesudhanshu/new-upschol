@@ -69,7 +69,7 @@ export default function CreateUser() {
     >
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{ 
-          backgroundImage: 'radial-gradient(circle at 25% 25%, #6941c6 0%, transparent 50%), radial-gradient(circle at 75% 75%, #3b82f6 0%, transparent 50%)',
+          backgroundImage: 'radial-gradient(circle at 25% 25%, #6941c6 0%, transparent 50%), radial-gradient(circle at 75% 75%, #7004e5 0%, transparent 50%)',
         }}></div>
       </div>
 

@@ -374,7 +374,7 @@ export default function ModernEMICalculator() {
         }
 
         .slider-blue::-webkit-slider-thumb {
-          background: linear-gradient(45deg, #3b82f6, #06b6d4);
+          background: linear-gradient(45deg, #7004e5, #06b6d4);
           box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 

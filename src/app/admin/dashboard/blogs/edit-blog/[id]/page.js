@@ -45,13 +45,10 @@ const EditBlogPage = ({ params }) => {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        console.log('Fetching Blog with ID:', id)
         const response = await getBlogByIds(id)
-        console.log('API Response:', response)
         
         if (response.status === true) {
           const blog = response.result?.blog?.[0] || response.result?.blog || response.result
-          console.log('Found Blog:', blog)
           
           if (blog) {
             setTitle(blog.title || '')
@@ -275,7 +272,7 @@ const EditBlogPage = ({ params }) => {
           icon: 'success',
           title: 'Success!',
           text: 'Blog updated successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         }).then(() => {
           router.push('/admin/dashboard/blogs')
         })

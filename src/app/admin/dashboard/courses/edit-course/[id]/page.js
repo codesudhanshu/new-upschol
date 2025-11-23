@@ -55,7 +55,7 @@ const EditCoursePage = () => {
           icon: 'error',
           title: 'Error',
           text: error.message || 'Failed to load course data',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         }).then(() => {
           router.push('/admin/dashboard/courses');
         });
@@ -90,7 +90,7 @@ const EditCoursePage = () => {
         icon: 'error',
         title: 'Missing Information',
         html: `Please fill in: <strong>${errors.join(', ')}</strong>`,
-        confirmButtonColor: '#3b82f6'
+        confirmButtonColor: '#7004e5'
       });
       return;
     }
@@ -120,7 +120,7 @@ const EditCoursePage = () => {
           icon: 'success',
           title: 'Success!',
           text: response.result.message,
-          confirmButtonColor: '#3b82f6',
+          confirmButtonColor: '#7004e5',
           timer: 3000
         });
 
@@ -134,7 +134,7 @@ const EditCoursePage = () => {
         icon: 'error',
         title: 'Error',
         text: error.message || 'Failed to update course',
-        confirmButtonColor: '#3b82f6'
+        confirmButtonColor: '#7004e5'
       });
     } finally {
       setIsSubmitting(false);

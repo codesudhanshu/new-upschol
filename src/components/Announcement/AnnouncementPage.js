@@ -58,11 +58,6 @@ export default function AnnouncementTable() {
     try {
       // Simulate form submission
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Form submitted:', {
-        announcement: selectedAnnouncement,
-        contactData: formData
-      });
-      
       // Reset form and close modal
       setFormData({ name: '', email: '', phoneNumber: '' });
       setIsContactFormOpen(false);

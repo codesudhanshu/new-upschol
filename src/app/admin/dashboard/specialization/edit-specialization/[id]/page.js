@@ -249,7 +249,7 @@ const EditSpecialization = () => {
           icon: 'success',
           title: 'Success!',
           text: 'Specialization updated successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         router.push('/admin/dashboard/specialization');
       } else {

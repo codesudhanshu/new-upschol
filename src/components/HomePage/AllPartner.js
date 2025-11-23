@@ -44,14 +44,21 @@ export default function AllPartner() {
             className="logo-items border d-flex align-items-center mx-1 rounded px-3 py-2"
           >
             <Link href={`/university/${partner.collegeUrl}`} target="_blank">
-              <Image
-                src={partner.logo}
-                alt="uni-logo"
-                width={145}
-                height={56}
-                decoding="async"
-                className="uni-logo-img"
-              />
+              <div className="image-container">
+                <Image
+                  src={partner.logo}
+                  alt="uni-logo"
+                  width={145}
+                  height={56}
+                  decoding="async"
+                  className="uni-logo-img"
+                  style={{
+                    width: '145px',
+                    height: '56px',
+                    objectFit: 'contain'
+                  }}
+                />
+              </div>
             </Link>
           </div>
         ))}
@@ -80,6 +87,15 @@ export default function AllPartner() {
           flex: 0 0 auto;
           padding: 10px;
           margin: -21px 0;
+        }
+
+        .image-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 145px;
+          height: 56px;
+          overflow: hidden;
         }
 
         .d-flex {
@@ -115,7 +131,8 @@ export default function AllPartner() {
 
         .uni-logo-img {
           max-width: 100%;
-          height: auto;
+          max-height: 100%;
+          display: block;
         }
 
         @keyframes scroll {
@@ -132,8 +149,14 @@ export default function AllPartner() {
             animation-duration: 180s;
           }
 
-          .uni-logo-img {
-            max-width: 120px;
+          .logo-items {
+            width: 160px;
+            height: 50px;
+          }
+
+          .image-container {
+            width: 130px;
+            height: 50px;
           }
         }
 
@@ -142,8 +165,14 @@ export default function AllPartner() {
             animation-duration: 180s;
           }
 
-          .uni-logo-img {
-            max-width: 145px;
+          .logo-items {
+            width: 140px;
+            height: 45px;
+          }
+
+          .image-container {
+            width: 120px;
+            height: 45px;
           }
         }
       `}</style>

@@ -4,16 +4,16 @@ import { Search, X, ChevronDown, Menu, Phone, ChevronRight } from 'lucide-react'
 import { getAllCourses } from '@/app/api/admin/apiService';
 import HeaderSearchTrigger from "@/components/HeaderSearchTrigger"
 import SearchModal from "@/components/SearchModal"
+import Link from 'next/link';
+import { slugify } from '@/utils/slugify';
 
 const UpScholHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProgramsModalOpen, setIsProgramsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('tab2');
-  const [activeCourse, setActiveCourse] = useState(null);
-  const [activeSpec, setActiveSpec] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [activeCourse, setActiveCourse] = useState(null);
 
   // Fetch categories data
   useEffect(() => {
@@ -59,154 +59,191 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     "UI & UX": "/uploads/dropdown/1745819379-dropdown-image.svg"
   };
 
-  // Toggle mobile menu
+  // Specialization images mapping<link
+  const getSpecializationImage = (specialization) => {
+    const specializationImages = {
+      "Applied Sciences": "/uploads/specializations/applied-sciences.svg",
+      "Arts & Humanities": "/uploads/specializations/arts-humanities.svg",
+      "Medical & Health Sciences": "/uploads/specializations/medical-health.svg",
+      "Science & Technology": "/uploads/specializations/science-tech.svg",
+      "Law & Governance": "/uploads/specializations/law-governance.svg",
+      "Travel, Media & Miscellaneous": "/uploads/specializations/travel-media.svg",
+      "Human Resources": "/uploads/specializations/hr.svg",
+      "MBA": "/uploads/specializations/mba.svg"
+    };
+    
+    return specializationImages[specialization.name] || "/uploads/specializations/default-spec.svg";
+  };
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Close mobile menu
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
+  // Programs Modal Component
+ // Programs Modal Component - FIXED VERSION
+const ProgramsModal = () => {
+  const [selectedCategory, setSelectedCategory] = useState(
+    programCategories.find(cat => cat.name === "UG Course") || programCategories[0]
+  );
+  const [viewMode, setViewMode] = useState('courses');
+
+  const handleViewSpecialisations = (course) => {
+    setActiveCourse(course);
+    setViewMode('specialisations');
   };
 
-  // Programs Modal Component
-  const ProgramsModal = () => {
-    const [selectedCategory, setSelectedCategory] = useState(programCategories[1] || programCategories[0]);
-    const [viewMode, setViewMode] = useState('courses'); // 'courses' or 'specialisations'
+  const handleBackToCourses = () => {
+    setActiveCourse(null);
+    setViewMode('courses');
+  };
 
-    const handleViewSpecialisations = (course) => {
-      setActiveCourse(course);
-      setViewMode('specialisations');
-    };
+  // Category change handler - ensure it only changes when explicitly clicked
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setViewMode('courses');
+    setActiveCourse(null);
+  };
 
-    const handleBackToCourses = () => {
-      setActiveCourse(null);
-      setViewMode('courses');
-    };
+  return (
+    <div className={`modal fade ${isProgramsModalOpen ? 'show' : ''}`} id="programsModal" 
+         style={{ 
+           display: isProgramsModalOpen ? 'block' : 'none', 
+           backgroundColor: 'rgba(0,0,0,0.5)' 
+         }} 
+         tabIndex="-1">
+      <div className="modal-dialog modalbx" style={{ maxWidth: '90%', width: '95%' }}>
+        <div className="modal-content mdlcnt" style={{ height: '80vh' }}>
+          <div className="modal-header">
+            <p className="modal-title">Explore All Programs</p>
+            <button 
+              type="button" 
+              className="btn-close" 
+              onClick={() => setIsProgramsModalOpen(false)}
+              style={{ border: '2px solid #EC1C24!important' }}
+            >
+              <X size={16} />
+            </button>
+          </div>
+          <div className="modal-body fndprg" style={{ overflow: 'hidden' }}>
+            <div className="explore-programm-wrap d-flex" style={{ height: '100%' }}>
+              {/* Sidebar */}
+              <div className="programm-tab-left" style={{ width: '250px', flexShrink: 0 }}>
+                <span className="h2-classes">Browse by Domains</span>
+                <ul className="nav nav-pills flex-column" role="tablist">
+                  {programCategories.map((category) => (
+                    <li key={category.id} className="nav-item" role="presentation">
+                      <button
+                        className={`nav-link ${selectedCategory?.id === category.id ? 'active' : ''}`}
+                        onClick={() => handleCategoryChange(category)}
+                        type="button"
+                      >
+                        {category.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-    return (
-      <div className={`modal fade ${isProgramsModalOpen ? 'show' : ''}`} id="programsModal" 
-           style={{ display: isProgramsModalOpen ? 'block' : 'none', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1">
-        <div className="modal-dialog modalbx">
-          <div className="modal-content mdlcnt">
-            <div className="modal-header">
-              <p className="modal-title">Explore All Programs</p>
-              <button 
-                type="button" 
-                className="btn-close" 
-                onClick={() => setIsProgramsModalOpen(false)}
-                style={{ border: '2px solid #EC1C24!important' }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <div className="modal-body fndprg">
-              <div className="explore-programm-wrap d-flex">
-                {/* Sidebar */}
-                <div className="programm-tab-left">
-                  <span className="h2-classes">Browse by Domains</span>
-                  <ul className="nav nav-pills flex-column" role="tablist">
-                    {programCategories.map((category) => (
-                      <li key={category.id} className="nav-item" role="presentation">
-                        <button
-                          className={`nav-link ${selectedCategory?.id === category.id ? 'active' : ''}`}
-                          onClick={() => {
-                            setSelectedCategory(category);
-                            setViewMode('courses');
-                            setActiveCourse(null);
-                          }}
-                          type="button"
-                        >
-                          {category.name}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Main Content */}
-                <div className="programm-tab-content flex-fill">
-                  <div className="tab-content">
-                    <div className="tab-pane fade show active">
-                      {viewMode === 'courses' ? (
-                        <>
-                          {/* Course Grid View */}
-                          <div className="course-grid row g-3 mt-3" style={{ marginLeft: '78px' }}>
-                            {selectedCategory?.courses?.map((course) => (
-                              <div key={course._id} className="col-md-4" style={{ width: '22.333333%' }}>
-                                <div className="course-card">
-                                  <img 
-                                    src={courseImages[course.courseName] || '/uploads/dropdown/1745818950-dropdown-image.svg'} 
-                                    alt={course.courseName} 
-                                    style={{ height: '50px' }}
-                                  />
-                                  <p className="course-title">{course.courseName}</p>
-                                  <a 
+              {/* Main Content */}
+              <div className="programm-tab-content flex-fill" style={{ overflow: 'auto' }}>
+                <div className="tab-content">
+                  <div className="tab-pane fade show active">
+                    {viewMode === 'courses' ? (
+                      <>
+                        {/* Course Grid View */}
+                        <div className="course-grid row g-3 mt-3">
+                          {selectedCategory?.courses?.map((course) => (
+                            <div key={course._id} className="col-md-4 col-lg-3">
+                              <div className="course-card text-center p-3 border rounded shadow-sm h-100">
+                                {/* <img 
+                                  src={courseImages[course.courseName] || '/uploads/dropdown/1745818950-dropdown-image.svg'} 
+                                  alt={course.courseName} 
+                                  style={{ height: '60px', objectFit: 'contain', marginBottom: '15px' }}
+                                /> */}
+                                <p className="course-title fw-bold mb-2">{course.courseName}</p>
+                                {course.specializations && course.specializations.length > 0 ? (
+                                  <Link 
                                     href="javascript:void(0);" 
-                                    className="view-specs-link"
+                                    className="view-specs-link  fw-semibold"
+                                    style={{color: "#7004e5"}}
                                     onClick={() => handleViewSpecialisations(course)}
                                   >
-                                    View Specialisations →
-                                  </a>
-                                </div>
+                                    View Specializations ({course.specializations.length}) →
+                                  </Link>
+                                ) : (
+                                  <span className="no-specs-text text-muted">No Specializations</span>
+                                )}
                               </div>
-                            ))}
-                            
-                            {/* Fallback when no courses in category */}
-                            {(!selectedCategory?.courses || selectedCategory.courses.length === 0) && (
-                              <div className="col-12 text-center py-4">
-                                <p>No courses available in this category</p>
-                              </div>
-                            )}
-                          </div>
-                        </>
-                      ) : (
-                        /* Specialisations View */
-                        <div className="specs-grid">
+                            </div>
+                          ))}
+                          
+                          {(!selectedCategory?.courses || selectedCategory.courses.length === 0) && (
+                            <div className="col-12 text-center py-4">
+                              <p className="text-muted">No courses available in this category</p>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      /* Specializations View - FULL WINDOW */
+                      <div className="specs-grid h-100">
+                        <div className="d-flex justify-content-between align-items-center mb-4">
                           <button 
-                            className="btn btn-sm btn-secondary mb-3 back-to-courses-btn"
+                            className="btn btn-sm btn-outline-secondary back-to-courses-btn"
                             onClick={handleBackToCourses}
                           >
-                            ← Back to Courses
+                            ← Back to {selectedCategory?.name} Courses
                           </button>
-                          
-                          <div className="specialisations-wrapper">
-                            <div className="container">
-                              <div className="row justify-content-center">
-                                {/* Mock specialisations - replace with your actual data */}
-                                <div className="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex justify-content-center">
-                                  <div className="course-card text-center p-3 shadow-sm rounded" style={{ width: '100%', maxWidth: '280px' }}>
-                                    <img 
-                                      src="/uploads/dropdown/1753162924-dropdown-image.svg" 
-                                      alt="Specialisation" 
-                                      style={{ height: '50px', objectFit: 'contain', marginBottom: '10px' }} 
-                                    />
-                                    <p className="course-title">Specialisation 1</p>
-                                    <a href="javascript:void(0);" className="view-universities-link">
+                          <h5 className="mb-0 text-center flex-grow-1">
+                            Specializations for {activeCourse?.courseName}
+                          </h5>
+                          <div style={{ width: '100px' }}></div>
+                        </div>
+                        
+                        <div className="specialisations-wrapper h-100">
+                          <div className="container-fluid h-100">
+                            <div className="row g-4">
+                              {activeCourse?.specializations?.map((specialization, index) => (
+                                <div key={specialization._id || index} className="col-xl-3 col-lg-4 col-md-6">
+                                  <div className="specialization-card text-center p-4 border rounded shadow-sm h-100 d-flex flex-column">
+                                    <div className="flex-grow-1">
+                                      {/* <img 
+                                        src={getSpecializationImage(specialization)} 
+                                        alt={specialization.name} 
+                                        style={{ 
+                                          height: '60px', 
+                                          objectFit: 'contain', 
+                                          marginBottom: '15px' 
+                                        }} 
+                                      /> */}
+                                      <h6 className="course-title fw-bold mb-2">{specialization.name}</h6>
+                                      {specialization.description && (
+                                        <p className="specialization-desc text-muted small mb-3">
+                                          {specialization.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                    <Link 
+                                      href={`/university?categoryname=${slugify(selectedCategory?.name)}&&coursename=${slugify(activeCourse.courseName)}&&specialization=${slugify(specialization.name)}`}
+                                      className="view-universities-link fw-semibold mt-auto"
+                                      style={{color: "#7004e5"}}
+                                    >
                                       View Info →
-                                    </a>
+                                    </Link>
                                   </div>
                                 </div>
-                                
-                                <div className="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex justify-content-center">
-                                  <div className="course-card text-center p-3 shadow-sm rounded" style={{ width: '100%', maxWidth: '280px' }}>
-                                    <img 
-                                      src="/uploads/dropdown/1753075466-dropdown-image.svg" 
-                                      alt="Specialisation" 
-                                      style={{ height: '50px', objectFit: 'contain', marginBottom: '10px' }} 
-                                    />
-                                    <p className="course-title">Specialisation 2</p>
-                                    <a href="javascript:void(0);" className="view-universities-link">
-                                      View Info →
-                                    </a>
-                                  </div>
+                              ))}
+                              
+                              {(!activeCourse?.specializations || activeCourse.specializations.length === 0) && (
+                                <div className="col-12 text-center py-5">
+                                  <p className="text-muted">No specializations available for this course</p>
                                 </div>
-                              </div>
+                              )}
                             </div>
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -214,8 +251,9 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
   // Mobile Accordion Component
   const MobileAccordion = () => {
@@ -277,6 +315,11 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
                             onClick={() => setOpenCourse(openCourse === course._id ? null : course._id)}
                           >
                             {course.courseName}
+                            {course.specializations && course.specializations.length > 0 && (
+                              <span className="badge bg-primary ms-2">
+                                {course.specializations.length}
+                              </span>
+                            )}
                           </button>
                         </span>
                         
@@ -298,23 +341,57 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
                             
                             <div className="dynamic-content">
                               <div className="specialisations-wrapper" style={{ display: 'block' }}>
+                                <h6 className="px-3 py-2 mb-0" style={{ backgroundColor: '#f8f9fa' }}>
+                                  Specializations
+                                </h6>
                                 <div className="row gx-3 gy-4 px-2 py-2">
-                                  {/* Mock specialisations for mobile */}
-                                  <div className="col-6 col-md-4 col-lg-3">
-                                    <div className="specialisation-card p-3 border rounded shadow-sm h-100">
-                                      <div className="d-flex align-items-center mb-2">
-                                        {/* <img 
-                                          src="/uploads/dropdown/1753162924-dropdown-image.svg" 
-                                          alt="Specialisation" 
-                                          style={{ width: '30px', height: '30px', objectFit: 'contain', marginRight: '10px' }} 
-                                        /> */}
-                                        <p className="course-title">Specialisation</p>
+                                  {course.specializations?.map((specialization, specIndex) => (
+                                    <div key={specialization._id || specIndex} className="col-6 col-md-4 col-lg-3">
+                                      <div className="specialisation-card p-3 border rounded shadow-sm h-100 d-flex flex-column">
+                                        <div className="d-flex align-items-center mb-2 flex-grow-1">
+                                          {/* <img 
+                                            src={getSpecializationImage(specialization)} 
+                                            alt={specialization.name} 
+                                            style={{ 
+                                              width: '30px', 
+                                              height: '30px', 
+                                              objectFit: 'contain', 
+                                              marginRight: '10px' 
+                                            }} 
+                                          /> */}
+                                          <p className="course-title" style={{ fontSize: '14px', margin: 0 }}>
+                                            {specialization.name}
+                                          </p>
+                                        </div>
+                                        {specialization.description && (
+                                          <p style={{ 
+                                            fontSize: '12px', 
+                                            color: '#666', 
+                                            marginBottom: '8px',
+                                            lineHeight: '1.3'
+                                          }}>
+                                            {specialization.description.length > 80 
+                                              ? `${specialization.description.substring(0, 80)}...`
+                                              : specialization.description
+                                            }
+                                          </p>
+                                        )}
+                                        <Link 
+                                          href="javascript:void(0);" 
+                                          className="card-link load-universities fw-semibold mt-auto"
+                                          style={{color: "##3b82f6"}}
+                                        >
+                                          View Info →
+                                        </Link>
                                       </div>
-                                      <a href="javascript:void(0);" className="card-link load-universities text-primary fw-semibold">
-                                        View Info →
-                                      </a>
                                     </div>
-                                  </div>
+                                  ))}
+                                  
+                                  {(!course.specializations || course.specializations.length === 0) && (
+                                    <div className="col-12 text-center py-3">
+                                      <p className="text-muted">No specializations available</p>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -325,7 +402,7 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
                     
                     {(!category.courses || category.courses.length === 0) && (
                       <div className="p-3 text-center">
-                        <p>No courses available</p>
+                        <p className="text-muted">No courses available</p>
                       </div>
                     )}
                   </div>
@@ -334,31 +411,18 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
             </div>
           ))}
         </div>
-        
-        {/* <div className="bottom-stuff mt-4 pt-2" id="scli">
-          <div className="socials-btn d-flex align-items-center justify-content-center mt-4">
-            <a href="https://www.facebook.com/people/UpSchol/61552821882181/">
-              <img src="/assets/icons/fb.webp" width="50" height="50" alt="Facebook" />
-            </a>
-            <a href="https://www.youtube.com/@upskillwithus" className="me-1">
-              <img src="/assets/icons/utb.webp" width="51" height="51" alt="YouTube" />
-            </a>
-            <a href="https://www.instagram.com/upschol/">
-              <img src="/assets/icons/inst.png" width="42" height="42" alt="Instagram" />
-            </a>
-          </div>
-        </div> */}
       </div>
     );
   };
 
+  // Rest of the component remains the same...
   return (
     <>
       <header>
         <div className="container">
           <nav className="navbar navbar-expand-lg bg-transparent">
             <div className="navigation_main hdrr">
-              <a className="navbar-brand" href="https://www.new-upschol.vercel.app">
+              <Link className="navbar-brand" href="https://www.new-upschol.vercel.app">
                 <figure>
                   <img 
                     className="img-fluid" 
@@ -367,14 +431,14 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
                     style={{marginTop:"18px"}}
                   />
                 </figure>
-              </a>
+              </Link>
 
               {/* Desktop Navigation */}
               <div className="navigation" style={{ marginRight: '170px' }}>
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0" id="desk">
                   <li className="nav-item">
                     <div className="responsive_nav">
-                      <a 
+                      <Link 
                         className="btn" 
                         href="#" 
                         id="findProgramsBtn"
@@ -382,20 +446,20 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
                       >
                         Find Programs
                         <i className="fa fa-sort-desc" aria-hidden="true"></i>
-                      </a>
+                      </Link>
                     </div>
                   </li>
                   
                   <li className="nav-item">
-                    <a className="nav-link" href="/university">
+                    <Link className="nav-link" href="/university">
                       Top Universities
-                    </a>
+                    </Link>
                   </li>
                   
                   <li className="nav-item button-hdr">
-                    <a href="/expert-advice" className="hdr ai-powered">
+                    <Link href="/expert-advice" className="hdr ai-powered">
                       <span className="tips">✅ ClikPick</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
                 
@@ -403,14 +467,15 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0" id="mob">
                   <li className="nav-item">
                     <div className="responsive_nav">
-                      <a 
+                      <Link 
                         className="sub_menu_dropdown active" 
                         onClick={toggleMobileMenu}
                         role="button"
                         style={{ cursor: 'pointer' }}
+                        href="#"
                       >
                         Find Programs <i className="fa fa-sort-desc" aria-hidden="true"></i>
-                      </a>
+                      </Link>
                     </div>
                   </li>
                 </ul>
@@ -457,10 +522,10 @@ const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
               </div>
 
               <HeaderSearchTrigger onClick={() => setIsSearchModalOpen(true)} />
-                     <SearchModal 
-        isOpen={isSearchModalOpen} 
-        onClose={() => setIsSearchModalOpen(false)} 
-      />
+              <SearchModal 
+                isOpen={isSearchModalOpen} 
+                onClose={() => setIsSearchModalOpen(false)} 
+              />
               
               <button className="menu" onClick={toggleMobileMenu}>
                 <span></span>

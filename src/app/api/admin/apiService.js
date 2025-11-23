@@ -259,13 +259,20 @@ export const getAllCourses = () => {
 };
 
 
-export const searchUniversities = (data) => {
-  const datam = data ? data : "";
+// app/api/admin/apiService.js
+export const searchUniversities = (data = {}, page = 1) => {
+  const queryParams = new URLSearchParams();
+  
+  if (data.categoryId) queryParams.append('categoryId', data.categoryId);
+  if (data.courseId) queryParams.append('courseId', data.courseId);
+  if (data.specialization) queryParams.append('specialization', data.specialization);
+  queryParams.append('page', page);
+  queryParams.append('limit', 9); // 9 records per page
+
   return axios
-    .get(`${API_BASE_URL}/candidate/search-universities/${datam}`)
+    .get(`${API_BASE_URL}/candidate/search-universities?${queryParams.toString()}`)
     .then(res => res.data);
 };
-
 
 export const getAllfooterdata = () => {
   return axios.get(`${API_BASE_URL}/admin/getfooter`).then(res => res.data);

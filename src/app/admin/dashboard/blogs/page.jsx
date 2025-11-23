@@ -45,7 +45,7 @@ const BlogSection = () => {
           icon: 'success',
           title: 'Deleted!',
           text: 'Blog deleted successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         if (close) close();
         fetchBlogs();

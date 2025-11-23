@@ -112,7 +112,7 @@ const ReferAndEarn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your form validation and submission logic here
-    console.log('Form submitted:', formData);
+
   };
 
   return (

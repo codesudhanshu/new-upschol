@@ -47,7 +47,7 @@ const companyassociated = () => {
           icon: 'success',
           title: 'Success!',
           text: 'Company added successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         setFormData({ title: '', description: '' });
         setImage(null);

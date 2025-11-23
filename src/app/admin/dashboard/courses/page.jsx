@@ -32,7 +32,7 @@ const CoursesSection = () => {
         icon: 'error',
         title: 'Error',
         text: error.message || 'Failed to load courses',
-        confirmButtonColor: '#3b82f6'
+        confirmButtonColor: '#7004e5'
       });
     } finally {
       setIsLoading(false);
@@ -68,7 +68,7 @@ const CoursesSection = () => {
             icon: 'success',
             title: 'Deleted!',
             text: response.message,
-            confirmButtonColor: '#3b82f6',
+            confirmButtonColor: '#7004e5',
             timer: 3000
           });
           
@@ -83,7 +83,7 @@ const CoursesSection = () => {
           icon: 'error',
           title: 'Error',
           text: error.message || 'Failed to delete course',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
       }
     }

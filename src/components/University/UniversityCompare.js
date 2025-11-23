@@ -11,6 +11,7 @@ const UniversityComparison = ({ collegeUrl }) => {
   const [compareCriteria, setCompareCriteria] = useState('all');
   const [showAllApprovals, setShowAllApprovals] = useState(false);
   const [showAllPlacements, setShowAllPlacements] = useState(false);
+  const [expandedContent, setExpandedContent] = useState({});
 
   useEffect(() => {
     const fetchUniversityData = async () => {
@@ -42,16 +43,41 @@ const UniversityComparison = ({ collegeUrl }) => {
     setCompareCriteria(event.target.value);
   };
 
+  const toggleExpandContent = (key) => {
+    setExpandedContent(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
   // Helper function to render expandable content
   const renderExpandableContent = (content, maxLength = 100, contentKey) => {
     if (!content) return 'N/A';
-    if (content.length <= maxLength) return content;
+    
+    const isExpanded = expandedContent[contentKey];
+    
+    if (content.length <= maxLength || isExpanded) {
+      return (
+        <div>
+          <span>{content}</span>
+          {content.length > maxLength && (
+            <button 
+              className="text-blue-500 hover:text-blue-700 ml-1 text-sm font-medium"
+              onClick={() => toggleExpandContent(contentKey)}
+            >
+              Read Less
+            </button>
+          )}
+        </div>
+      );
+    }
     
     return (
       <div>
         <span>{content.substring(0, maxLength)}...</span>
         <button 
           className="text-blue-500 hover:text-blue-700 ml-1 text-sm font-medium"
+          onClick={() => toggleExpandContent(contentKey)}
         >
           Read More
         </button>
@@ -59,12 +85,64 @@ const UniversityComparison = ({ collegeUrl }) => {
     );
   };
 
+  // Get all unique approvals from all universities
+  const getAllUniqueApprovals = () => {
+    if (!universitiesData) return [];
+    const allApprovals = new Set();
+    universitiesData.forEach(university => {
+      if (university.selectedApprovals && university.selectedApprovals.length > 0) {
+        university.selectedApprovals.forEach(approval => {
+          allApprovals.add(approval.title);
+        });
+      }
+    });
+    return Array.from(allApprovals);
+  };
+
+  // Get all unique placement partners from all universities
+  const getAllUniquePlacementPartners = () => {
+    if (!universitiesData) return [];
+    const allPartners = new Set();
+    universitiesData.forEach(university => {
+      if (university.selectedCompanies && university.selectedCompanies.length > 0) {
+        university.selectedCompanies.forEach(company => {
+          allPartners.add(company.title);
+        });
+      }
+    });
+    return Array.from(allPartners);
+  };
+
+  // Extract all courses from selectedDepartments
+  const getAllCourses = (university) => {
+    if (!university.selectedDepartments || !Array.isArray(university.selectedDepartments)) {
+      return [];
+    }
+
+    const courses = [];
+    university.selectedDepartments.forEach(department => {
+      if (department.selectedCourses && Array.isArray(department.selectedCourses)) {
+        department.selectedCourses.forEach(course => {
+          if (course.courseName) {
+            courses.push({
+              name: course.courseName,
+              slug: course.courseId || course._id,
+              courseContent: course.courseContent,
+              feeDetails: course.feeDetails
+            });
+          }
+        });
+      }
+    });
+    return courses;
+  };
+
   if (loading) {
     return (
       <div className="card" style={{ border: 'none', outline: 'none', background: 'none', marginTop: '2%', marginLeft: '2%', marginRight: '2%', marginBottom: '2%' }}>
         <div className="container pb-5 mb-2">
           <div className="text-center">
-            <div className="spinner-border text-primary" role="status">
+            <div className="spinner-border " role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
             <p className="mt-2">Loading university data...</p>
@@ -98,632 +176,614 @@ const UniversityComparison = ({ collegeUrl }) => {
     );
   }
 
+  const uniqueApprovals = getAllUniqueApprovals();
+  const uniquePlacementPartners = getAllUniquePlacementPartners();
+
   return (
     <div className="card" style={{ border: 'none', outline: 'none', background: 'none', marginTop: '2%', marginLeft: '2%', marginRight: '2%', marginBottom: '2%' }}>
       <div className="container pb-5 mb-2" id="comparison-container">
-        <div className="comparison-table" style={{ display: 'flex', justifyContent: 'space-around', width: '100%', margin: '20px auto', boxShadow: '9px 9px 15px 13px rgba(0,0,0,.3)' }}>
-          
-          <input type="hidden" name="comparision_ids[]" id="comparision_ids" value="3,10,30" />
-          <input type="hidden" name="universitySlugs" id="universitySlugs" value="amity-university-online-vs-manipal-online-university-vs-nmims-online" />
-          
-          <table className="table align-middle text-start" id="university-comparision-table" style={{ border: '2px solid rgb(244, 124, 128)', marginBottom: '0px', width: '100%', tableLayout: 'fixed' }}>
-            <thead className="bg-secondary">
-              <tr className="tophead" style={{ backgroundColor: 'rgb(237, 32, 36)', color: 'rgb(255, 255, 255)' }}>
-                <td className="align-middle" style={{ border: '2px solid #F47C80' }}>
-                  <select 
-                    className="form-control custom-select" 
-                    id="compare-criteria" 
-                    data-filter="trigger"
-                    value={compareCriteria}
-                    onChange={handleCriteriaChange}
-                  >
-                    <option value="all">Comparison criteria *</option>
-                    <option value="summary">Summary</option>
-                    <option value="about">About University</option>
-                    <option value="facts">University Facts</option>
-                    <option value="faqs">FAQs</option>
-                    <option value="advantages">Advantages</option>
-                    <option value="courses">University Courses</option>
-                    <option value="approvals">Approvals</option>
-                    <option value="companies">Associated Companies</option>
-                    <option value="ratings">Ratings</option>
-                    <option value="certificates">Certificates</option>
-                    <option value="placement_partners">Placement Partners</option>
-                  </select>
-                  <small className="form-text text-muted">* Choose criteria to filter</small>
-                </td>
-                
-                {universitiesData.map((university) => (
-                  <td key={university._id} style={{ border: '2px solid #F47C80' }}>
-                    <div className="comparison-item">
-                      <a className="comparison-item-thumb" href="shop-single.html">
-                        <Image 
-                          src={university.logo} 
-                          alt="University-image"
-                          width={80}
-                          height={60}
-                          style={{ objectFit: 'contain' }}
-                        />
-                      </a>
-                      <a className="comparison-item-title" target="_blank" href={`/university/${university.slug || university.collegeUrl}`}>
-                        {university.universityName}
-                      </a>
-                      <a className="btn btn-pill btn-outline-primary btn-sm" target="_blank" href={`/university/${university.slug || university.collegeUrl}`} type="button" data-toggle="toast" data-target="#cart-toast">
-                        Visit University
-                      </a>
-                    </div>
+        <div className="comparison-table-responsive">
+          <div className="comparison-table" style={{ width: '100%', margin: '20px auto', boxShadow: '9px 9px 15px 13px rgba(0,0,0,.3)', overflowX: 'auto' }}>
+            
+            <table className="table align-middle text-start" id="university-comparision-table" style={{ border: '2px solid #7004e5', marginBottom: '0px', width: '100%', minWidth: '800px' }}>
+              <thead className="bg-primary">
+                <tr className="tophead" style={{ backgroundColor: '#7004e5', color: 'white' }}>
+                  <td className="align-middle" style={{ border: '2px solid #7004e5', minWidth: '200px' }}>
+                    <select 
+                      className="form-control custom-select" 
+                      id="compare-criteria" 
+                      data-filter="trigger"
+                      value={compareCriteria}
+                      onChange={handleCriteriaChange}
+                    >
+                      <option value="all">Comparison criteria *</option>
+                      <option value="summary">Summary</option>
+                      <option value="about">About University</option>
+                      <option value="facts">University Facts</option>
+                      <option value="faqs">FAQs</option>
+                      <option value="advantages">Advantages</option>
+                      <option value="courses">University Courses</option>
+                      <option value="approvals">Approvals</option>
+                      <option value="companies">Associated Companies</option>
+                      <option value="ratings">Ratings</option>
+                      <option value="certificates">Certificates</option>
+                      <option value="placement_partners">Placement Partners</option>
+                    </select>
+                    <small className="form-text text-muted">* Choose criteria to filter</small>
                   </td>
-                ))}
-              </tr>
-            </thead>
-
-            {/* About University Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'about') && (
-              <tbody id="about" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    About University
-                  </th>
-                </tr>
-                
-                <tr className="bg-secondary" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-uppercase" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Description
-                  </th>
+                  
                   {universitiesData.map((university) => (
-                    <td key={university._id} style={{ textAlign: 'center', border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <div className="bg-slate-50 p-3 rounded-lg border border-slate-100" style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                        {university.aboutCollege ? (
-                          <div className="text-sm text-gray-700 leading-relaxed">
-                            {renderExpandableContent(university.aboutCollege, 150, `about-${university._id}`)}
-                          </div>
-                        ) : (
-                          <span className="text-gray-500 text-sm">No description available</span>
-                        )}
+                    <td key={university._id} style={{ border: '2px solid #7004e5', minWidth: '250px' }}>
+                      <div className="comparison-item text-center">
+                        <Link className="comparison-item-thumb d-block mb-2" target="_blank" href={`/university/${university.collegeUrl}`}>
+                          <Image 
+                            src={university.logo} 
+                            alt={`${university.universityName} logo`}
+                            width={80}
+                            height={60}
+                            style={{ objectFit: 'contain' }}
+                            className="mx-auto"
+                          />
+                        </Link>
+                        <Link className="comparison-item-title d-block mb-2 fw-bold text-decoration-none" style={{color: "#7004e5"}} target="_blank" href={`/university/${university.collegeUrl}`}>
+                          {university.universityName}
+                        </Link>
+                        <Link className="btn btn-pill btn-outline-primary btn-sm" target="_blank" href={`/university/${university.collegeUrl}`} type="button">
+                          Visit University
+                        </Link>
                       </div>
                     </td>
                   ))}
+                  
+                  {/* Third university placeholder if only 2 universities */}
+                  {universitiesData.length === 2 && null}
                 </tr>
-              </tbody>
-            )}
+              </thead>
 
-            {/* University Facts Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'facts') && (
-              <tbody id="facts" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    University Facts
-                  </th>
-                </tr>
-                
-                {universitiesData[0]?.universityFacts?.map((fact, index) => (
-                  <tr key={index} style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                      Fact {index + 1}
+              {/* About University Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'about') && (
+                <tbody id="about" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                      About University
+                    </th>
+                  </tr>
+                  
+                  <tr className="bg-primary" style={{ border: '1px solid #7004e5', backgroundColor: '#f8f9fa' }}>
+                    <th className="text-uppercase" style={{  borderColor: 'black #7004e5 black black', minWidth: '200px' }}>
+                      Description
                     </th>
                     {universitiesData.map((university) => (
-                      <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                        <div className="bg-green-50 p-2 rounded-lg text-xs mb-2 border border-green-100">
-                          {university.universityFacts?.[index]?.fact || 'N/A'}
+                      <td key={university._id} style={{ textAlign: 'center', border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <div className="bg-light p-3 rounded-lg border" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          {university.aboutCollege ? (
+                            <div className="text-sm text-gray-700 leading-relaxed">
+                              {renderExpandableContent(university.aboutCollege, 150, `about-${university._id}`)}
+                            </div>
+                          ) : (
+                            <span className="text-muted text-sm">No description available</span>
+                          )}
                         </div>
                       </td>
                     ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
                   </tr>
-                ))}
+                </tbody>
+              )}
 
-                {(!universitiesData[0]?.universityFacts || universitiesData[0].universityFacts.length === 0) && (
-                  <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
+              {/* University Facts Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'facts') && (
+                <tbody id="facts" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
                       University Facts
                     </th>
-                    {universitiesData.map((university) => (
-                      <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                        <span className="text-muted">No facts available</span>
-                      </td>
-                    ))}
                   </tr>
-                )}
-              </tbody>
-            )}
-
-            {/* FAQs Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'faqs') && (
-              <tbody id="faqs" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    Frequently Asked Questions
-                  </th>
-                </tr>
-                
-                {universitiesData[0]?.faqs?.map((faq, index) => (
-                  <tr key={index} style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                      {faq.question}
-                    </th>
-                    {universitiesData.map((university) => (
-                      <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                        <div className="bg-yellow-50 p-2 rounded-lg text-xs mb-2 border border-yellow-100">
-                          <div className="text-gray-700">
-                            {university.faqs?.[index]?.answer || 'N/A'}
-                          </div>
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-
-                {(!universitiesData[0]?.faqs || universitiesData[0].faqs.length === 0) && (
-                  <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                      FAQs
-                    </th>
-                    {universitiesData.map((university) => (
-                      <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                        <span className="text-muted">No FAQs available</span>
-                      </td>
-                    ))}
-                  </tr>
-                )}
-              </tbody>
-            )}
-
-            {/* Advantages Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'advantages') && (
-              <tbody id="advantages" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    Advantages
-                  </th>
-                </tr>
-                
-                {universitiesData[0]?.advantages?.map((advantage, index) => (
-                  <tr key={index} style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                      {advantage.title || `Advantage ${index + 1}`}
-                    </th>
-                    {universitiesData.map((university) => (
-                      <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                        <div className="bg-purple-50 p-2 rounded-lg text-xs mb-2 border border-purple-100">
-                          <div className="font-medium text-purple-800 mb-1">
-                            {university.advantages?.[index]?.description || 'N/A'}
-                          </div>
-                          {university.advantages?.[index]?.benefits?.map((benefit, bIndex) => (
-                            <div key={bIndex} className="text-gray-700 text-xs">
-                              • {benefit.description}
-                            </div>
+                  
+                  {(() => {
+                    const maxFacts = Math.max(...universitiesData.map(u => u.universityFacts?.length || 0));
+                    if (maxFacts === 0) {
+                      return (
+                        <tr style={{ border: '1px solid #7004e5' }}>
+                          <th style={{  borderColor: 'black #7004e5 black black' }}>
+                            University Facts
+                          </th>
+                          {universitiesData.map((university) => (
+                            <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                              <span className="text-muted">No facts available</span>
+                            </td>
                           ))}
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                          {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                        </tr>
+                      );
+                    }
 
-                {(!universitiesData[0]?.advantages || universitiesData[0].advantages.length === 0) && (
-                  <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
+                    return Array.from({ length: maxFacts }).map((_, index) => (
+                      <tr key={index} style={{ border: '1px solid #7004e5' }}>
+                        <th style={{  borderColor: 'black #7004e5 black black' }}>
+                          Fact {index + 1}
+                        </th>
+                        {universitiesData.map((university) => (
+                          <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                            <div className="bg-success bg-opacity-10 p-2 rounded-lg text-xs mb-2 border border-success border-opacity-25">
+                              {university.universityFacts?.[index]?.fact || 'N/A'}
+                            </div>
+                          </td>
+                        ))}
+                        {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              )}
+
+              {/* FAQs Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'faqs') && (
+                <tbody id="faqs" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                      Frequently Asked Questions
+                    </th>
+                  </tr>
+                  
+                  {(() => {
+                    const maxFaqs = Math.max(...universitiesData.map(u => u.faqs?.length || 0));
+                    if (maxFaqs === 0) {
+                      return (
+                        <tr style={{ border: '1px solid #7004e5' }}>
+                          <th style={{  borderColor: 'black #7004e5 black black' }}>
+                            FAQs
+                          </th>
+                          {universitiesData.map((university) => (
+                            <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                              <span className="text-muted">No FAQs available</span>
+                            </td>
+                          ))}
+                          {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                        </tr>
+                      );
+                    }
+
+                    return Array.from({ length: maxFaqs }).map((_, index) => (
+                      <tr key={index} style={{ border: '1px solid #7004e5' }}>
+                        <th style={{  borderColor: 'black #7004e5 black black' }}>
+                          {universitiesData[0]?.faqs?.[index]?.question || `Question ${index + 1}`}
+                        </th>
+                        {universitiesData.map((university) => (
+                          <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                            <div className="bg-warning bg-opacity-10 p-2 rounded-lg text-xs mb-2 border border-warning border-opacity-25">
+                              <div className="text-gray-700">
+                                {university.faqs?.[index]?.answer || 'N/A'}
+                              </div>
+                            </div>
+                          </td>
+                        ))}
+                        {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              )}
+
+              {/* Advantages Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'advantages') && (
+                <tbody id="advantages" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
                       Advantages
                     </th>
-                    {universitiesData.map((university) => (
-                      <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                        <span className="text-muted">No advantages listed</span>
-                      </td>
-                    ))}
                   </tr>
-                )}
-              </tbody>
-            )}
-
-            {/* Summary Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'summary') && (
-              <tbody id="summary" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    University Summary
-                  </th>
-                </tr>
-                
-                <tr className="bg-secondary" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-uppercase" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    NIRF Ranking
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ textAlign: 'center', border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <span className="text-dark"># {university.nirfRanking || 'N/A'}</span>
-                    </td>
-                  ))}
-                </tr>
-
-                <tr className="equal-height-row" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Location
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <table className="table inner-table align-middle text-start" style={{ minWidth: '10px', border: '2px solid rgb(244, 124, 128)', width: '100%', tableLayout: 'fixed' }}>
-                        <thead className="bg-secondary">
-                          <tr style={{ border: '1px solid rgb(244, 124, 128)' }} className="tophead">
-                            <th colSpan="2" style={{ textAlign: 'center', borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }} className="px-4 text-start align-middle">
-                              University Campuses
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                            <td className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                              Indian
+                  
+                  {(() => {
+                    const maxAdvantages = Math.max(...universitiesData.map(u => u.advantages?.length || 0));
+                    if (maxAdvantages === 0) {
+                      return (
+                        <tr style={{ border: '1px solid #7004e5' }}>
+                          <th style={{  borderColor: 'black #7004e5 black black' }}>
+                            Advantages
+                          </th>
+                          {universitiesData.map((university) => (
+                            <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                              <span className="text-muted">No advantages listed</span>
                             </td>
-                            <td className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                              International
-                            </td>
-                          </tr>
-                          <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                            <td className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                              {university.indianCampuses || 'N/A'}
-                            </td>
-                            <td className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                              {university.internationalCampuses || 'N/A'}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  ))}
-                </tr>
-
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    EMI/Loan Facility
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ textAlign: 'center', border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      {university.emiLoanFacility ? 'Yes' : 'No'}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            )}
-
-            {/* Courses Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'courses') && (
-              <tbody id="courses" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    University Courses
-                  </th>
-                </tr>
-
-                <tr className="bg-secondary" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-uppercase" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    PG Courses
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      {university.pgCourses && university.pgCourses.length > 0 ? (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                          {university.pgCourses.map((course, index) => (
-                            <a key={index} href={`/university/${university.slug || university.collegeUrl}/${course.slug}`} target="_blank">
-                              <span className="text-dark d-block" style={{ cursor: 'pointer' }}>
-                                • <u>{course.name}</u>
-                              </span>
-                            </a>
                           ))}
-                        </div>
-                      ) : (
-                        <span className="text-muted">Not Available</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
+                          {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                        </tr>
+                      );
+                    }
 
-                <tr className="bg-secondary" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-uppercase" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    UG Courses
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      {university.ugCourses && university.ugCourses.length > 0 ? (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                          {university.ugCourses.map((course, index) => (
-                            <a key={index} href={`/university/${university.slug || university.collegeUrl}/${course.slug}`} target="_blank">
-                              <span className="text-dark d-block" style={{ cursor: 'pointer' }}>
-                                • <u>{course.name}</u>
-                              </span>
-                            </a>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-muted">Not Available</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-
-                <tr className="bg-secondary" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-uppercase" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Executive Programs
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      {university.executivePrograms && university.executivePrograms.length > 0 ? (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                          {university.executivePrograms.map((program, index) => (
-                            <span key={index} className="text-dark d-block" style={{ cursor: 'pointer' }}>
-                              • <u>{program.name}</u>
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-muted">Not Available</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-
-                <tr className="bg-secondary" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-uppercase" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Certification
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      {university.certifications && university.certifications.length > 0 ? (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                          {university.certifications.map((cert, index) => (
-                            <a key={index} href={`/university/${university.slug || university.collegeUrl}/${cert.slug}`} target="_blank">
-                              <span className="text-dark d-block" style={{ cursor: 'pointer' }}>
-                                • <u>{cert.name}</u>
-                              </span>
-                            </a>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-muted">Not Available</span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            )}
-
-            {/* Associated Companies Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'companies') && (
-              <tbody id="companies" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    Associated Companies
-                  </th>
-                </tr>
-                
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Partner Companies
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <div className="flex flex-wrap gap-2 justify-center">
-                        {university.selectedCompanies && university.selectedCompanies.length > 0 ? (
-                          university.selectedCompanies.map((company) => (
-                            <div key={company._id} className="bg-blue-50 p-2 rounded-lg border border-blue-100 text-center min-w-[80px]">
-                              <Image 
-                                src={company.image} 
-                                alt={company.title}
-                                width={32}
-                                height={32}
-                                className="object-contain mx-auto mb-1"
-                              />
-                              <div className="text-xs font-medium text-blue-800 line-clamp-2">{company.title}</div>
+                    return Array.from({ length: maxAdvantages }).map((_, index) => (
+                      <tr key={index} style={{ border: '1px solid #7004e5' }}>
+                        <th style={{  borderColor: 'black #7004e5 black black' }}>
+                          Advantage {index + 1}
+                        </th>
+                        {universitiesData.map((university) => (
+                          <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                            <div className="bg-info bg-opacity-10 p-2 rounded-lg text-xs mb-2 border border-info border-opacity-25">
+                              <div className="fw-medium  mb-1" style={{color: "#7004e5"}}>
+                                {university.advantages?.[index]?.description || 'N/A'}
+                              </div>
+                              {university.advantages?.[index]?.benefits?.map((benefit, bIndex) => (
+                                <div key={bIndex} className="text-gray-700 text-xs">
+                                  • {benefit}
+                                </div>
+                              ))}
                             </div>
-                          ))
+                          </td>
+                        ))}
+                        {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              )}
+
+              {/* Summary Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'summary') && (
+                <tbody id="summary" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                      University Summary
+                    </th>
+                  </tr>
+                  
+                  <tr className="bg-primary" style={{ border: '1px solid #7004e5', backgroundColor: '#f8f9fa' }}>
+                    <th className="text-uppercase" style={{  borderColor: 'black #7004e5 black black' }}>
+                      University Rating
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ textAlign: 'center', border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <span className="text-dark fw-bold">{university.universityRating || 'N/A'}/5</span>
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th style={{  borderColor: 'black #7004e5 black black' }}>
+                      Location
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <div className="bg-light p-2 rounded border">
+                          {university.city && university.state ? (
+                            <div>
+                              <div className="fw-medium">{university.city}, {university.state}</div>
+                              {university.country && <div className="text-muted small">{university.country}</div>}
+                            </div>
+                          ) : (
+                            <span className="text-muted">Location not specified</span>
+                          )}
+                        </div>
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th style={{  borderColor: 'black #7004e5 black black' }}>
+                      College Type
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ textAlign: 'center', border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <span className={`badge ${university.collegeType === 'global' ? 'bg-warning' : '#7004e5'}`}>
+                          {university.collegeType || 'N/A'}
+                        </span>
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+                </tbody>
+              )}
+
+              {/* Courses Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'courses') && (
+                <tbody id="courses" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                      University Courses
+                    </th>
+                  </tr>
+
+                  <tr style={{ border: '1px solid #7004e5', backgroundColor: '#f8f9fa' }}>
+                    <th className="text-uppercase" style={{  borderColor: 'black #7004e5 black black' }}>
+                      All Courses
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        {(() => {
+                          const courses = getAllCourses(university);
+                          return courses.length > 0 ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              {courses.map((course, index) => (
+                                <div key={index} className="bg-light p-2 rounded border">
+                                  <div className="fw-medium">{course.name}</div>
+                                  {course.feeDetails?.totalAmount > 0 && (
+                                    <div className="text-success small">Fees: ₹{course.feeDetails.totalAmount}</div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-muted">No courses available</span>
+                          );
+                        })()}
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+
+                  <tr style={{ border: '1px solid #7004e5', backgroundColor: '#f8f9fa' }}>
+                    <th className="text-uppercase" style={{  borderColor: 'black #7004e5 black black' }}>
+                      Departments
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        {university.selectedDepartments && university.selectedDepartments.length > 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                            {university.selectedDepartments.map((dept, index) => (
+                              <span key={index} className="text-dark d-block small">
+                                • {dept.departmentName}
+                              </span>
+                            ))}
+                          </div>
                         ) : (
-                          <span className="text-gray-500 text-sm">No companies listed</span>
+                          <span className="text-muted">No departments listed</span>
                         )}
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            )}
-
-            {/* Ratings Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'ratings') && (
-              <tbody id="ratings" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" colSpan="4" style={{ borderRight: '1px solid rgb(244, 124, 128)' }}>
-                    Detailed Ratings
-                  </th>
-                </tr>
-                
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Overall Rating
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <div className="bg-indigo-50 p-2 rounded-lg border border-indigo-100">
-                        <div className="text-xs text-gray-600 mb-1">Overall Rating</div>
-                        <div className="text-sm font-semibold text-indigo-800">{university.universityRating}/5</div>
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Digital Infrastructure
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <div className="bg-indigo-50 p-2 rounded-lg border border-indigo-100">
-                        <div className="text-sm font-semibold text-indigo-800">{university.digitalInfrastructure}/5</div>
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Value for Money
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <div className="bg-indigo-50 p-2 rounded-lg border border-indigo-100">
-                        <div className="text-sm font-semibold text-indigo-800">{university.valueForMoney}/5</div>
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Curriculum
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)' }} className="px-4 text-start align-middle">
-                      <div className="bg-indigo-50 p-2 rounded-lg border border-indigo-100">
-                        <div className="text-sm font-semibold text-indigo-800">{university.curriculum}/5</div>
-                      </div>
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            )}
-
-            {/* Approvals Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'approvals') && (
-              <tbody id="approvals" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th 
-                    className="text-center bg-secondary text-black toggle-approvals" 
-                    style={{ cursor: 'pointer', borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }} 
-                    colSpan="4"
-                    onClick={toggleApprovals}
-                  >
-                    <u>University Approvals</u>
-                  </th>
-                </tr>
-
-                {/* Sample approval data - you'll need to replace this with actual data from your API */}
-                {universitiesData[0]?.approvals?.slice(0, showAllApprovals ? undefined : 2).map((approval, index) => (
-                  <tr key={index} className={`approval-row ${index >= 2 && !showAllApprovals ? 'd-none' : ''}`} style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                      {approval.title}
-                    </th>
-                    {universitiesData.map((university) => (
-                      <td key={university._id} className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                        <span style={{ color: university.approvals?.some(a => a.title === approval.title) ? 'green' : 'red' }}>
-                          {university.approvals?.some(a => a.title === approval.title) ? '✔️' : '❌'}
-                        </span>
                       </td>
                     ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
                   </tr>
-                ))}
+                </tbody>
+              )}
 
-                {/* Fallback if no approval data */}
-                {(!universitiesData[0]?.approvals || universitiesData[0].approvals.length === 0) && (
-                  <tr className="approval-row" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                      UGC-entitled
+              {/* Associated Companies Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'companies') && (
+                <tbody id="companies" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                      Associated Companies
+                    </th>
+                  </tr>
+                  
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th style={{  borderColor: 'black #7004e5 black black' }}>
+                      Partner Companies
                     </th>
                     {universitiesData.map((university) => (
-                      <td key={university._id} className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                        <span style={{ color: university.ugcEntitled ? 'green' : 'red' }}>
-                          {university.ugcEntitled ? '✔️' : '❌'}
-                        </span>
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <div className="d-flex flex-wrap gap-2 justify-content-center">
+                          {university.selectedCompanies && university.selectedCompanies.length > 0 ? (
+                            university.selectedCompanies.slice(0, 4).map((company) => (
+                              <div key={company._id} className="bg-primary bg-opacity-10 p-2 rounded-lg border border-primary border-opacity-25 text-center" style={{ minWidth: '80px', backgroundColor: "#7004e5" }}>
+                                <Image 
+                                  src={company.image} 
+                                  alt={company.title}
+                                  width={40}
+                                  height={40}
+                                  className="object-contain mx-auto mb-1"
+                                  style={{ objectFit: 'contain' }}
+                                />
+                                <div className="text-xs fw-medium  line-clamp-2" style={{color: "#7004e5"}}>{company.title}</div>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-muted text-sm">No companies listed</span>
+                          )}
+                          {university.selectedCompanies && university.selectedCompanies.length > 4 && (
+                            <div className="w-100 text-center mt-1">
+                              <small className="text-muted">+{university.selectedCompanies.length - 4} more</small>
+                            </div>
+                          )}
+                        </div>
                       </td>
                     ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
                   </tr>
-                )}
-              </tbody>
-            )}
+                </tbody>
+              )}
 
-            {/* Certificates Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'certificates') && (
-              <tbody id="certificates" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="text-center bg-secondary text-black" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }} colSpan="4">
-                    University Certificate
-                  </th>
-                </tr>
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th className="align-middle" style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                    Certificates
-                  </th>
-                  {universitiesData.map((university) => (
-                    <td key={university._id} style={{ border: '1px solid rgb(244, 124, 128)', textAlign: 'center' }} className="px-4 text-start align-middle">
-                      <figure>
-                        <a href={university.sampleCertificate || '#'} className="image-popup-no-margins">
-                          <Image 
-                            src={university.sampleCertificate || '/default-certificate.jpg'} 
-                            alt="university-certificate"
-                            width={213}
-                            height={296}
-                            style={{ objectFit: 'contain' }}
-                          />
-                        </a>
-                      </figure>
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            )}
-
-            {/* Placement Partners Section */}
-            {(compareCriteria === 'all' || compareCriteria === 'placement_partners') && (
-              <tbody id="placement_partners" data-filter="target">
-                <tr style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                  <th 
-                    className="text-center bg-secondary text-black toggle-placement" 
-                    style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black', cursor: 'pointer' }} 
-                    colSpan="4"
-                    onClick={togglePlacements}
-                  >
-                    <u>University Placement Partners</u>
-                  </th>
-                </tr>
-
-                {/* Sample placement data - you'll need to replace this with actual data from your API */}
-                {universitiesData[0]?.placementPartners?.slice(0, showAllPlacements ? undefined : 3).map((partner, index) => (
-                  <tr key={index} className={`placement-row ${index >= 3 && !showAllPlacements ? 'd-none' : ''}`} style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                    <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                      {partner.name}
+              {/* Ratings Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'ratings') && (
+                <tbody id="ratings" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" colSpan={universitiesData.length + 1} style={{ borderRight: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                      Detailed Ratings
+                    </th>
+                  </tr>
+                  
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th style={{  borderColor: 'black #7004e5 black black' }}>
+                      Overall Rating
                     </th>
                     {universitiesData.map((university) => (
-                      <td key={university._id} className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                        <span style={{ color: university.placementPartners?.some(p => p.name === partner.name) ? 'green' : 'red' }}>
-                          {university.placementPartners?.some(p => p.name === partner.name) ? '✔️' : '❌'}
-                        </span>
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <div className="bg-primary bg-opacity-10 p-2 rounded-lg border border-primary border-opacity-25">
+                          <div className="text-xs text-muted mb-1">Overall Rating</div>
+                          <div className="text-sm fw-semibold " style={{color: "#7004e5"}}>{university.universityRating || 'N/A'}/5</div>
+                        </div>
                       </td>
                     ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
                   </tr>
-                ))}
 
-                {/* Fallback if no placement data */}
-                {(!universitiesData[0]?.placementPartners || universitiesData[0].placementPartners.length === 0) && (
-                  <>
-                    <tr className="placement-row" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                      <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                        IBM
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th style={{  borderColor: 'black #7004e5 black black' }}>
+                      Digital Infrastructure
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <div className="bg-primary bg-opacity-10 p-2 rounded-lg border border-primary border-opacity-25">
+                          <div className="text-sm fw-semibold " style={{color: "#7004e5"}}>{university.digitalInfrastructure || 'N/A'}/5</div>
+                        </div>
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th style={{  borderColor: 'black #7004e5 black black' }}>
+                      Value for Money
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <div className="bg-primary bg-opacity-10 p-2 rounded-lg border border-primary border-opacity-25">
+                          <div className="text-sm fw-semibold " style={{color: "#7004e5"}}>{university.valueForMoney || 'N/A'}/5</div>
+                        </div>
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th style={{  borderColor: 'black #7004e5 black black' }}>
+                      Curriculum
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ border: '1px solid #7004e5' }} className="px-3 text-start align-middle">
+                        <div className="bg-primary bg-opacity-10 p-2 rounded-lg border border-primary border-opacity-25">
+                          <div className="text-sm fw-semibold " style={{color: "#7004e5"}}>{university.curriculum || 'N/A'}/5</div>
+                        </div>
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+                </tbody>
+              )}
+
+              {/* Approvals Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'approvals') && (
+                <tbody id="approvals" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                    <th 
+                      className="text-center toggle-approvals" 
+                      style={{ cursor: 'pointer',  borderColor: 'black #7004e5 black black' }} 
+                      colSpan={universitiesData.length + 1}
+                      onClick={toggleApprovals}
+                    >
+                      <u>University Approvals {showAllApprovals ? '▲' : '▼'}</u>
+                    </th>
+                  </tr>
+
+                  {uniqueApprovals.slice(0, showAllApprovals ? undefined : 3).map((approval, index) => (
+                    <tr key={index} style={{ border: '1px solid #7004e5' }}>
+                      <th style={{  borderColor: 'black #7004e5 black black' }}>
+                        {approval}
                       </th>
                       {universitiesData.map((university) => (
-                        <td key={university._id} className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
+                        <td key={university._id} className="px-3 text-start align-middle" style={{ border: '1px solid #7004e5' }}>
+                          <span style={{ color: university.selectedApprovals?.some(a => a.title === approval) ? 'green' : 'red' }}>
+                            {university.selectedApprovals?.some(a => a.title === approval) ? '✔️' : '❌'}
+                          </span>
+                        </td>
+                      ))}
+                      {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                    </tr>
+                  ))}
+
+                  {uniqueApprovals.length === 0 && (
+                    <tr style={{ border: '1px solid #7004e5' }}>
+                      <th style={{  borderColor: 'black #7004e5 black black' }}>
+                        UGC Approved
+                      </th>
+                      {universitiesData.map((university) => (
+                        <td key={university._id} className="px-3 text-start align-middle" style={{ border: '1px solid #7004e5' }}>
                           <span style={{ color: 'green' }}>✔️</span>
                         </td>
                       ))}
+                      {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
                     </tr>
-                    <tr className="placement-row" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                      <th style={{ borderWidth: '2px 1px 2px 2px', borderStyle: 'solid', borderColor: 'black rgb(244, 124, 128) black black' }}>
-                        Microsoft
+                  )}
+                </tbody>
+              )}
+
+              {/* Certificates Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'certificates') && (
+                <tbody id="certificates" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="text-center" style={{  borderColor: 'black #7004e5 black black', backgroundColor: '#7004e5', color: 'white' }} colSpan={universitiesData.length + 1}>
+                      University Certificate
+                    </th>
+                  </tr>
+                  <tr style={{ border: '1px solid #7004e5' }}>
+                    <th className="align-middle" style={{  borderColor: 'black #7004e5 black black' }}>
+                      Sample Certificate
+                    </th>
+                    {universitiesData.map((university) => (
+                      <td key={university._id} style={{ border: '1px solid #7004e5', textAlign: 'center' }} className="px-3 text-start align-middle">
+                        <figure className="text-center">
+                          <Link href={university.sampleCertificate || '#'} className="image-popup-no-margins d-inline-block">
+                            <Image 
+                              src={university.sampleCertificate || '/default-certificate.jpg'} 
+                              alt="university-certificate"
+                              width={150}
+                              height={200}
+                              style={{ objectFit: 'contain' }}
+                              className="border rounded"
+                            />
+                          </Link>
+                          <figcaption className="mt-2 small text-muted">
+                            {university.sampleCertificateDescription || 'Sample Certificate'}
+                          </figcaption>
+                        </figure>
+                      </td>
+                    ))}
+                    {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                  </tr>
+                </tbody>
+              )}
+
+              {/* Placement Partners Section */}
+              {(compareCriteria === 'all' || compareCriteria === 'placement_partners') && (
+                <tbody id="placement_partners" data-filter="target">
+                  <tr style={{ border: '1px solid #7004e5', backgroundColor: '#7004e5', color: 'white' }}>
+                    <th 
+                      className="text-center toggle-placement" 
+                      style={{  borderColor: 'black #7004e5 black black', cursor: 'pointer' }} 
+                      colSpan={universitiesData.length + 1}
+                      onClick={togglePlacements}
+                    >
+                      <u>University Placement Partners {showAllPlacements ? '▲' : '▼'}</u>
+                    </th>
+                  </tr>
+
+                  {uniquePlacementPartners.slice(0, showAllPlacements ? undefined : 3).map((partner, index) => (
+                    <tr key={index} style={{ border: '1px solid #7004e5' }}>
+                      <th style={{  borderColor: 'black #7004e5 black black' }}>
+                        {partner}
                       </th>
                       {universitiesData.map((university) => (
-                        <td key={university._id} className="px-4 text-start align-middle" style={{ border: '1px solid rgb(244, 124, 128)' }}>
-                          <span style={{ color: 'green' }}>✔️</span>
+                        <td key={university._id} className="px-3 text-start align-middle" style={{ border: '1px solid #7004e5' }}>
+                          <span style={{ color: university.selectedCompanies?.some(p => p.title === partner) ? 'green' : 'red' }}>
+                            {university.selectedCompanies?.some(p => p.title === partner) ? '✔️' : '❌'}
+                          </span>
                         </td>
                       ))}
+                      {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
                     </tr>
-                  </>
-                )}
-              </tbody>
-            )}
-          </table>
+                  ))}
+
+                  {uniquePlacementPartners.length === 0 && (
+                    <>
+                      <tr style={{ border: '1px solid #7004e5' }}>
+                        <th style={{  borderColor: 'black #7004e5 black black' }}>
+                          Top Companies
+                        </th>
+                        {universitiesData.map((university) => (
+                          <td key={university._id} className="px-3 text-start align-middle" style={{ border: '1px solid #7004e5' }}>
+                            <span style={{ color: university.selectedCompanies && university.selectedCompanies.length > 0 ? 'green' : 'orange' }}>
+                              {university.selectedCompanies && university.selectedCompanies.length > 0 ? '✔️' : '⚠️'}
+                            </span>
+                          </td>
+                        ))}
+                        {universitiesData.length === 2 && <td style={{ border: '1px solid #7004e5' }}></td>}
+                      </tr>
+                    </>
+                  )}
+                </tbody>
+              )}
+            </table>
+          </div>
         </div>
       </div>
     </div>

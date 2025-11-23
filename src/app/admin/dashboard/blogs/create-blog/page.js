@@ -221,14 +221,14 @@ const SimpleBlogCreatePage = () => {
           icon: 'error',
           title: 'error!',
           text: result.result.message,
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         })
       }else{
         Swal.fire({
           icon: 'success',
           title: 'Success!',
           text: 'Blog created successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         }).then(() => {
           resetForm()
         })

@@ -29,7 +29,7 @@ const JobForm = () => {
       icon: 'success',
       title: title,
       text: message,
-      confirmButtonColor: '#3b82f6',
+      confirmButtonColor: '#7004e5',
       confirmButtonText: 'OK'
     });
   };

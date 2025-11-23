@@ -14,7 +14,6 @@ export default function OurPartnerPage() {
     const fetchPartners = async () => {
       try {
         const data = await getAllpartnersdata();
-        console.log("API Response:", data);
 
         if (data.status && data.result && data.result.data) {
           setPartners(data.result.data);

@@ -84,7 +84,7 @@ const AffiliateInstitute = () => {
           icon: 'success',
           title: 'Success!',
           text: result.result.message,
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         if (closeEdit) closeEdit();
         fetchApprovals();
@@ -118,7 +118,7 @@ const AffiliateInstitute = () => {
           icon: 'success',
           title: 'Deleted!',
           text: result.result.message,
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         if (close) close();
         fetchApprovals();

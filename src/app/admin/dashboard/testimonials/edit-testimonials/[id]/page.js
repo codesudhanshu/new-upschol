@@ -156,7 +156,7 @@ const EditTestimonials = () => {
           icon: 'success',
           title: 'Success!',
           text: 'Testimonial updated successfully',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         router.push('/admin/dashboard/testimonials');
       } else {

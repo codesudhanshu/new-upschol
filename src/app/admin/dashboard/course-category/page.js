@@ -103,7 +103,7 @@ const CourseCategoryManagement = () => {
           title: 'Success!',
           text: response.result.message || `Course category ${editMode ? 'updated' : 'created'} successfully`,
           icon: 'success',
-          confirmButtonColor: '#3b82f6',
+          confirmButtonColor: '#7004e5',
           timer: 1500,
           showConfirmButton: false
         });
@@ -156,7 +156,7 @@ const CourseCategoryManagement = () => {
         text: `Do you want to ${currentStatus ? 'deactivate' : 'activate'} this category?`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3b82f6',
+        confirmButtonColor: '#7004e5',
         cancelButtonColor: '#ef4444',
         confirmButtonText: `Yes, ${currentStatus ? 'deactivate' : 'activate'} it!`
       });
@@ -176,7 +176,7 @@ const CourseCategoryManagement = () => {
             title: 'Success!',
             text: `Category ${currentStatus ? 'deactivated' : 'activated'} successfully`,
             icon: 'success',
-            confirmButtonColor: '#3b82f6',
+            confirmButtonColor: '#7004e5',
             timer: 1500,
             showConfirmButton: false
           });
@@ -228,7 +228,7 @@ const CourseCategoryManagement = () => {
             title: 'Deleted!',
             text: response.result.message || 'Category deleted successfully',
             icon: 'success',
-            confirmButtonColor: '#3b82f6',
+            confirmButtonColor: '#7004e5',
             timer: 1500,
             showConfirmButton: false
           });

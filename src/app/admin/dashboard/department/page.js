@@ -115,7 +115,7 @@ const DepartmentManagement = () => {
           title: 'Success!',
           text: response.result.message || `Department ${popupType === 'create' ? 'created' : 'updated'} successfully`,
           icon: 'success',
-          confirmButtonColor: '#3b82f6'
+          confirmButtonColor: '#7004e5'
         });
         closePopup();
         fetchDepartments();
@@ -156,7 +156,7 @@ const DepartmentManagement = () => {
             title: 'Deleted!',
             text: response.result.message || 'Department deleted successfully',
             icon: 'success',
-            confirmButtonColor: '#3b82f6'
+            confirmButtonColor: '#7004e5'
           });
           fetchDepartments();
         } else {
