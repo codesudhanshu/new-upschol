@@ -90,7 +90,7 @@ export default function ScholarshipFair() {
 
   const faqs = [
     {
-      question: "What is the Upschol Scholarship Fair 2025?",
+      question: "What is the Upschol Scholarship Fair 2026?",
       answer: "It's India's biggest virtual scholarship fair connecting students with educational institutions and scholarship providers."
     },
     {
@@ -274,13 +274,13 @@ export default function ScholarshipFair() {
           <div className="text-center">
             <div className="inline-flex items-center px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
               <span className="text-2xl mr-3">📅</span>
-              <span className="text-white font-medium">15th September 2025</span>
+              <span className="text-white font-medium">15th September 2026</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight">
               India&apos;s Biggest
               <span className="block bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mt-2">
-                Scholarship Fair 2025
+                Scholarship Fair 2026
               </span>
             </h1>
             
@@ -327,7 +327,7 @@ export default function ScholarshipFair() {
             About the <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Fair</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            The Upschol Scholarship Fair 2025 brings together students, educators, and institutions to unlock educational opportunities. Get personalized guidance and discover your perfect academic path.
+            The Upschol Scholarship Fair 2026 brings together students, educators, and institutions to unlock educational opportunities. Get personalized guidance and discover your perfect academic path.
           </p>
         </div>
       </div>
@@ -337,7 +337,7 @@ export default function ScholarshipFair() {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">Our Universities</h2>
           <p className="text-xl text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-            Universities at Upschol Scholarship Fair 2025 showcase educational institutions, programs, and career opportunities, offering students insights and guidance for their academic and professional futures.
+            Universities at Upschol Scholarship Fair 2026 showcase educational institutions, programs, and career opportunities, offering students insights and guidance for their academic and professional futures.
           </p>
           
           {/* Mobile Responsive Infinite Carousel */}
@@ -420,7 +420,7 @@ export default function ScholarshipFair() {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">Innovative Courses</h2>
           <p className="text-xl text-gray-600 mb-16 text-center max-w-3xl mx-auto">
-            The Upschol Scholarship Education Fair 2025 features innovative courses designed to equip students with cutting-edge skills and knowledge.
+            The Upschol Scholarship Education Fair 2026 features innovative courses designed to equip students with cutting-edge skills and knowledge.
           </p>
           
           {/* Mobile and Desktop Responsive Carousel */}

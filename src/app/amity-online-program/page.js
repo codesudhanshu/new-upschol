@@ -263,13 +263,13 @@ const Amity = () =>{
 <div className={styles.admissonsection}>
     <div className={styles.ad_admissionsection1}>
             <h2 className={styles.heading_unique}>Admissions Open</h2>
-            <p className={styles.para_unique}>For 2025 session</p>
+            <p className={styles.para_unique}>For 2026 session</p>
     </div>
     <div className={styles.ad_admissionsection2}>
         <div>
             <h2 className={styles.heading_admision}>₹7,582</h2>
             <p className={styles.p_admision} style={{marginTop:"-1em"}}>per month</p>
-            <p className={styles.p_admision}>For 2025 session</p>
+            <p className={styles.p_admision}>For 2026 session</p>
         </div>
         <div>
             <img src="./amity/icon2.png" alt="admission"/>
@@ -651,7 +651,7 @@ const Amity = () =>{
     </div>
     <footer>
         <div className={styles.footer}>
-            <h3>© 2025 Copyright Amity University</h3>
+            <h3>© 2026 Copyright Amity University</h3>
         </div>
     </footer>
 

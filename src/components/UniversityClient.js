@@ -243,7 +243,7 @@ export default function UniversityClient({ collegeUrl }) {
     { id: 'advantage', name: 'Advantages', image: 'Examination Pattern' },
     { id: 'FinancialAid', name: 'Financial Aid', image: 'Hiring partners' },
     { id: 'PlacementPartners', name: 'Hiring Partners', image: 'Hiring partners' },
-    { id: 'AdmissionOpen', name: 'Admission Open 2025', image: 'Admission Open 2025' },
+    { id: 'AdmissionOpen', name: 'Admission Open 2026', image: 'Admission Open 2026' },
     { id: 'FAQ', name: 'FAQ', image: 'FAQ' },
     { id: 'TestimonialsReviews', name: 'Reviews', image: 'Reviews' }
   ];
@@ -306,7 +306,13 @@ export default function UniversityClient({ collegeUrl }) {
                 </div>
                 
            
-<UniversityRatingGauge rating={university.universityRating || 4.0} />
+<UniversityRatingGauge 
+  rating={university.universityRating || 4.0}
+  averageRating={university.averageRating || 4.0}
+  digitalInfrastructure={university.digitalInfrastructure || 4.0}
+  curriculum={university.curriculum || 3.6}
+  valueForMoney={university.valueForMoney || 3.6}
+/>
                 
                 
                 <div className="btn-group gap-2">
@@ -330,7 +336,7 @@ export default function UniversityClient({ collegeUrl }) {
                       <img src={university.universityHomeImage || "https://via.placeholder.com/585x405"} alt="University Campus" className="w-100"/>
                     </figure>
                     <div className="small_logo">
-                      <figure className="university_logo_explore_program">
+                      <figure className="university_logo_explore_program w-32 h-32">
                         <img src={university.logo || "https://via.placeholder.com/64"} alt="University Logo" />
                       </figure>
                     </div>
@@ -494,7 +500,7 @@ export default function UniversityClient({ collegeUrl }) {
 
                 {/* Course Fees */}
                 <div className="course_fees mt-5">
-                  <h2 className="heading_program_details">Updated Course Fees for 2025</h2>
+                  <h2 className="heading_program_details">Updated Course Fees for 2026</h2>
                   <div className="table-responsive">
                     <table className="table table-bordered align-middle">
                       <thead className="table-primary" style={{ backgroundColor: '#7004e5', color: 'white' }}>
@@ -642,7 +648,7 @@ export default function UniversityClient({ collegeUrl }) {
                 <section id="AdmissionOpen" className="mt-5" ref={el => sectionRefs.current['AdmissionOpen'] = el}>
                   {university.admissionProcess && (
                     <>
-                      <h2 className="heading_program_details">Admission Open 2025</h2>
+                      <h2 className="heading_program_details">Admission Open 2026</h2>
                       <p>{university.admissionProcess}</p>
                     </>
                   )}

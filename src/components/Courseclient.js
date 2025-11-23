@@ -155,7 +155,7 @@ export default function CourseClient({ collegeUrl }) {
     { id: 'EducationLoanEMI', name: 'Financial Aid' , image: 'Education loan- Monthly EMI' },
     { id: 'Campuses', name: 'Campuses', image: 'Similar Universities' },
     { id: 'PlacementPartners', name: 'Hiring Partners', image: 'Hiring partners' },
-    { id: 'AdmissionOpen', name: 'Admission Open 2025', image: 'Admission Open 2025' },
+    { id: 'AdmissionOpen', name: 'Admission Open 2026', image: 'Admission Open 2026' },
     { id: 'FAQ', name: 'FAQ', image: 'FAQ' },
     { id: 'OtherUniversities', name: 'Similar Universities', image: 'Similar Universities' },
     { id: 'TestimonialsReviews', name: 'Reviews',  image: 'Reviews' }
@@ -476,7 +476,7 @@ export default function CourseClient({ collegeUrl }) {
                     
                     {/* Course Fees Section */}
                     <div className="course_fees">
-                      <h2 className="heading_program_details">Updated Course Fees for 2025</h2>
+                      <h2 className="heading_program_details">Updated Course Fees for 2026</h2>
                       <div className="table-responsive tableformat">
                         <table className="table-responsive align-middle text-start" 
                                style={{ border: '2px solid #7004e5', width: '100%', tableLayout: 'fixed' }}>
@@ -689,7 +689,7 @@ export default function CourseClient({ collegeUrl }) {
                 <section id="AdmissionOpen" className="mt-5" ref={el => sectionRefs.current['AdmissionOpen'] = el}>
                   {university.admissionProcess && (
                     <>
-                      <h2 className="heading_program_details">Admission Open 2025</h2>
+                      <h2 className="heading_program_details">Admission Open 2026</h2>
                       <div className="prose max-w-none text-gray-700">
                         <p>{university.admissionProcess}</p>
                       </div>

@@ -123,7 +123,7 @@ const PrivacyPolicyPage = () => {
             <p><strong>17. Disclaimer</strong><br />
             UpSchol is an ed-tech platform that connects prospective students with online programs offered through partner universities, including NMIMS, Amity, and LPU. We provide program discovery, eligibility guidance, and application support, with fee payments made through the universities' portals. UpSchol does not issue degrees or process loans; program approval and financing are handled exclusively by the partner universities and their approved lenders. All programs are offered through our partner institutions and subject to their criteria.</p>
 
-            <p><em>Last updated on 18 August 2025</em></p>
+            <p><em>Last updated on 18 August 2026</em></p>
           </div>
         </div>
       </div>

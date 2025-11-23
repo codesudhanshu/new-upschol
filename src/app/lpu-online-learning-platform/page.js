@@ -1799,7 +1799,7 @@ return(
       {/*end of row*/}
       <hr className={styles.footer_hr} />
       <p className={styles.copyright}>
-        © 2025 Copyright Lovely Professional University
+        © 2026 Copyright Lovely Professional University
       </p>
     </div>
     {/*end of container*/}

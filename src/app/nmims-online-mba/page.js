@@ -351,7 +351,7 @@ return(<><Head><meta charset="utf-8" />
 
 		{/* <section className={styles.container_specialize}>
 			<div className={styles.conatiners}>
-				<h2 className={styles.r_colors}>Specializations Wize Updated Fees 2025</h2>
+				<h2 className={styles.r_colors}>Specializations Wize Updated Fees 2026</h2>
 				<button className={styles.structure} onClick={() => {
 								const fnameInput = document.getElementById("name");
 								
@@ -546,7 +546,7 @@ return(<><Head><meta charset="utf-8" />
 			<div className={styles.footersection}>
 				<div className={`block sm:flex items-center ${styles.container}`}>
   <p>
-    © 2025 All Rights Reserved. | <a href="">Privacy Policy</a>
+    © 2026 All Rights Reserved. | <a href="">Privacy Policy</a>
   </p>
   <p className="mt-2 sm:mt-0 sm:ml-16">
     Contact us Now - <a href="tel://+917678313034">+91 7678313034</a>

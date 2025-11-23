@@ -246,7 +246,7 @@ const UpScholFooter = () => {
           <div className="long-txt text-center">
             <small>Upschol aims to provide unbiased and precise information, along with comparative guidance on universities and their programs, to admission aspirants. The content on the College Sathi website—encompassing texts, graphics, images, blogs, videos, and university logos—is intended solely for informational purposes and should not be viewed as a substitute for offerings from academic partners. While we strive for accuracy and present information in good faith, College Sathi makes no warranties regarding the completeness or reliability of the content and will not be liable for any errors, omissions, or resulting damages from its use.</small>
           </div>
-          <p className="text-center copyright mt-3 mb-0">© Upschol 2025. All Right Reserved.</p>
+          <p className="text-center copyright mt-3 mb-0">© Upschol 2026. All Right Reserved.</p>
         </div>
       </div>
       <style jsx>{`  footer.footer {

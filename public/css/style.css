@@ -3023,9 +3023,8 @@ header .navbar .navigation ul li .submenu-nested ul.dropdown_menu li {
 .star_rating {
     display: flex;
     align-items: center;
-    padding: 9px 0px 0;
-        margin-top: -3em;
-    padding-bottom: 4em;
+    padding: 9px 0px 0 1em;
+   margin-top: -3em;
 }
 
 .star_rating h5 {
